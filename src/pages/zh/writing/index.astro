@@ -1,0 +1,144 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { t } from '../../../i18n/translations';
+
+const lang = 'zh';
+
+const posts = [
+  {
+    title: "为什么我选择公开构建",
+    date: "2026-02-01",
+    type: "reflection",
+    slug: "building-in-public",
+    excerpt: "选择公开记录一切并不容易。这是我选择透明而非完美的原因，以及我希望从中获得什么。"
+  },
+  {
+    title: "Steplify 教会我的关于产品市场匹配的一切",
+    date: "2026-01-20",
+    type: "product-thought",
+    slug: "steplify-pmf",
+    excerpt: "我的创业失败了。但关于倾听用户、把握时机、以及信念与验证之间差距的教训，比任何成功都更有价值。"
+  },
+  {
+    title: "AI产品管理：没人告诉你的那些事",
+    date: "2026-01-10",
+    type: "ai-commentary",
+    slug: "ai-pm-reality",
+    excerpt: "每个人都在谈AI战略。但很少有人谈交付AI产品的真实混乱 —— 数据问题、边界情况、还有人的因素。"
+  },
+  {
+    title: "学习笔记：第3周",
+    date: "2026-01-05",
+    type: "learning-log",
+    slug: "learning-week-3",
+    excerpt: "这周：深入研究LLM评估框架，开始读《创业维艰》，健身刷新了个人纪录。"
+  },
+  {
+    title: "想和做之间的差距",
+    date: "2025-12-28",
+    type: "note",
+    slug: "thinking-vs-doing",
+    excerpt: "一个简短的思考：为什么执行永远胜过空想，以及当你发现自己困在脑子里时该怎么办。"
+  }
+];
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+function getTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    'note': '随笔',
+    'reflection': '反思',
+    'product-thought': '产品',
+    'ai-commentary': 'AI',
+    'learning-log': '学习日志'
+  };
+  return labels[type] || type;
+}
+---
+
+<Layout title={t(lang, 'writing.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'writing.title')}</h1>
+      <p class="subtitle">{t(lang, 'writing.subtitle')}</p>
+    </div>
+
+    <p class="writing-intro fade-in">{t(lang, 'writing.intro')}</p>
+
+    <div class="posts">
+      {posts.map((post) => (
+        <article class="post-card fade-in">
+          <div class="post-meta">
+            <span class="tag">{getTypeLabel(post.type)}</span>
+            <span class="post-date">{formatDate(post.date)}</span>
+          </div>
+          <h2 class="post-title">{post.title}</h2>
+          <p class="post-excerpt">{post.excerpt}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .writing-intro {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .post-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: transform var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+  }
+
+  .post-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .post-excerpt {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>
+

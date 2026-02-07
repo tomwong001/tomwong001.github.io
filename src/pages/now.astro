@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/translations';
+
+const lang = 'en';
+const lastUpdated = 'February 2026';
+---
+
+<Layout title={t(lang, 'now.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'now.title')}</h1>
+      <p class="subtitle">{t(lang, 'now.subtitle')}</p>
+      <p class="updated">{t(lang, 'now.updated')}: {lastUpdated}</p>
+    </div>
+
+    <div class="now-grid">
+      <section class="now-section fade-in">
+        <h2>{t(lang, 'now.life.title')}</h2>
+        <p class="now-intro">{t(lang, 'now.life.intro')}</p>
+        <div class="now-items">
+          <div class="now-item">
+            <span class="now-icon">💪</span>
+            <div>
+              <h3>Fitness & Physical Training</h3>
+              <p>Consistently training — building discipline through the body. It grounds everything else.</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">📚</span>
+            <div>
+              <h3>Reading & Sharing</h3>
+              <p>Currently diving into books on product thinking, AI strategy, and personal growth. Sharing notes as I go.</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">🎵</span>
+            <div>
+              <h3>Music</h3>
+              <p>Erhu (Chinese traditional instrument), singing (semi-professional level), guitar, and street busking. Music is how I express what words can't.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="now-section fade-in">
+        <h2>{t(lang, 'now.work.title')}</h2>
+        <p class="now-intro">{t(lang, 'now.work.intro')}</p>
+        <div class="now-items">
+          <div class="now-item">
+            <span class="now-icon">🛠️</span>
+            <div>
+              <h3>Building Products in Public</h3>
+              <p>Documenting the process of building AI products — the wins, the failures, and the lessons.</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">🤖</span>
+            <div>
+              <h3>AI Product Thinking</h3>
+              <p>Exploring how AI can be applied to real problems — not hype, but practical systems that work.</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">🎙️</span>
+            <div>
+              <h3>Sharing Insights</h3>
+              <p>From podcasts, industry trends, and things I'm actively learning. Turning input into output.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .updated {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    margin-top: 0.5rem;
+  }
+
+  .now-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .now-section h2 {
+    font-size: 1.375rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .now-intro {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .now-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .now-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .now-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .now-item h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .now-item p {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>
+

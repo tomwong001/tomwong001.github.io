@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/translations';
+
+const lang = 'en';
+
+const chapters = [
+  {
+    title: "Before I Knew What I Was Doing",
+    content: "Growing up, I was always the kid who wanted to try everything — music, writing, trading, YouTube. I didn't have a plan. I had energy and curiosity, and I threw myself at anything that seemed interesting. Most of it didn't stick, but that restlessness taught me something important: I wasn't looking for a hobby. I was looking for something worth building.",
+    number: "01"
+  },
+  {
+    title: "The First Time I Tried to Build Something Real",
+    content: "College at UCSD opened a new world. Data science, engineering, the first taste of what technology could actually do. Then CMU sharpened everything — systems thinking, product design, the craft of building. I started to see that the gap between an idea and something real was bridged by one thing: execution. I wanted to be on the execution side.",
+    number: "02"
+  },
+  {
+    title: "The Startup That Failed",
+    content: "Steplify.ai was born out of genuine conviction. I believed in the problem. I believed in the product. I put everything into it — time, energy, money. And it didn't work. The market wasn't ready, the resources weren't enough, and a hundred small things went wrong in ways I couldn't have predicted. It's dead now. But I'm not bitter about it.",
+    number: "03"
+  },
+  {
+    title: "Why That Failure Clarified Everything",
+    content: "Steplify failing didn't make me want to stop. It made me want to build better. I learned more from that one failure than from any class or job. I learned about timing, about product-market fit, about what it really costs to build something from zero. Most importantly, I learned that building is my path — not because it's easy, but because nothing else feels as real.",
+    number: "04"
+  },
+  {
+    title: "What I'm Building Toward Now",
+    content: "I'm working as an AI Product Manager now — building systems, tools, and workflows that matter. But the job is context, not the destination. The real mission is bigger: build things that compound over time, share the process honestly, and attract people who think the same way. This website is part of that. Everything I do from here is in public.",
+    number: "05"
+  }
+];
+---
+
+<Layout title={t(lang, 'journey.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'journey.title')}</h1>
+      <p class="subtitle">{t(lang, 'journey.subtitle')}</p>
+    </div>
+
+    <div class="chapters">
+      {chapters.map((chapter) => (
+        <article class="chapter-card fade-in">
+          <span class="chapter-number">{chapter.number}</span>
+          <h2 class="chapter-title">{chapter.title}</h2>
+          <p class="chapter-content">{chapter.content}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .chapter-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    position: relative;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .chapter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .chapter-number {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    background: var(--color-tag-bg);
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+  }
+
+  .chapter-title {
+    font-size: 1.375rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .chapter-content {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .chapter-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+

@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/translations';
+
+const lang = 'zh';
+
+const chapters = [
+  {
+    title: "在我还不知道自己在干什么的时候",
+    content: "从小到大，我总是那个什么都想尝试的人 —— 音乐、写作、炒股、YouTube。我没有计划，只有精力和好奇心，看到什么有趣的就冲上去。大部分都没坚持下来，但那种不安分教会了我一件事：我不是在找爱好，我在找值得建造的东西。",
+    number: "01"
+  },
+  {
+    title: "第一次尝试做一些真实的东西",
+    content: "在UCSD读本科打开了一个新世界 —— 数据科学、工程学，第一次尝到技术真正能做什么的味道。然后CMU磨砺了一切 —— 系统思维、产品设计、建造的手艺。我开始明白，想法和现实之间的桥梁只有一个：执行力。我想站在执行的那一边。",
+    number: "02"
+  },
+  {
+    title: "那个失败的创业",
+    content: "Steplify.ai 诞生于真正的信念。我相信那个问题，我相信那个产品。我投入了一切 —— 时间、精力、金钱。但它没有成功。市场还没准备好，资源不够，还有一百件小事以我无法预料的方式出了错。它现在已经死了。但我对此并不苦涩。",
+    number: "03"
+  },
+  {
+    title: "为什么那次失败让一切变清晰了",
+    content: "Steplify的失败没有让我想停下来，反而让我想做得更好。我从那一次失败中学到的比任何课程或工作都多。我学到了关于时机、产品市场匹配、以及从零开始真正需要付出什么的道理。最重要的是，我确认了建造就是我的路 —— 不是因为容易，而是因为没有什么比这更真实。",
+    number: "04"
+  },
+  {
+    title: "我现在在朝什么方向建造",
+    content: "我现在是一名AI产品经理 —— 构建系统、工具和有意义的工作流。但工作只是背景，不是终点。真正的使命更大：建造能随时间复利的东西，诚实地分享过程，吸引有同样想法的人。这个网站就是其中一部分。从现在起，我做的一切都是公开的。",
+    number: "05"
+  }
+];
+---
+
+<Layout title={t(lang, 'journey.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'journey.title')}</h1>
+      <p class="subtitle">{t(lang, 'journey.subtitle')}</p>
+    </div>
+
+    <div class="chapters">
+      {chapters.map((chapter) => (
+        <article class="chapter-card fade-in">
+          <span class="chapter-number">{chapter.number}</span>
+          <h2 class="chapter-title">{chapter.title}</h2>
+          <p class="chapter-content">{chapter.content}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .chapter-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    position: relative;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .chapter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .chapter-number {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    background: var(--color-tag-bg);
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+  }
+
+  .chapter-title {
+    font-size: 1.375rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .chapter-content {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .chapter-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+

@@ -1,0 +1,140 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { t } from '../../../i18n/translations';
+
+const lang = 'zh';
+---
+
+<Layout title={t(lang, 'projects.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'projects.title')}</h1>
+      <p class="subtitle">{t(lang, 'projects.subtitle')}</p>
+    </div>
+
+    <p class="projects-intro fade-in">{t(lang, 'projects.intro')}</p>
+
+    <div class="projects-list">
+      <article class="project-card featured fade-in">
+        <div class="project-badge">重点项目</div>
+        <h2>Steplify.ai</h2>
+        <p class="project-status">状态：已关闭 • 开源</p>
+
+        <div class="project-section">
+          <h3>它是什么</h3>
+          <p>Steplify 是我创办的一个AI驱动平台，旨在简化复杂的工作流。我真心关心这个问题 —— 人们在重复性的多步骤流程上浪费了大量时间，而AI本可以解决这些问题。我相信技术应该减少摩擦，而不是增加它。</p>
+        </div>
+
+        <div class="project-section">
+          <h3>发生了什么</h3>
+          <p>产品在技术上是可行的，但市场还没准备好。时机不对，资源有限，进入市场的策略需要比我的资金能撑的时间更多的迭代。一百件小事叠加成了一个大教训：做产品和做生意是两种不同的技能。</p>
+        </div>
+
+        <div class="project-section">
+          <h3>为什么它仍然重要</h3>
+          <p>Steplify 确认了建造就是我的路。它塑造了我对产品的思考方式 —— 关于时机、关于用户、关于技术上可行和实际需要之间的差距。失败不是终点，而是更清晰地建造的开始。</p>
+        </div>
+
+        <div class="project-section">
+          <h3>开源</h3>
+          <p>代码库已开源。如果其中任何部分能帮助别人做出更好的东西，那它就是值得的。</p>
+          <a href="https://github.com/tomwong001" class="project-link" target="_blank" rel="noopener">
+            在 GitHub 上查看 →
+          </a>
+        </div>
+      </article>
+
+      <article class="project-card fade-in">
+        <h2>更多即将到来</h2>
+        <p class="project-coming">我正在建造新东西。它们准备好了就会出现在这里 —— 或者失败了也会。不管怎样，你都会知道。</p>
+      </article>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .projects-intro {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .project-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+  }
+
+  .project-card.featured {
+    border-color: var(--color-accent);
+    border-width: 2px;
+  }
+
+  .project-badge {
+    display: inline-block;
+    background: var(--color-tag-bg);
+    color: var(--color-tag-text);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .project-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-status {
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .project-section p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .project-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .project-coming {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .project-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+

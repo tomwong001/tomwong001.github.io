@@ -1,0 +1,148 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t, getLocalePath } from '../i18n/translations';
+
+const lang = 'en';
+---
+
+<Layout title="Home" lang={lang}>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content fade-in">
+        <h1 class="hero-greeting">{t(lang, 'home.greeting')}</h1>
+        <p class="hero-tagline">{t(lang, 'home.tagline')}</p>
+        <p class="hero-tagline">{t(lang, 'home.tagline2')}</p>
+        <p class="hero-subtext">{t(lang, 'home.subtext')}</p>
+        <div class="hero-ctas">
+          <a href={getLocalePath(lang, '/journey')} class="cta cta-primary">{t(lang, 'home.cta.journey')}</a>
+          <a href={getLocalePath(lang, '/now')} class="cta cta-secondary">{t(lang, 'home.cta.now')}</a>
+          <a href={getLocalePath(lang, '/writing')} class="cta cta-secondary">{t(lang, 'home.cta.writing')}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="home-identity fade-in">
+        <blockquote class="identity-quote">
+          "I'm a builder who completes missions — driven by curiosity, and the belief that building is how you can change the world."
+        </blockquote>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, var(--color-hero-gradient-start), var(--color-hero-gradient-end));
+    color: var(--color-hero-text);
+    padding: 6rem 0 5rem;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-content {
+    max-width: 600px;
+  }
+
+  .hero-greeting {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .hero-tagline {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--color-hero-text);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .hero-subtext {
+    color: var(--color-hero-muted);
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .cta {
+    display: inline-block;
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition);
+  }
+
+  .cta-primary {
+    background: white;
+    color: var(--color-hero-gradient-start);
+  }
+
+  .cta-primary:hover {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  .cta-secondary {
+    background: transparent;
+    color: var(--color-hero-muted);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+  }
+
+  .cta-secondary:hover {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .home-identity {
+    padding: 2rem 0;
+  }
+
+  .identity-quote {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1.5rem;
+    font-style: italic;
+    max-width: 600px;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 4rem 0 3rem;
+      min-height: auto;
+    }
+
+    .hero-greeting {
+      font-size: 2.5rem;
+    }
+
+    .hero-tagline {
+      font-size: 1.1rem;
+    }
+
+    .hero-ctas {
+      flex-direction: column;
+    }
+
+    .cta {
+      text-align: center;
+    }
+  }
+</style>
+

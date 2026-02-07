@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/translations';
+
+const lang = 'zh';
+
+const sections = [
+  {
+    icon: "💪",
+    title: "健身与纪律",
+    content: "持续训练是不可妥协的。这不是为了外表 —— 而是为了建立渗透到其他一切的纪律性。健身房是我练习坚持的地方，尤其是在不想去的日子。",
+  },
+  {
+    icon: "🎵",
+    title: "音乐与表演",
+    content: "音乐从我记事起就是生活的一部分。我拉二胡（中国传统乐器），唱歌达到半专业水平，也在学吉他。街头卖艺是我最喜欢的与人建立连接的方式 —— 原始的、未经过滤的、完全诚实的。",
+  },
+  {
+    icon: "📖",
+    title: "阅读与思考",
+    content: "我的阅读跨越各个领域 —— 产品设计、心理学、AI、商业、哲学。阅读是输入，写作是输出。两者结合是我理解世界和形成自己思考的方式。",
+  },
+  {
+    icon: "🎸",
+    title: "街头卖艺",
+    content: "为陌生人表演有一种强大的力量。没有安全网，没有算法，没有后期编辑。只有你、你的乐器和停下来听的人。每次卖艺都是关于存在感和脆弱性的一课。",
+  }
+];
+---
+
+<Layout title={t(lang, 'life.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'life.title')}</h1>
+      <p class="subtitle">{t(lang, 'life.subtitle')}</p>
+    </div>
+
+    <div class="life-grid">
+      {sections.map((section) => (
+        <article class="life-card fade-in">
+          <span class="life-icon">{section.icon}</span>
+          <h2>{section.title}</h2>
+          <p>{section.content}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .life-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .life-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .life-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .life-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .life-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .life-card p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 768px) {
+    .life-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .life-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+

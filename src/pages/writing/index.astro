@@ -1,0 +1,145 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t, getLocalePath } from '../../i18n/translations';
+
+const lang = 'en';
+
+// Sample posts data - in a real setup these would come from markdown content collections
+const posts = [
+  {
+    title: "Why I'm Building in Public",
+    date: "2026-02-01",
+    type: "reflection",
+    slug: "building-in-public",
+    excerpt: "The decision to document everything publicly wasn't easy. Here's why I chose transparency over polish, and what I hope to gain from it."
+  },
+  {
+    title: "What Steplify Taught Me About Product-Market Fit",
+    date: "2026-01-20",
+    type: "product-thought",
+    slug: "steplify-pmf",
+    excerpt: "My startup failed. But the lessons about listening to users, timing, and the gap between conviction and validation are worth more than any success."
+  },
+  {
+    title: "AI Product Management: What Nobody Tells You",
+    date: "2026-01-10",
+    type: "ai-commentary",
+    slug: "ai-pm-reality",
+    excerpt: "Everyone talks about AI strategy. Few talk about the messy reality of shipping AI products — the data problems, the edge cases, the human side."
+  },
+  {
+    title: "Notes on Learning: Week 3",
+    date: "2026-01-05",
+    type: "learning-log",
+    slug: "learning-week-3",
+    excerpt: "This week: deep dive into LLM evaluation frameworks, started reading 'The Hard Thing About Hard Things', and hit a new PR at the gym."
+  },
+  {
+    title: "The Gap Between Thinking and Doing",
+    date: "2025-12-28",
+    type: "note",
+    slug: "thinking-vs-doing",
+    excerpt: "A short thought on why execution beats ideation every time, and how to close the gap when you find yourself stuck in your head."
+  }
+];
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+function getTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    'note': 'Note',
+    'reflection': 'Reflection',
+    'product-thought': 'Product',
+    'ai-commentary': 'AI',
+    'learning-log': 'Learning Log'
+  };
+  return labels[type] || type;
+}
+---
+
+<Layout title={t(lang, 'writing.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'writing.title')}</h1>
+      <p class="subtitle">{t(lang, 'writing.subtitle')}</p>
+    </div>
+
+    <p class="writing-intro fade-in">{t(lang, 'writing.intro')}</p>
+
+    <div class="posts">
+      {posts.map((post) => (
+        <article class="post-card fade-in">
+          <div class="post-meta">
+            <span class="tag">{getTypeLabel(post.type)}</span>
+            <span class="post-date">{formatDate(post.date)}</span>
+          </div>
+          <h2 class="post-title">{post.title}</h2>
+          <p class="post-excerpt">{post.excerpt}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .writing-intro {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .post-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: transform var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+  }
+
+  .post-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .post-excerpt {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>
+

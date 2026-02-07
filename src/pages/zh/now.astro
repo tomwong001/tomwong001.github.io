@@ -1,0 +1,141 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/translations';
+
+const lang = 'zh';
+const lastUpdated = '2026年2月';
+---
+
+<Layout title={t(lang, 'now.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'now.title')}</h1>
+      <p class="subtitle">{t(lang, 'now.subtitle')}</p>
+      <p class="updated">{t(lang, 'now.updated')}: {lastUpdated}</p>
+    </div>
+
+    <div class="now-grid">
+      <section class="now-section fade-in">
+        <h2>{t(lang, 'now.life.title')}</h2>
+        <p class="now-intro">{t(lang, 'now.life.intro')}</p>
+        <div class="now-items">
+          <div class="now-item">
+            <span class="now-icon">💪</span>
+            <div>
+              <h3>健身与体能训练</h3>
+              <p>持续训练 —— 通过身体建立纪律性。它为其他一切打下基础。</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">📚</span>
+            <div>
+              <h3>阅读与分享</h3>
+              <p>目前在深入阅读产品思维、AI策略和个人成长方面的书。边读边分享笔记。</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">🎵</span>
+            <div>
+              <h3>音乐</h3>
+              <p>二胡（中国传统乐器）、唱歌（半专业水平）、吉他、以及街头卖艺。音乐是我表达文字无法传达的情感的方式。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="now-section fade-in">
+        <h2>{t(lang, 'now.work.title')}</h2>
+        <p class="now-intro">{t(lang, 'now.work.intro')}</p>
+        <div class="now-items">
+          <div class="now-item">
+            <span class="now-icon">🛠️</span>
+            <div>
+              <h3>公开构建产品</h3>
+              <p>记录构建AI产品的过程 —— 成功、失败和教训。</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">🤖</span>
+            <div>
+              <h3>AI产品思维</h3>
+              <p>探索AI如何应用于真实问题 —— 不是炒作，而是真正有效的实用系统。</p>
+            </div>
+          </div>
+          <div class="now-item">
+            <span class="now-icon">🎙️</span>
+            <div>
+              <h3>分享洞察</h3>
+              <p>来自播客、行业趋势和正在学习的事物。将输入转化为输出。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .updated {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    margin-top: 0.5rem;
+  }
+
+  .now-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .now-section h2 {
+    font-size: 1.375rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .now-intro {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .now-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .now-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .now-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .now-item h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .now-item p {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>
+

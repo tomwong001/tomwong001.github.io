@@ -1,0 +1,208 @@
+---
+import { t, getLocalePath, languages, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+  currentPath?: string;
+}
+
+const { lang, currentPath = '/' } = Astro.props;
+
+const navItems = [
+  { key: 'nav.home' as const, path: '/' },
+  { key: 'nav.about' as const, path: '/about' },
+  { key: 'nav.journey' as const, path: '/journey' },
+  { key: 'nav.now' as const, path: '/now' },
+  { key: 'nav.writing' as const, path: '/writing' },
+  { key: 'nav.projects' as const, path: '/projects' },
+  { key: 'nav.life' as const, path: '/life' },
+  { key: 'nav.contact' as const, path: '/contact' },
+];
+
+function isActive(itemPath: string): boolean {
+  const clean = currentPath.replace(/^\/(en|zh)/, '') || '/';
+  if (itemPath === '/') return clean === '/';
+  return clean.startsWith(itemPath);
+}
+
+const otherLang: Lang = lang === 'en' ? 'zh' : 'en';
+const switchPath = getLocalePath(otherLang, currentPath);
+---
+
+<nav class="nav">
+  <div class="nav-inner container-wide">
+    <a href={getLocalePath(lang, '/')} class="nav-logo">Tom.</a>
+
+    <button class="nav-toggle" aria-label="Toggle menu" id="nav-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links" id="nav-links">
+      {navItems.map(item => (
+        <a
+          href={getLocalePath(lang, item.path)}
+          class:list={['nav-link', { active: isActive(item.path) }]}
+        >
+          {t(lang, item.key)}
+        </a>
+      ))}
+      <a href={switchPath} class="lang-switch" title={`Switch to ${languages[otherLang]}`}>
+        {languages[otherLang]}
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  toggle?.addEventListener('click', () => {
+    links?.classList.toggle('open');
+    toggle.classList.toggle('open');
+  });
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: var(--max-width-wide);
+  }
+
+  .nav-logo {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+
+  .nav-logo:hover {
+    color: var(--color-accent);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radius);
+    transition: all var(--transition);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+    background: var(--color-bg-alt);
+  }
+
+  .nav-link.active {
+    color: var(--color-text);
+    background: var(--color-bg-alt);
+  }
+
+  .lang-switch {
+    color: var(--color-accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border: 1.5px solid var(--color-accent);
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    text-decoration: none;
+    transition: all var(--transition);
+  }
+
+  .lang-switch:hover {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  /* Hamburger */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 2px;
+    transition: all var(--transition);
+  }
+
+  .nav-toggle.open span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .nav-toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-toggle.open span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  @media (max-width: 768px) {
+    .nav-toggle {
+      display: flex;
+    }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 1.5rem;
+      gap: 0.25rem;
+    }
+
+    .nav-links.open {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 0.6rem 0.75rem;
+      width: 100%;
+    }
+
+    .lang-switch {
+      margin-left: 0;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+  }
+</style>
+

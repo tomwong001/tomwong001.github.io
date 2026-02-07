@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/translations';
+
+const lang = 'en';
+
+const sections = [
+  {
+    icon: "💪",
+    title: "Fitness & Discipline",
+    content: "Training consistently is non-negotiable. It's not about aesthetics — it's about building the discipline that carries into everything else. The gym is where I practice showing up, especially on days I don't want to.",
+  },
+  {
+    icon: "🎵",
+    title: "Music & Performance",
+    content: "Music has been part of my life since I can remember. I play the erhu (a Chinese traditional instrument), sing at a semi-professional level, and am learning guitar. Street busking is one of my favorite ways to connect with people — raw, unfiltered, and completely honest.",
+  },
+  {
+    icon: "📖",
+    title: "Reading & Reflection",
+    content: "I read across categories — product design, psychology, AI, business, philosophy. Reading is input. Writing is output. The combination is how I make sense of the world and form my own thinking.",
+  },
+  {
+    icon: "🎸",
+    title: "Street Busking",
+    content: "There's something powerful about performing for strangers. No safety net, no algorithm, no editing. Just you, your instrument, and whoever stops to listen. Every busking session is a lesson in presence and vulnerability.",
+  }
+];
+---
+
+<Layout title={t(lang, 'life.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'life.title')}</h1>
+      <p class="subtitle">{t(lang, 'life.subtitle')}</p>
+    </div>
+
+    <div class="life-grid">
+      {sections.map((section) => (
+        <article class="life-card fade-in">
+          <span class="life-icon">{section.icon}</span>
+          <h2>{section.title}</h2>
+          <p>{section.content}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .life-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .life-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .life-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .life-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .life-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .life-card p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 768px) {
+    .life-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .life-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+

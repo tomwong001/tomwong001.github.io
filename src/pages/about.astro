@@ -1,0 +1,101 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/translations';
+
+const lang = 'en';
+---
+
+<Layout title={t(lang, 'about.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'about.title')}</h1>
+      <p class="subtitle">{t(lang, 'about.subtitle')}</p>
+    </div>
+
+    <div class="about-content">
+      <section class="about-section fade-in">
+        <h2>{t(lang, 'about.section1.title')}</h2>
+        <p class="about-lead">{t(lang, 'about.section1.text')}</p>
+      </section>
+
+      <section class="about-section fade-in">
+        <h2>{t(lang, 'about.section2.title')}</h2>
+        <p>{t(lang, 'about.section2.text1')}</p>
+        <p>{t(lang, 'about.section2.text2')}</p>
+        <p class="about-emphasis">{t(lang, 'about.section2.text3')}</p>
+      </section>
+
+      <section class="about-section fade-in">
+        <h2>{t(lang, 'about.section3.title')}</h2>
+        <div class="context-items">
+          <div class="context-item">
+            <span class="context-icon">🎓</span>
+            <p>{t(lang, 'about.section3.text1')}</p>
+          </div>
+          <div class="context-item">
+            <span class="context-icon">🚀</span>
+            <p>{t(lang, 'about.section3.text2')}</p>
+          </div>
+          <div class="context-item">
+            <span class="context-icon">🤖</span>
+            <p>{t(lang, 'about.section3.text3')}</p>
+          </div>
+          <div class="context-item">
+            <span class="context-icon">🔭</span>
+            <p>{t(lang, 'about.section3.text4')}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .about-content {
+    padding-bottom: 2rem;
+  }
+
+  .about-section {
+    margin-bottom: 3rem;
+  }
+
+  .about-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.375rem;
+  }
+
+  .about-lead {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--color-text);
+  }
+
+  .about-emphasis {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .context-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .context-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .context-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+
+  .context-item p {
+    margin: 0;
+    line-height: 1.6;
+  }
+</style>
+

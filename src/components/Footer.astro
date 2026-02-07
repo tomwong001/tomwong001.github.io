@@ -1,0 +1,66 @@
+---
+import { t, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-text">{t(lang, 'footer.text')}</p>
+    <div class="footer-links">
+      <a href="https://github.com/tomwong001" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/zhenjian-tom-wang-881476226/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:zhenjiantomwang@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border);
+    padding: 2.5rem 0;
+    margin-top: 4rem;
+  }
+
+  .footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-text {
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 480px) {
+    .footer .container {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+

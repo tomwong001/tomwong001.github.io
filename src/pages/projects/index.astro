@@ -1,0 +1,142 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t, getLocalePath } from '../../i18n/translations';
+
+const lang = 'en';
+---
+
+<Layout title={t(lang, 'projects.title')} lang={lang}>
+  <div class="container">
+    <div class="page-header fade-in">
+      <h1>{t(lang, 'projects.title')}</h1>
+      <p class="subtitle">{t(lang, 'projects.subtitle')}</p>
+    </div>
+
+    <p class="projects-intro fade-in">{t(lang, 'projects.intro')}</p>
+
+    <div class="projects-list">
+      <!-- Featured: Steplify -->
+      <article class="project-card featured fade-in">
+        <div class="project-badge">Featured Project</div>
+        <h2>Steplify.ai</h2>
+        <p class="project-status">Status: Shut down • Open Source</p>
+
+        <div class="project-section">
+          <h3>What It Was</h3>
+          <p>Steplify was an AI-powered platform I founded to simplify complex workflows. I cared deeply about the problem — people were wasting hours on repetitive, multi-step processes that AI could handle. I believed technology should remove friction, not add it.</p>
+        </div>
+
+        <div class="project-section">
+          <h3>What Happened</h3>
+          <p>The product worked technically, but the market wasn't ready. Timing was off, resources were limited, and the go-to-market strategy needed more iteration than I had runway for. A hundred small things compounded into one big lesson: building a product and building a business are two different skills.</p>
+        </div>
+
+        <div class="project-section">
+          <h3>Why It Still Matters</h3>
+          <p>Steplify confirmed that building is my path. It shaped how I think about products — about timing, about users, about the difference between what's technically possible and what's actually needed. The failure wasn't the end. It was the beginning of building with more clarity.</p>
+        </div>
+
+        <div class="project-section">
+          <h3>Open Source</h3>
+          <p>The codebase is open source. If any part of it helps someone else build something better, it was worth it.</p>
+          <a href="https://github.com/tomwong001" class="project-link" target="_blank" rel="noopener">
+            View on GitHub →
+          </a>
+        </div>
+      </article>
+
+      <!-- Future projects placeholder -->
+      <article class="project-card fade-in">
+        <h2>More Coming Soon</h2>
+        <p class="project-coming">I'm building new things. They'll show up here when they're ready — or when they fail. Either way, you'll hear about it.</p>
+      </article>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .projects-intro {
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .project-card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+  }
+
+  .project-card.featured {
+    border-color: var(--color-accent);
+    border-width: 2px;
+  }
+
+  .project-badge {
+    display: inline-block;
+    background: var(--color-tag-bg);
+    color: var(--color-tag-text);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .project-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-status {
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+  }
+
+  .project-section p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .project-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .project-coming {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .project-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
