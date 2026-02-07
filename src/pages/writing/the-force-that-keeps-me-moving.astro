@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/translations';
+
+const lang = 'en';
+const title = "The Force That Keeps Me Moving";
+const date = "2026-02-07";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Share</span>
+          <time datetime={date}>February 7, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <p>There was a moment when a simple number stopped me in my tracks. Thirty thousand. To most people, thirty thousand dollars feels like a meaningful amount of money. Thirty thousand yuan also sounds substantial. These numbers feel solid, heavy, and important. But when I shifted my attention from money to time, everything changed. A human life has roughly thirty thousand days. That realization hit me much harder than any financial number ever could.</p>
+
+        <p>Time looks abundant on the surface. It feels like something that keeps refilling itself. When you are young, days stretch long and slow, and the future feels endless. But once you pass eighteen, time behaves differently. Days begin to slip by unnoticed. Weeks disappear without memory. Years compress into brief flashes. Most people never consciously register how little time there actually is, and that is what scares me. Time is not scarce in appearance, but in reality, it is fragile, thin, and constantly leaking away.</p>
+
+        <p>This awareness became the strongest force pushing me forward. I am deeply afraid of wasting my time without realizing it. I am afraid of waking up one day and discovering that years have passed without anything meaningful built, without growth, without movement. That fear reshaped how I live. I stepped away from endless social media feeds designed to consume attention. I follow very few people. I only read what they intentionally share. I avoid infinite streams that turn hours into nothing. I limit my phone time not because technology is evil, but because my days matter. Once you truly understand how few they are, attention becomes something you guard fiercely.</p>
+
+        <p>There is another force that keeps me moving, and it comes from a different place. I want to prove that I am capable. I have been surrounded by brilliance. At Carnegie Mellon, I saw people who felt like pure geniuses, especially in coding. Watching them was intimidating, even confidence destroying at times. For a while, I believed that success belonged only to people born with exceptional talent. Later, I realized that this belief was incomplete. Not every successful founder is a genius. Not every impactful builder has extreme intelligence. Many of them are simply smart, persistent, and unwilling to stop. That realization rebuilt my confidence. You do not need to be extraordinary to do something meaningful. You need belief, discipline, and the ability to keep going.</p>
+
+        <p>I hold onto one idea tightly. Opportunities always exist. They are never evenly distributed, but they are always present. Someone will seize them. There is no reason that someone cannot be you. Complaining achieves nothing. Belief combined with action creates momentum. Momentum changes outcomes.</p>
+
+        <p>There is also anger inside me, and I do not deny it. Some people are born into wealth. Some people are blessed with early luck. They reach heights I have not reached yet. I am not satisfied with that reality. I am not at peace with being left behind. That frustration turns into fuel. I want to build something great, something that actually matters, something that changes something real. When I see people who I believe are less driven or less committed achieving more, it hurts. That pain sharpens me. It forces me to work harder, think deeper, and move faster.</p>
+
+        <p>When people ask me what I want to do in the future, I am honest. I do not know yet. I refuse to lie by naming something grand just to sound confident. I do not know the exact shape of what I will build. What I do know is how I will live while searching for it. I will not waste my time. I will not settle too early. I will not stop pushing myself forward.</p>
+
+        <p>Right now, I do not lack motivation. I feel surrounded by it. The fear of losing days, the belief in effort, the hunger to prove myself, and the desire to create something meaningful all combine into a single force. Thirty thousand days sound like a lot. They are not. Understanding that truth is what keeps me moving.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article {
+    max-width: 680px;
+    padding-bottom: 3rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    transition: color var(--transition);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .article-meta time {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+  }
+
+  .article-header h1 {
+    font-size: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .article-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--color-text);
+  }
+
+  .article-body p {
+    margin-bottom: 1.25rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .article-header h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

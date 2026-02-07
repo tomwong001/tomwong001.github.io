@@ -6,24 +6,24 @@ const lang = 'en';
 
 const sections = [
   {
-    icon: "💪",
     title: "Fitness & Discipline",
     content: "Training consistently is non-negotiable. It's not about aesthetics — it's about building the discipline that carries into everything else. The gym is where I practice showing up, especially on days I don't want to.",
+    image: null,
+    accent: "01"
   },
   {
-    icon: "🎵",
     title: "Music & Performance",
     content: "Music has been part of my life since I can remember. I play the erhu (a Chinese traditional instrument), sing at a semi-professional level, and am learning guitar. Street busking is one of my favorite ways to connect with people — raw, unfiltered, and completely honest.",
+    image: "/images/me_play_erhu_on_stage.JPG",
+    imageAlt: "Tom playing erhu on stage",
+    accent: "02"
   },
   {
-    icon: "📖",
     title: "Reading & Reflection",
     content: "I read across categories — product design, psychology, AI, business, philosophy. Reading is input. Writing is output. The combination is how I make sense of the world and form my own thinking.",
-  },
-  {
-    icon: "🎸",
-    title: "Street Busking",
-    content: "There's something powerful about performing for strangers. No safety net, no algorithm, no editing. Just you, your instrument, and whoever stops to listen. Every busking session is a lesson in presence and vulnerability.",
+    image: "/images/writing.png",
+    imageAlt: "Writing and reflection",
+    accent: "03"
   }
 ];
 ---
@@ -35,12 +35,23 @@ const sections = [
       <p class="subtitle">{t(lang, 'life.subtitle')}</p>
     </div>
 
-    <div class="life-grid">
-      {sections.map((section) => (
-        <article class="life-card fade-in">
-          <span class="life-icon">{section.icon}</span>
-          <h2>{section.title}</h2>
-          <p>{section.content}</p>
+    <div class="life-sections">
+      {sections.map((section, i) => (
+        <article class:list={['life-section', 'fade-in', { 'reverse': i % 2 !== 0 }]}>
+          <div class="life-text">
+            <span class="life-number">{section.accent}</span>
+            <h2>{section.title}</h2>
+            <p>{section.content}</p>
+          </div>
+          {section.image ? (
+            <div class="life-image">
+              <img src={section.image} alt={section.imageAlt} loading="lazy" />
+            </div>
+          ) : (
+            <div class="life-image life-image-placeholder">
+              <span class="placeholder-icon">💪</span>
+            </div>
+          )}
         </article>
       ))}
     </div>
@@ -48,52 +59,91 @@ const sections = [
 </Layout>
 
 <style>
-  .life-grid {
+  .life-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding-bottom: 3rem;
+  }
+
+  .life-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    padding-bottom: 2rem;
+    gap: 3rem;
+    align-items: center;
   }
 
-  .life-card {
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    transition: transform var(--transition), box-shadow var(--transition);
+  .life-section.reverse {
+    direction: rtl;
   }
 
-  .life-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  .life-section.reverse > * {
+    direction: ltr;
   }
 
-  .life-icon {
-    font-size: 2rem;
-    display: block;
+  .life-number {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: 0.1em;
     margin-bottom: 1rem;
   }
 
-  .life-card h2 {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
+  .life-text h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', var(--font-serif);
   }
 
-  .life-card p {
+  .life-text p {
     color: var(--color-text-muted);
-    line-height: 1.7;
+    line-height: 1.8;
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
+  }
+
+  .life-image {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--color-bg-alt);
+  }
+
+  .life-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .life-image:hover img {
+    transform: scale(1.03);
+  }
+
+  .life-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .placeholder-icon {
+    font-size: 4rem;
+    opacity: 0.4;
   }
 
   @media (max-width: 768px) {
-    .life-grid {
+    .life-section {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
-    .life-card {
-      padding: 1.5rem;
+    .life-section.reverse {
+      direction: ltr;
+    }
+
+    .life-image {
+      aspect-ratio: 16 / 9;
     }
   }
 </style>
-

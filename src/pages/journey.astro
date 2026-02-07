@@ -9,6 +9,8 @@ const chapters = [
     title: "Before I Knew What I Was Doing",
     content: "Growing up, I was always the kid who wanted to try everything — music, writing, investing, YouTube. I didn't have a plan. I had energy and curiosity, and I threw myself at anything that seemed interesting. That restlessness taught me something important: I wasn't looking for a hobby. I was looking for something worth building.",
     expandedContent: "The lesson I learned from those early years was simple: try new things, try different things when you're young. When you have a thought, go do it. You won't regret it because if you don't do it, you will regret it. That's why I keep trying new things. Music, writing, investing — these are things I've been doing all along. But if I find out that something is not for me, not my goal, not something I would do for life, I just try another thing. That's how I discovered what truly matters to me.",
+    image: "/images/writing.png",
+    imageAlt: "Writing — one of the things I never stopped doing",
     number: "01"
   },
   {
@@ -21,6 +23,8 @@ const chapters = [
     title: "The Startup That Failed",
     content: "Steplify.ai was born out of genuine conviction. I believed in the problem. I believed in the product. I put everything into it — time, energy, money. And it didn't work. The market wasn't ready, the resources weren't enough, and a hundred small things went wrong in ways I couldn't have predicted. It's dead now. But I'm not bitter about it.",
     expandedContent: "Steplify.ai was supposed to be the solution to workflow chaos. I built the MVP, talked to users, iterated on the product. But timing matters. The market wasn't ready. Resources were tight. And honestly, I made mistakes. I learned that building something great isn't just about the product — it's about timing, resources, team, and a hundred other factors. The failure was painful, but it was also the best education I could have asked for.",
+    image: "/images/MY_STARTUP_steplifyai.png",
+    imageAlt: "Steplify.ai — the startup that taught me everything",
     number: "03"
   },
   {
@@ -62,6 +66,11 @@ const chapters = [
           <p class="chapter-content">{chapter.content}</p>
           <div class="chapter-expanded">
             <p class="chapter-expanded-content">{chapter.expandedContent}</p>
+            {chapter.image && (
+              <div class="chapter-image">
+                <img src={chapter.image} alt={chapter.imageAlt} loading="lazy" />
+              </div>
+            )}
           </div>
         </article>
       ))}
@@ -173,9 +182,31 @@ const chapters = [
     margin: 0;
   }
 
+  .chapter-image {
+    margin-top: 2rem;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    max-height: 400px;
+  }
+
+  .chapter-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .chapter-image:hover img {
+    transform: scale(1.02);
+  }
+
   @media (max-width: 768px) {
     .chapter-card {
       padding: 1.5rem;
+    }
+
+    .chapter-image {
+      max-height: 250px;
     }
   }
 </style>

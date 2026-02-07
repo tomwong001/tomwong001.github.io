@@ -9,6 +9,8 @@ const chapters = [
     title: "在我还不知道自己在干什么的时候",
     content: "从小到大，我总是那个什么都想尝试的人 —— 音乐、写作、投资、哔哩哔哩。我没有计划，只有精力和好奇心，看到什么有趣的就冲上去。那种不安分教会了我一件事：我不是在找爱好，我在找值得建造的东西。",
     expandedContent: "我从那些早期经历中学到的教训很简单：年轻时要尝试新事物，尝试不同的事物。当你有想法时，就去做。你不会后悔，因为如果你不去做，你才会后悔。这就是为什么我一直在尝试新事物。音乐、写作、投资 —— 这些都是我一直在做的事情。但如果我发现某件事不适合我，不是我的目标，不是我愿意为之付出一生的事情，我就去尝试另一件事。这就是我如何发现什么对我真正重要。",
+    image: "/images/writing.png",
+    imageAlt: "写作 —— 一直没有停止的事情",
     number: "01"
   },
   {
@@ -21,6 +23,8 @@ const chapters = [
     title: "那个失败的创业",
     content: "Steplify.ai 诞生于真正的信念。我相信那个问题，我相信那个产品。我投入了一切 —— 时间、精力、金钱。但它没有成功。市场还没准备好，资源不够，还有一百件小事以我无法预料的方式出了错。它现在已经死了。但我对此并不苦涩。",
     expandedContent: "Steplify.ai 本应该是解决工作流混乱的方案。我构建了MVP，和用户交流，迭代产品。但时机很重要。市场还没准备好。资源紧张。说实话，我犯了错误。我学到了建造伟大的东西不仅仅是关于产品 —— 它关乎时机、资源、团队，以及一百个其他因素。失败是痛苦的，但它也是我能得到的最好的教育。",
+    image: "/images/MY_STARTUP_steplifyai.png",
+    imageAlt: "Steplify.ai —— 教会了我一切的创业项目",
     number: "03"
   },
   {
@@ -62,6 +66,11 @@ const chapters = [
           <p class="chapter-content">{chapter.content}</p>
           <div class="chapter-expanded">
             <p class="chapter-expanded-content">{chapter.expandedContent}</p>
+            {chapter.image && (
+              <div class="chapter-image">
+                <img src={chapter.image} alt={chapter.imageAlt} loading="lazy" />
+              </div>
+            )}
           </div>
         </article>
       ))}
@@ -173,9 +182,31 @@ const chapters = [
     margin: 0;
   }
 
+  .chapter-image {
+    margin-top: 2rem;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    max-height: 400px;
+  }
+
+  .chapter-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .chapter-image:hover img {
+    transform: scale(1.02);
+  }
+
   @media (max-width: 768px) {
     .chapter-card {
       padding: 1.5rem;
+    }
+
+    .chapter-image {
+      max-height: 250px;
     }
   }
 </style>

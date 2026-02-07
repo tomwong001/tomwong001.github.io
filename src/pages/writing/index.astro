@@ -7,11 +7,21 @@ const lang = 'en';
 // Sample posts data - in a real setup these would come from markdown content collections
 const posts = [
   {
+    title: "The Force That Keeps Me Moving",
+    date: "2026-02-07",
+    type: "share",
+    slug: "the-force-that-keeps-me-moving",
+    excerpt: "A simple number changed everything. Thirty thousand days. That's roughly how many days a human life has. This realization reshaped how I live, work, and think about time.",
+    image: "/images/theforCETHATKEEPSMEmoving.jpg",
+    comingSoon: false
+  },
+  {
     title: "Why I'm Building in Public",
     date: "2026-02-01",
     type: "reflection",
     slug: "building-in-public",
     excerpt: "The decision to document everything publicly wasn't easy. Here's why I chose transparency over polish, and what I hope to gain from it.",
+    image: "/images/buildinpujblic.png",
     comingSoon: false
   },
   {
@@ -36,6 +46,7 @@ function getTypeLabel(type: string): string {
   const labels: Record<string, string> = {
     'note': 'Note',
     'reflection': 'Reflection',
+    'share': 'Share',
     'product-thought': 'Product',
     'ai-commentary': 'AI',
     'learning-log': 'Learning Log'
@@ -57,22 +68,31 @@ function getTypeLabel(type: string): string {
       {posts.map((post) => (
         post.comingSoon ? (
           <article class="post-card coming-soon fade-in">
-            <div class="post-meta">
-              <span class="tag">{getTypeLabel(post.type)}</span>
-              <span class="coming-soon-badge">Coming Soon</span>
+            <div class="post-body">
+              <div class="post-meta">
+                <span class="tag">{getTypeLabel(post.type)}</span>
+                <span class="coming-soon-badge">Coming Soon</span>
+              </div>
+              <h2 class="post-title">{post.title}</h2>
+              <p class="post-excerpt">{post.excerpt}</p>
             </div>
-            <h2 class="post-title">{post.title}</h2>
-            <p class="post-excerpt">{post.excerpt}</p>
           </article>
         ) : (
           <a href={`/writing/${post.slug}/`} class="post-link">
             <article class="post-card fade-in">
-              <div class="post-meta">
-                <span class="tag">{getTypeLabel(post.type)}</span>
-                <span class="post-date">{formatDate(post.date)}</span>
+              {post.image && (
+                <div class="post-image">
+                  <img src={post.image} alt={post.title} loading="lazy" />
+                </div>
+              )}
+              <div class="post-body">
+                <div class="post-meta">
+                  <span class="tag">{getTypeLabel(post.type)}</span>
+                  <span class="post-date">{formatDate(post.date)}</span>
+                </div>
+                <h2 class="post-title">{post.title}</h2>
+                <p class="post-excerpt">{post.excerpt}</p>
               </div>
-              <h2 class="post-title">{post.title}</h2>
-              <p class="post-excerpt">{post.excerpt}</p>
             </article>
           </a>
         )
@@ -107,19 +127,40 @@ function getTypeLabel(type: string): string {
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    padding: 2rem;
-    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    overflow: hidden;
+    transition: all var(--transition-slow);
     cursor: pointer;
   }
 
+  .post-body {
+    padding: 1.75rem 2rem;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
   .post-link:hover .post-card {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(28, 25, 23, 0.1);
     border-color: var(--color-accent);
   }
 
+  .post-link:hover .post-image img {
+    transform: scale(1.05);
+  }
+
   .post-card.coming-soon {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: default;
   }
 
@@ -129,13 +170,14 @@ function getTypeLabel(type: string): string {
   }
 
   .coming-soon-badge {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: var(--color-text-light);
     background: var(--color-bg-alt);
-    padding: 0.2rem 0.6rem;
+    padding: 0.25rem 0.75rem;
     border-radius: 9999px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   .post-meta {

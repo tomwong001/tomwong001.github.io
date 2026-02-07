@@ -1,0 +1,100 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { t } from '../../../i18n/translations';
+
+const lang = 'zh';
+const title = "让我持续前进的力量";
+const date = "2026-02-07";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回写作</a>
+        <div class="article-meta">
+          <span class="tag">分享</span>
+          <time datetime={date}>2026年2月7日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <p>有一个瞬间，一个简单的数字让我停下了脚步。三万。对大多数人来说，三万美元听起来是一笔不小的钱。三万元人民币听起来也很可观。这些数字感觉坚实、沉重、重要。但当我从金钱转向时间，一切都变了。一个人的一生大约有三万天。这个认知给我的冲击比任何财务数字都要大得多。</p>
+
+        <p>时间表面上看起来很充裕。它感觉像是会不断自我补充的东西。当你年轻的时候，日子拉得很长很慢，未来感觉没有尽头。但一旦你过了十八岁，时间的行为就不同了。日子开始悄无声息地溜走。周消失了，没有记忆。年压缩成短暂的闪光。大多数人从未有意识地意识到时间实际上有多么少，这就是让我害怕的地方。时间看起来不稀缺，但实际上，它是脆弱的、薄的，在不断流失。</p>
+
+        <p>这种意识成了推动我前进的最强力量。我深深害怕在不知不觉中浪费我的时间。我害怕有一天醒来，发现几年过去了，却没有建造任何有意义的东西，没有成长，没有进步。那种恐惧重塑了我的生活方式。我远离了那些设计来消耗注意力的无尽社交媒体信息流。我关注的人很少。我只读他们有意分享的内容。我避免那些把时间变成虚无的无限流。我限制手机使用时间，不是因为技术是邪恶的，而是因为我的日子很重要。一旦你真正理解它们有多么少，注意力就成了你拼命守护的东西。</p>
+
+        <p>还有另一种力量推动我前进，它来自不同的地方。我想证明我是有能力的。我一直被才华包围。在卡内基梅隆，我看到了一些感觉像纯粹天才的人，尤其是在编程方面。看着他们很吓人，有时甚至会摧毁信心。有一段时间，我相信成功只属于那些天生就有非凡天赋的人。后来，我意识到这种信念是不完整的。不是每个成功的创始人都天才。不是每个有影响力的建造者都有极高的智力。他们中的许多人只是聪明、坚持、不愿意停下来。这个认知重建了我的信心。你不需要非凡才能做有意义的事情。你需要信念、纪律和继续前进的能力。</p>
+
+        <p>我紧紧抓住一个想法。机会总是存在的。它们从不均匀分布，但它们总是存在。有人会抓住它们。没有理由那个人不能是你。抱怨什么也得不到。信念加上行动创造动力。动力改变结果。</p>
+
+        <p>我内心也有愤怒，我不否认。有些人出生在财富中。有些人被早期的运气祝福。他们达到了我还没有达到的高度。我对那个现实不满意。我不甘心被落下。那种挫败感变成了燃料。我想建造一些伟大的东西，一些真正重要的东西，一些能改变真实世界的东西。当我看到那些我认为不那么有动力或不够投入的人取得更多成就时，这很痛苦。那种痛苦让我变得锋利。它迫使我更努力地工作，更深入地思考，更快地行动。</p>
+
+        <p>当人们问我未来想做什么时，我很诚实。我还不知道。我拒绝为了听起来自信而编造一些宏大的东西。我不知道我将建造的东西的确切形状。我知道的是我在寻找它的过程中将如何生活。我不会浪费我的时间。我不会过早地安于现状。我不会停止推动自己前进。</p>
+
+        <p>现在，我不缺乏动力。我感觉被它包围着。对失去日子的恐惧，对努力的信念，证明自己的渴望，以及创造有意义的东西的欲望，所有这些都结合成一股力量。三万天听起来很多。它们不是。理解这个真相就是让我持续前进的原因。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article {
+    max-width: 680px;
+    padding-bottom: 3rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    transition: color var(--transition);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .article-meta time {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+  }
+
+  .article-header h1 {
+    font-size: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .article-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--color-text);
+  }
+
+  .article-body p {
+    margin-bottom: 1.25rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 768px) {
+    .article-header h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
