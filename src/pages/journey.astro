@@ -7,27 +7,32 @@ const lang = 'en';
 const chapters = [
   {
     title: "Before I Knew What I Was Doing",
-    content: "Growing up, I was always the kid who wanted to try everything — music, writing, trading, YouTube. I didn't have a plan. I had energy and curiosity, and I threw myself at anything that seemed interesting. Most of it didn't stick, but that restlessness taught me something important: I wasn't looking for a hobby. I was looking for something worth building.",
+    content: "Growing up, I was always the kid who wanted to try everything — music, writing, investing, YouTube. I didn't have a plan. I had energy and curiosity, and I threw myself at anything that seemed interesting. That restlessness taught me something important: I wasn't looking for a hobby. I was looking for something worth building.",
+    expandedContent: "The lesson I learned from those early years was simple: try new things, try different things when you're young. When you have a thought, go do it. You won't regret it because if you don't do it, you will regret it. That's why I keep trying new things. Music, writing, investing — these are things I've been doing all along. But if I find out that something is not for me, not my goal, not something I would do for life, I just try another thing. That's how I discovered what truly matters to me.",
     number: "01"
   },
   {
     title: "The First Time I Tried to Build Something Real",
     content: "College at UCSD opened a new world. Data science, engineering, the first taste of what technology could actually do. Then CMU sharpened everything — systems thinking, product design, the craft of building. I started to see that the gap between an idea and something real was bridged by one thing: execution. I wanted to be on the execution side.",
+    expandedContent: "UCSD gave me the foundation — data structures, algorithms, the basics of how software actually works. CMU pushed me further. I learned to think in systems, to design for users, to ship products that people actually used. That's when I realized: ideas are everywhere. Execution is rare. I wanted to be someone who executed.",
     number: "02"
   },
   {
     title: "The Startup That Failed",
     content: "Steplify.ai was born out of genuine conviction. I believed in the problem. I believed in the product. I put everything into it — time, energy, money. And it didn't work. The market wasn't ready, the resources weren't enough, and a hundred small things went wrong in ways I couldn't have predicted. It's dead now. But I'm not bitter about it.",
+    expandedContent: "Steplify.ai was supposed to be the solution to workflow chaos. I built the MVP, talked to users, iterated on the product. But timing matters. The market wasn't ready. Resources were tight. And honestly, I made mistakes. I learned that building something great isn't just about the product — it's about timing, resources, team, and a hundred other factors. The failure was painful, but it was also the best education I could have asked for.",
     number: "03"
   },
   {
     title: "Why That Failure Clarified Everything",
     content: "Steplify failing didn't make me want to stop. It made me want to build better. I learned more from that one failure than from any class or job. I learned about timing, about product-market fit, about what it really costs to build something from zero. Most importantly, I learned that building is my path — not because it's easy, but because nothing else feels as real.",
+    expandedContent: "Failure taught me that building is hard, but it's also the only thing that makes sense. I learned to appreciate the process, not just the outcome. I learned that every failure is data, every mistake is a lesson. Most importantly, I confirmed that building — creating something from nothing — is what I'm meant to do. The path forward became clear: keep building, keep learning, keep shipping.",
     number: "04"
   },
   {
     title: "What I'm Building Toward Now",
     content: "I'm working as an AI Product Manager now — building systems, tools, and workflows that matter. But the job is context, not the destination. The real mission is bigger: build things that compound over time, share the process honestly, and attract people who think the same way. This website is part of that. Everything I do from here is in public.",
+    expandedContent: "Right now, I'm focused on building data platforms that matter. But more than that, I'm building a practice of building in public — sharing what I learn, documenting the process, and connecting with others who are on the same path. This website is part of that mission. It's a living document of growth, a signal of what I care about, and an invitation to connect with people who think similarly.",
     number: "05"
   }
 ];
@@ -41,11 +46,23 @@ const chapters = [
     </div>
 
     <div class="chapters">
-      {chapters.map((chapter) => (
-        <article class="chapter-card fade-in">
-          <span class="chapter-number">{chapter.number}</span>
-          <h2 class="chapter-title">{chapter.title}</h2>
+      {chapters.map((chapter, index) => (
+        <article class="chapter-card fade-in" data-chapter-index={index}>
+          <div class="chapter-header" data-chapter-toggle>
+            <div class="chapter-header-content">
+              <span class="chapter-number">{chapter.number}</span>
+              <h2 class="chapter-title">{chapter.title}</h2>
+            </div>
+            <button class="chapter-toggle" aria-label="Toggle chapter details">
+              <svg class="toggle-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
           <p class="chapter-content">{chapter.content}</p>
+          <div class="chapter-expanded">
+            <p class="chapter-expanded-content">{chapter.expandedContent}</p>
+          </div>
         </article>
       ))}
     </div>
@@ -66,12 +83,28 @@ const chapters = [
     border-radius: var(--radius-lg);
     padding: 2.5rem;
     position: relative;
-    transition: transform var(--transition), box-shadow var(--transition);
+    transition: all var(--transition-slow);
+    cursor: pointer;
   }
 
   .chapter-card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .chapter-card.expanded {
+    border-color: var(--color-accent);
+  }
+
+  .chapter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .chapter-header-content {
+    flex: 1;
   }
 
   .chapter-number {
@@ -87,11 +120,54 @@ const chapters = [
 
   .chapter-title {
     font-size: 1.375rem;
-    margin-bottom: 1rem;
+    margin: 0;
     letter-spacing: -0.02em;
   }
 
+  .chapter-toggle {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: transform var(--transition), color var(--transition);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chapter-toggle:hover {
+    color: var(--color-accent);
+  }
+
+  .chapter-card.expanded .chapter-toggle {
+    transform: rotate(180deg);
+  }
+
+  .toggle-icon {
+    transition: transform var(--transition);
+  }
+
   .chapter-content {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .chapter-expanded {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow), margin-top var(--transition-slow);
+    margin-top: 0;
+  }
+
+  .chapter-card.expanded .chapter-expanded {
+    max-height: 5000px;
+    margin-top: 2rem;
+  }
+
+  .chapter-expanded-content {
     color: var(--color-text-muted);
     line-height: 1.8;
     margin: 0;
@@ -103,4 +179,29 @@ const chapters = [
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.chapter-card');
+    
+    cards.forEach((card) => {
+      const toggle = card.querySelector('.chapter-header');
+      
+      toggle?.addEventListener('click', (e) => {
+        // Don't toggle if clicking directly on the button
+        if ((e.target as HTMLElement).closest('.chapter-toggle')) {
+          return;
+        }
+        
+        card.classList.toggle('expanded');
+      });
+
+      const toggleButton = card.querySelector('.chapter-toggle');
+      toggleButton?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        card.classList.toggle('expanded');
+      });
+    });
+  });
+</script>
 

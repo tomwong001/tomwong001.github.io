@@ -7,27 +7,32 @@ const lang = 'zh';
 const chapters = [
   {
     title: "在我还不知道自己在干什么的时候",
-    content: "从小到大，我总是那个什么都想尝试的人 —— 音乐、写作、炒股、YouTube。我没有计划，只有精力和好奇心，看到什么有趣的就冲上去。大部分都没坚持下来，但那种不安分教会了我一件事：我不是在找爱好，我在找值得建造的东西。",
+    content: "从小到大，我总是那个什么都想尝试的人 —— 音乐、写作、投资、哔哩哔哩。我没有计划，只有精力和好奇心，看到什么有趣的就冲上去。那种不安分教会了我一件事：我不是在找爱好，我在找值得建造的东西。",
+    expandedContent: "我从那些早期经历中学到的教训很简单：年轻时要尝试新事物，尝试不同的事物。当你有想法时，就去做。你不会后悔，因为如果你不去做，你才会后悔。这就是为什么我一直在尝试新事物。音乐、写作、投资 —— 这些都是我一直在做的事情。但如果我发现某件事不适合我，不是我的目标，不是我愿意为之付出一生的事情，我就去尝试另一件事。这就是我如何发现什么对我真正重要。",
     number: "01"
   },
   {
     title: "第一次尝试做一些真实的东西",
     content: "在UCSD读本科打开了一个新世界 —— 数据科学、工程学，第一次尝到技术真正能做什么的味道。然后CMU磨砺了一切 —— 系统思维、产品设计、建造的手艺。我开始明白，想法和现实之间的桥梁只有一个：执行力。我想站在执行的那一边。",
+    expandedContent: "UCSD给了我基础 —— 数据结构、算法、软件如何真正工作的基础知识。CMU把我推得更远。我学会了系统思维，为用户设计，交付人们真正使用的产品。那时我意识到：想法到处都是。执行力很罕见。我想成为一个有执行力的人。",
     number: "02"
   },
   {
     title: "那个失败的创业",
     content: "Steplify.ai 诞生于真正的信念。我相信那个问题，我相信那个产品。我投入了一切 —— 时间、精力、金钱。但它没有成功。市场还没准备好，资源不够，还有一百件小事以我无法预料的方式出了错。它现在已经死了。但我对此并不苦涩。",
+    expandedContent: "Steplify.ai 本应该是解决工作流混乱的方案。我构建了MVP，和用户交流，迭代产品。但时机很重要。市场还没准备好。资源紧张。说实话，我犯了错误。我学到了建造伟大的东西不仅仅是关于产品 —— 它关乎时机、资源、团队，以及一百个其他因素。失败是痛苦的，但它也是我能得到的最好的教育。",
     number: "03"
   },
   {
     title: "为什么那次失败让一切变清晰了",
     content: "Steplify的失败没有让我想停下来，反而让我想做得更好。我从那一次失败中学到的比任何课程或工作都多。我学到了关于时机、产品市场匹配、以及从零开始真正需要付出什么的道理。最重要的是，我确认了建造就是我的路 —— 不是因为容易，而是因为没有什么比这更真实。",
+    expandedContent: "失败教会我建造很难，但它也是唯一有意义的事。我学会了欣赏过程，而不仅仅是结果。我学会了每一次失败都是数据，每一个错误都是教训。最重要的是，我确认了建造 —— 从无到有创造东西 —— 就是我应该做的事。前进的道路变得清晰：继续建造，继续学习，继续交付。",
     number: "04"
   },
   {
     title: "我现在在朝什么方向建造",
     content: "我现在是一名AI产品经理 —— 构建系统、工具和有意义的工作流。但工作只是背景，不是终点。真正的使命更大：建造能随时间复利的东西，诚实地分享过程，吸引有同样想法的人。这个网站就是其中一部分。从现在起，我做的一切都是公开的。",
+    expandedContent: "现在，我专注于构建有意义的数据平台。但更重要的是，我正在建立一种公开建造的实践 —— 分享我学到的东西，记录过程，并与走同一条路的人建立联系。这个网站就是那个使命的一部分。它是成长的活文档，是我关心什么的信号，也是与有相似想法的人联系的邀请。",
     number: "05"
   }
 ];
@@ -41,11 +46,23 @@ const chapters = [
     </div>
 
     <div class="chapters">
-      {chapters.map((chapter) => (
-        <article class="chapter-card fade-in">
-          <span class="chapter-number">{chapter.number}</span>
-          <h2 class="chapter-title">{chapter.title}</h2>
+      {chapters.map((chapter, index) => (
+        <article class="chapter-card fade-in" data-chapter-index={index}>
+          <div class="chapter-header" data-chapter-toggle>
+            <div class="chapter-header-content">
+              <span class="chapter-number">{chapter.number}</span>
+              <h2 class="chapter-title">{chapter.title}</h2>
+            </div>
+            <button class="chapter-toggle" aria-label="切换章节详情">
+              <svg class="toggle-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
           <p class="chapter-content">{chapter.content}</p>
+          <div class="chapter-expanded">
+            <p class="chapter-expanded-content">{chapter.expandedContent}</p>
+          </div>
         </article>
       ))}
     </div>
@@ -66,12 +83,28 @@ const chapters = [
     border-radius: var(--radius-lg);
     padding: 2.5rem;
     position: relative;
-    transition: transform var(--transition), box-shadow var(--transition);
+    transition: all var(--transition-slow);
+    cursor: pointer;
   }
 
   .chapter-card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .chapter-card.expanded {
+    border-color: var(--color-accent);
+  }
+
+  .chapter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .chapter-header-content {
+    flex: 1;
   }
 
   .chapter-number {
@@ -87,11 +120,54 @@ const chapters = [
 
   .chapter-title {
     font-size: 1.375rem;
-    margin-bottom: 1rem;
+    margin: 0;
     letter-spacing: -0.02em;
   }
 
+  .chapter-toggle {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: transform var(--transition), color var(--transition);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chapter-toggle:hover {
+    color: var(--color-accent);
+  }
+
+  .chapter-card.expanded .chapter-toggle {
+    transform: rotate(180deg);
+  }
+
+  .toggle-icon {
+    transition: transform var(--transition);
+  }
+
   .chapter-content {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .chapter-expanded {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow), margin-top var(--transition-slow);
+    margin-top: 0;
+  }
+
+  .chapter-card.expanded .chapter-expanded {
+    max-height: 5000px;
+    margin-top: 2rem;
+  }
+
+  .chapter-expanded-content {
     color: var(--color-text-muted);
     line-height: 1.8;
     margin: 0;
@@ -103,4 +179,29 @@ const chapters = [
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.chapter-card');
+    
+    cards.forEach((card) => {
+      const toggle = card.querySelector('.chapter-header');
+      
+      toggle?.addEventListener('click', (e) => {
+        // Don't toggle if clicking directly on the button
+        if ((e.target as HTMLElement).closest('.chapter-toggle')) {
+          return;
+        }
+        
+        card.classList.toggle('expanded');
+      });
+
+      const toggleButton = card.querySelector('.chapter-toggle');
+      toggleButton?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        card.classList.toggle('expanded');
+      });
+    });
+  });
+</script>
 

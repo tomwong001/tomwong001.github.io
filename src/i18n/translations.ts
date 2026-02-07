@@ -40,8 +40,8 @@ export const translations = {
     'about.section3.title': "Context",
     'about.section3.text1': "UCSD → CMU → Yale → the real world. Background in engineering and AI.",
     'about.section3.text2': "Founded Steplify.ai — a startup that didn't make it, but taught me everything.",
-    'about.section3.text3': "Currently working as an AI Product Manager, building systems that matter.",
-    'about.section3.text4': "Long-term interest: AI systems, products, and meaningful technology.",
+    'about.section3.text3': "Currently working as an AI Product Manager, building data platforms.",
+    'about.section3.text4': "Making the world a better place.",
 
     // Journey
     'journey.title': "How I Got Here",
@@ -113,8 +113,8 @@ export const translations = {
     'about.section3.title': "背景",
     'about.section3.text1': "UCSD → CMU → Yale → 真实世界。工程与AI背景。",
     'about.section3.text2': "创办了 Steplify.ai —— 一个没成功的创业，但它教会了我一切。",
-    'about.section3.text3': "目前担任AI产品经理，构建有意义的系统。",
-    'about.section3.text4': "长期兴趣：AI系统、产品与有意义的技术。",
+    'about.section3.text3': "目前担任AI产品经理，构建数据平台。",
+    'about.section3.text4': "让世界变得更美好。",
 
     // Journey
     'journey.title': "我的旅程",
