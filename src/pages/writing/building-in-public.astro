@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/translations';
+
+const lang = 'en';
+const title = "Why I'm Building in Public";
+const date = "2026-02-01";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Reflection</span>
+          <time datetime={date}>February 1, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <p>The decision to document everything publicly wasn't easy. There's a natural instinct to wait — wait until you have something polished, something impressive, something "ready." But I've learned that waiting is just another form of hiding.</p>
+
+        <h2>Why Public?</h2>
+        <p>Building in public forces honesty. When you share your process — not just your results — you can't fake it. You can't pretend every decision was brilliant or every outcome was planned. And that honesty is exactly the point.</p>
+        <p>I want people to see the real thing: the messy drafts, the failed experiments, the moments of doubt. Because that's what building actually looks like. The polished version is a lie by omission.</p>
+
+        <h2>What I Hope to Gain</h2>
+        <p>This isn't about attention or followers. It's about three things:</p>
+        <ul>
+          <li><strong>Accountability.</strong> When you say you're going to do something publicly, you actually do it.</li>
+          <li><strong>Connection.</strong> The right people find you when you show who you really are — not a curated highlight reel.</li>
+          <li><strong>Compounding.</strong> Every post, every note, every update is a brick. Over time, they build something that no single piece could achieve alone.</li>
+        </ul>
+
+        <h2>The Fear</h2>
+        <p>Yes, there's fear. Fear of being judged. Fear of saying something wrong. Fear of looking like a beginner. But I'd rather be someone who tried and documented it than someone who waited for perfection and never started.</p>
+
+        <h2>Starting Now</h2>
+        <p>This website is the beginning. Not the polished version — the real version. I'll update it, break it, fix it, and keep going. That's the whole point.</p>
+        <p>If you're reading this, you're seeing the first brick. There will be many more.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article {
+    max-width: 680px;
+    padding-bottom: 3rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    transition: color var(--transition);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .article-meta time {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+  }
+
+  .article-header h1 {
+    font-size: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .article-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--color-text);
+  }
+
+  .article-body h2 {
+    font-size: 1.35rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .article-body p {
+    margin-bottom: 1.25rem;
+    color: var(--color-text-muted);
+  }
+
+  .article-body ul {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-body li {
+    margin-bottom: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+
+  .article-body strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .article-header h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

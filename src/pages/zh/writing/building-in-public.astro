@@ -1,0 +1,128 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { t } from '../../../i18n/translations';
+
+const lang = 'zh';
+const title = "为什么我选择公开构建";
+const date = "2026-02-01";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回写作</a>
+        <div class="article-meta">
+          <span class="tag">反思</span>
+          <time datetime={date}>2026年2月1日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <p>选择公开记录一切并不容易。人有一种本能的冲动想要等待 —— 等到有了打磨好的东西，有了令人印象深刻的东西，有了"准备好"的东西。但我学到了，等待只是另一种形式的躲藏。</p>
+
+        <h2>为什么要公开？</h2>
+        <p>公开构建迫使你诚实。当你分享你的过程 —— 而不仅仅是结果 —— 你没法伪装。你没法假装每一个决定都是英明的，每一个结果都是计划好的。而那种诚实恰恰就是重点。</p>
+        <p>我希望人们看到真实的东西：混乱的草稿、失败的实验、怀疑的时刻。因为那才是建造真正的样子。打磨后的版本是一种省略式的谎言。</p>
+
+        <h2>我希望获得什么</h2>
+        <p>这不是为了关注或粉丝。这是关于三件事：</p>
+        <ul>
+          <li><strong>自律。</strong> 当你公开说要做某件事的时候，你真的会去做。</li>
+          <li><strong>连接。</strong> 当你展示真实的自己 —— 而不是精心策划的亮点集锦 —— 对的人会找到你。</li>
+          <li><strong>复利。</strong> 每一篇文章、每一条笔记、每一次更新都是一块砖。随着时间的推移，它们会建造出任何单独一块都无法实现的东西。</li>
+        </ul>
+
+        <h2>恐惧</h2>
+        <p>是的，有恐惧。害怕被评判。害怕说错话。害怕看起来像个新手。但我宁愿做一个尝试并记录下来的人，也不愿做一个等待完美却永远不开始的人。</p>
+
+        <h2>从现在开始</h2>
+        <p>这个网站就是开始。不是打磨过的版本 —— 是真实的版本。我会更新它、搞坏它、修复它，然后继续前进。这就是全部的意义。</p>
+        <p>如果你正在读这些，你看到的是第一块砖。还会有很多很多。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article {
+    max-width: 680px;
+    padding-bottom: 3rem;
+  }
+
+  .article-header {
+    margin-bottom: 3rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    transition: color var(--transition);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .article-meta time {
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+  }
+
+  .article-header h1 {
+    font-size: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+  }
+
+  .article-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--color-text);
+  }
+
+  .article-body h2 {
+    font-size: 1.35rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .article-body p {
+    margin-bottom: 1.25rem;
+    color: var(--color-text-muted);
+  }
+
+  .article-body ul {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-body li {
+    margin-bottom: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+
+  .article-body strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .article-header h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

@@ -10,35 +10,16 @@ const posts = [
     date: "2026-02-01",
     type: "reflection",
     slug: "building-in-public",
-    excerpt: "选择公开记录一切并不容易。这是我选择透明而非完美的原因，以及我希望从中获得什么。"
+    excerpt: "选择公开记录一切并不容易。这是我选择透明而非完美的原因，以及我希望从中获得什么。",
+    comingSoon: false
   },
   {
     title: "Steplify 教会我的关于产品市场匹配的一切",
     date: "2026-01-20",
     type: "product-thought",
     slug: "steplify-pmf",
-    excerpt: "我的创业失败了。但关于倾听用户、把握时机、以及信念与验证之间差距的教训，比任何成功都更有价值。"
-  },
-  {
-    title: "AI产品管理：没人告诉你的那些事",
-    date: "2026-01-10",
-    type: "ai-commentary",
-    slug: "ai-pm-reality",
-    excerpt: "每个人都在谈AI战略。但很少有人谈交付AI产品的真实混乱 —— 数据问题、边界情况、还有人的因素。"
-  },
-  {
-    title: "学习笔记：第3周",
-    date: "2026-01-05",
-    type: "learning-log",
-    slug: "learning-week-3",
-    excerpt: "这周：深入研究LLM评估框架，开始读《创业维艰》，健身刷新了个人纪录。"
-  },
-  {
-    title: "想和做之间的差距",
-    date: "2025-12-28",
-    type: "note",
-    slug: "thinking-vs-doing",
-    excerpt: "一个简短的思考：为什么执行永远胜过空想，以及当你发现自己困在脑子里时该怎么办。"
+    excerpt: "我的创业失败了。但关于倾听用户、把握时机、以及信念与验证之间差距的教训，比任何成功都更有价值。",
+    comingSoon: true
   }
 ];
 
@@ -73,14 +54,27 @@ function getTypeLabel(type: string): string {
 
     <div class="posts">
       {posts.map((post) => (
-        <article class="post-card fade-in">
-          <div class="post-meta">
-            <span class="tag">{getTypeLabel(post.type)}</span>
-            <span class="post-date">{formatDate(post.date)}</span>
-          </div>
-          <h2 class="post-title">{post.title}</h2>
-          <p class="post-excerpt">{post.excerpt}</p>
-        </article>
+        post.comingSoon ? (
+          <article class="post-card coming-soon fade-in">
+            <div class="post-meta">
+              <span class="tag">{getTypeLabel(post.type)}</span>
+              <span class="coming-soon-badge">待发布</span>
+            </div>
+            <h2 class="post-title">{post.title}</h2>
+            <p class="post-excerpt">{post.excerpt}</p>
+          </article>
+        ) : (
+          <a href={`/zh/writing/${post.slug}/`} class="post-link">
+            <article class="post-card fade-in">
+              <div class="post-meta">
+                <span class="tag">{getTypeLabel(post.type)}</span>
+                <span class="post-date">{formatDate(post.date)}</span>
+              </div>
+              <h2 class="post-title">{post.title}</h2>
+              <p class="post-excerpt">{post.excerpt}</p>
+            </article>
+          </a>
+        )
       ))}
     </div>
   </div>
@@ -102,18 +96,45 @@ function getTypeLabel(type: string): string {
     padding-bottom: 2rem;
   }
 
+  .post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
   .post-card {
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 2rem;
-    transition: transform var(--transition), box-shadow var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     cursor: pointer;
   }
 
-  .post-card:hover {
+  .post-link:hover .post-card {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    border-color: var(--color-accent);
+  }
+
+  .post-card.coming-soon {
+    opacity: 0.7;
+    cursor: default;
+  }
+
+  .post-card.coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .coming-soon-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    background: var(--color-bg-alt);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    letter-spacing: 0.03em;
   }
 
   .post-meta {

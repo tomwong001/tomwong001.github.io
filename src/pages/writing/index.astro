@@ -11,35 +11,16 @@ const posts = [
     date: "2026-02-01",
     type: "reflection",
     slug: "building-in-public",
-    excerpt: "The decision to document everything publicly wasn't easy. Here's why I chose transparency over polish, and what I hope to gain from it."
+    excerpt: "The decision to document everything publicly wasn't easy. Here's why I chose transparency over polish, and what I hope to gain from it.",
+    comingSoon: false
   },
   {
     title: "What Steplify Taught Me About Product-Market Fit",
     date: "2026-01-20",
     type: "product-thought",
     slug: "steplify-pmf",
-    excerpt: "My startup failed. But the lessons about listening to users, timing, and the gap between conviction and validation are worth more than any success."
-  },
-  {
-    title: "AI Product Management: What Nobody Tells You",
-    date: "2026-01-10",
-    type: "ai-commentary",
-    slug: "ai-pm-reality",
-    excerpt: "Everyone talks about AI strategy. Few talk about the messy reality of shipping AI products — the data problems, the edge cases, the human side."
-  },
-  {
-    title: "Notes on Learning: Week 3",
-    date: "2026-01-05",
-    type: "learning-log",
-    slug: "learning-week-3",
-    excerpt: "This week: deep dive into LLM evaluation frameworks, started reading 'The Hard Thing About Hard Things', and hit a new PR at the gym."
-  },
-  {
-    title: "The Gap Between Thinking and Doing",
-    date: "2025-12-28",
-    type: "note",
-    slug: "thinking-vs-doing",
-    excerpt: "A short thought on why execution beats ideation every time, and how to close the gap when you find yourself stuck in your head."
+    excerpt: "My startup failed. But the lessons about listening to users, timing, and the gap between conviction and validation are worth more than any success.",
+    comingSoon: true
   }
 ];
 
@@ -74,14 +55,27 @@ function getTypeLabel(type: string): string {
 
     <div class="posts">
       {posts.map((post) => (
-        <article class="post-card fade-in">
-          <div class="post-meta">
-            <span class="tag">{getTypeLabel(post.type)}</span>
-            <span class="post-date">{formatDate(post.date)}</span>
-          </div>
-          <h2 class="post-title">{post.title}</h2>
-          <p class="post-excerpt">{post.excerpt}</p>
-        </article>
+        post.comingSoon ? (
+          <article class="post-card coming-soon fade-in">
+            <div class="post-meta">
+              <span class="tag">{getTypeLabel(post.type)}</span>
+              <span class="coming-soon-badge">Coming Soon</span>
+            </div>
+            <h2 class="post-title">{post.title}</h2>
+            <p class="post-excerpt">{post.excerpt}</p>
+          </article>
+        ) : (
+          <a href={`/writing/${post.slug}/`} class="post-link">
+            <article class="post-card fade-in">
+              <div class="post-meta">
+                <span class="tag">{getTypeLabel(post.type)}</span>
+                <span class="post-date">{formatDate(post.date)}</span>
+              </div>
+              <h2 class="post-title">{post.title}</h2>
+              <p class="post-excerpt">{post.excerpt}</p>
+            </article>
+          </a>
+        )
       ))}
     </div>
   </div>
@@ -103,18 +97,45 @@ function getTypeLabel(type: string): string {
     padding-bottom: 2rem;
   }
 
+  .post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
   .post-card {
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 2rem;
-    transition: transform var(--transition), box-shadow var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     cursor: pointer;
   }
 
-  .post-card:hover {
+  .post-link:hover .post-card {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    border-color: var(--color-accent);
+  }
+
+  .post-card.coming-soon {
+    opacity: 0.7;
+    cursor: default;
+  }
+
+  .post-card.coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .coming-soon-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    background: var(--color-bg-alt);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    letter-spacing: 0.03em;
   }
 
   .post-meta {
