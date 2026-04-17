@@ -1,0 +1,102 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月10日";
+const date = "2026-04-10";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月10日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Meta 的新模型：Muse Spark</h2>
+        <p>Meta 之前的开源模型系列叫 Llama，现在他们放弃了这个路线，推出了全新的模型家族 <strong>Muse</strong>。首发的是 <strong>Muse Spark</strong>，定位是"小而快"的版本（相当于系列里的入门款）。负责人是 Alexandr Wang（Wang 的公司 Scale AI 之前被 Meta 收购），他带队用 <strong>9 个月</strong>从零重建了整个 AI 训练架构。</p>
+        <p>最重要的一个数字：<strong>10倍效率提升</strong>。同样的能力，只需要之前 Llama 4 Maverick 十分之一的算力。这在工程上是非常大的突破。</p>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1.25rem; font-size:0.9em;">
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <th style="padding:0.5rem; text-align:left;">测试项目</th>
+            <th style="padding:0.5rem; text-align:left;">Muse Spark</th>
+            <th style="padding:0.5rem; text-align:left;">Claude Opus</th>
+          </tr>
+          <tr><td style="padding:0.5rem;">CharXiv Reasoning（数学推理）</td><td style="padding:0.5rem;"><strong>86.4 ✅ 第一</strong></td><td style="padding:0.5rem;">低于 Spark</td></tr>
+          <tr><td style="padding:0.5rem;">HealthBench Hard（医疗问答）</td><td style="padding:0.5rem;"><strong>42.8 ✅ 碾压</strong></td><td style="padding:0.5rem;">14.8</td></tr>
+          <tr><td style="padding:0.5rem;">SWE-Bench Verified（写代码）</td><td style="padding:0.5rem;">77.4 ⚠️ 弱点</td><td style="padding:0.5rem;"><strong>80.8</strong></td></tr>
+        </table>
+        <p>医疗方向特别强——因为训练数据是由 1000 多名医生亲自筛选标注的。代码是当前公认的弱点，但对于一个全新架构的 v1 来说已经很不错。</p>
+        <p><strong>Contemplating 模式（沉思模式）</strong>= 并行多智能体推理——不是一个模型在单独想，而是多个子 agent 并行推理，最后汇总结果。</p>
+        <p><strong>战略转变：从开源到闭源。</strong>Meta 这次不再想做"AI 界的 Linux"，而是直接用 AI 赋能自己的产品矩阵（WhatsApp、Instagram、Threads、Ray-Ban 眼镜），直达数十亿普通用户。</p>
+        <p>排名：第 4（仅次于 Gemini 3.1 Pro、GPT-5.4、Claude Opus）。核心逻辑：不追求最强，追求效率极高 + 分发极广。用十分之一的算力达到顶尖水平，再通过几十亿用户的产品矩阵铺开——这是 Meta 独有的打法。</p>
+
+        <h2>Simon Willison 的发现：聊天框背后藏着 16 个工具</h2>
+        <p>研究者 Simon Willison 直接问 meta.ai 的聊天界面"你有哪些工具"，它老实回答了，暴露了 16 个隐藏工具：联网搜索 + 打开网页、代码解释器（Python 3.9）、生成可交互的 HTML/SVG 页面（类似 Claude Artifacts）、像素级物体识别、生成子 agent 来做分析和委托任务、搜索你自己的 Instagram/Threads/Facebook 帖子、编辑沙箱里的文件、连接 Google/Outlook 日历和邮件。</p>
+        <p>最有意思的是 <code>visual_grounding</code>：测试时用了一张 AI 生成的"浣熊坐在垃圾桶上戴垃圾帽"的图，它能精确识别出浣熊的 12 根胡须（每根的坐标）、8 个爪子、眼睛、耳朵、垃圾帽的位置框。这不是调用外部 API，而是<strong>模型本身的原生能力</strong>通过工具调用来实现的。</p>
+
+        <h2>我新的两个思考</h2>
+        <h2>一、AI 工具本质上是一种新型游戏</h2>
+        <p>Claude Code、Codex 这类"skills + AI"的软件，表面上是生产力工具，但从体验结构来看，它更接近于<strong>游戏的一种变体</strong>。游戏让人上瘾的核心机制叫做 <strong>agency（能动性）</strong>——你操作一个角色，角色真的在影响世界，这种"我的行动有效果"的即时反馈，是成瘾的根源。AI agent 工具给了你完全一样的感觉。</p>
+        <p>但它比游戏更有意思的地方在于：游戏的世界是封闭的，输了重来，代价可控。而 AI agent 操作的是<strong>真实世界</strong>——真实的文件、真实的部署、真实的后果。这让它兼具了游戏的爽感和现实世界的意义感，是一种前所未有的交互形态。</p>
+
+        <h2>二、Vibe Coding 之于传统编程，就像网络小说之于经典文学</h2>
+        <p>网络小说出现之前，"写了一部小说"是有门槛的事——你要打磨文笔，通过出版社的筛选，才能让人看到。网络小说打掉了守门人，写作和发表的门槛大幅下降，结果是小说的数量和种类爆炸式增长。</p>
+        <p>Vibe Coding 正在走同一条路。以前"做了一个软件"的门槛是：你得懂架构、懂调试、懂部署。现在门槛变成了：<strong>你有没有一个真实的需求</strong>。</p>
+        <p>这里面隐藏着一个新职业的雏形——<strong>不是写代码的人，而是能判断 AI 写的代码好不好用的人</strong>。就像网络小说催生了专业编辑和评分机制，Vibe Coding 也会催生出新的质量过滤层。守门人不会消失，只是换了一批人。</p>
+
+        <h2>LLM 训练并行策略全景图</h2>
+        <p><strong>一句话心智模型：</strong>训练 LLM 的所有 parallelism 都在回答同一个问题：当模型、数据、优化器状态、activation 这四样东西加起来装不下一张 GPU 的时候，沿着哪个维度切，谁留下、谁传出去、谁计算、谁通信。</p>
+        <ul>
+          <li><strong>DP（数据并行）</strong>：同一个模型复制到所有卡，每卡看不同 batch。通信：all-reduce 梯度（每 step 1 次）。</li>
+          <li><strong>TP（张量并行）</strong>：切权重矩阵（按列 or 按行）。通信：all-reduce activation（每 layer 2 次）。单机内，用 NVLink 高带宽。</li>
+          <li><strong>PP（流水线并行）</strong>：按层切开。通信：点对点（发 activation，收 gradient）。可跨机，低带宽可接受。</li>
+          <li><strong>SP（序列并行）</strong>：切 Activation 的 sequence 维度，大幅节省 activation 显存。通常和 TP 绑着用。</li>
+          <li><strong>CP（上下文并行）</strong>：seq ≥ 32K 时用，更激进的序列切分。</li>
+          <li><strong>EP（专家并行）</strong>：只有 MoE 模型用。</li>
+        </ul>
+        <h2>ZeRO：DP 上的分片优化</h2>
+        <ul>
+          <li><strong>ZeRO-1</strong>：分片 Optimizer states（Adam 的 m、v）——<strong>免费的午餐</strong>。</li>
+          <li><strong>ZeRO-2</strong>：+ 分片 Gradients</li>
+          <li><strong>ZeRO-3（= FSDP）</strong>：+ 分片 Weights 本身——极致节省，但通信代价更高</li>
+        </ul>
+        <h2>显存账本</h2>
+        <pre><code>Training memory ≈ 16 × N_params + activations
+
+Weights (bf16)        : 2 bytes × N_params
+Gradients (bf16)      : 2 bytes × N_params
+Adam states (fp32 m,v): 8 bytes × N_params
+Master weights (fp32) : 4 bytes × N_params</code></pre>
+        <p>7B 都已经装不下一张 80GB H100 的训练需求（100+ GB）。这就是为啥现在所有严肃的 LLM 训练都至少用 ZeRO-1 + TP。</p>
+        <h2>picotron vs nanotron 的关系</h2>
+        <p>picotron 教你"每个 parallelism 单独怎么运作"，nanotron 教你"它们怎么组合起来并且能 resume、能切 FP8、能切 sequence parallel"。前者是黑板，后者是工厂。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
