@@ -1,0 +1,89 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月9日";
+const date = "2026-04-09";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月9日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Generative Engine Optimization (GEO)</h2>
+        <p>这个也会是以后的重点。AI 模型已经开始在相互之间展示偏好——这创造了一个超越传统 SEO 的新优化维度。</p>
+
+        <h2>mythos：核武器级代码能力</h2>
+        <p>Mythos 在 SWE-bench Verified 上拿到 93.9%，比上一个版本的 80.8% 提升了整整 13 个百分点——"能碾压任何编程任务，包括寻找软件安全漏洞"。</p>
+        <p>我的理解：mythos 已经变成了一个核武器。不选择公开发布模型是因为谁都可以用它来寻找安全漏洞，可能会对现有的生态造成毁灭性的打击。就比如大家都是用枪械的时候突然来了个核武器。</p>
+        <p>Anthropic 没有将 Mythos 公开发布，而是启动了 Project Glasswing 计划，允许包括 AWS、Apple、Google、Microsoft、NVIDIA、Cisco、CrowdStrike、JPMorgan Chase 和 Linux Foundation 在内的少数合作伙伴使用该系统，提供了 1 亿美元的使用额度和 400 万美元用于开源安全相关工作。这一举措表明，尖端人工智能正迅速从令人印象深刻的测试结果，转变为具备实际应用价值的受控网络基础设施。</p>
+
+        <h2>picotron：动手做分布式训练（第一部分）</h2>
+        <p>用随机数据跑了一步训练，360M 参数的 LLaMA 模型。第一步结果：<strong>Loss = 11.0</strong></p>
+        <p>Loss = 11.0 合理吗？ln(49152) ≈ 10.8。随机猜 49152 个词中的一个，交叉熵就是 ~10.8。所以 11.0 说明模型还没学到任何东西，符合预期（才跑了一步）。</p>
+        <h2>分布式训练核心概念</h2>
+        <ul>
+          <li><strong>LOCAL_RANK</strong>：我是这台机器上的第几张 GPU，从 0 开始数。</li>
+          <li><strong>RANK（global rank）</strong>：我是全局的第几张 GPU。如果你有 2 台机器各 4 卡，那全局就有 8 张卡，RANK 从 0 到 7。</li>
+          <li><strong>WORLD_SIZE</strong>：总共几张 GPU 参与训练。</li>
+        </ul>
+        <p><strong>dist.barrier()</strong>：就是一道同步墙。所有 GPU 都必须到这里才能继续。想象 4 个人一起爬山，约好在山腰的亭子碰头——所有人到齐了，才一起继续往上走。</p>
+        <h2>语言模型的训练目标</h2>
+        <pre><code>input_ids  = [我, 爱, 吃]      → [5, 12, 8]
+target_ids = [爱, 吃, 苹果]    → [12, 8, 33]</code></pre>
+        <p>target 就是 input 往右移一位。模型学的是：给你前面的词，预测下一个词是什么。</p>
+
+        <h2>数据并行 Step 5 vs Step 6：朴素 vs Bucket</h2>
+        <p>Naive DP：每个参数单独做 all-reduce，同步执行。有几百个参数，就要做几百次 all-reduce 通信，效率低。</p>
+        <p>Bucket DP：把参数分组到 ~25MB 的桶里。一个桶里所有参数梯度就绪后，立刻启动异步 all-reduce（<code>async_op=True</code>）——计算和通信重叠。这就是 PyTorch DDP 的核心思想。</p>
+        <p>梯度精度：Naive 用 bf16（和参数一样），Bucket 用 float32 累加（更稳定，防止精度损失累积）。</p>
+
+        <h2>Pipeline Parallel：AFAB 和 1F1B 调度</h2>
+        <p>PP（流水线并行）是把模型<strong>按层切开</strong>：GPU 0 负责 Layer 0-7，GPU 1 负责 Layer 8-15，数据像流水线一样流过去。</p>
+        <p><strong>AFAB（All Forward All Backward）</strong>：先把所有 micro-batch 的前向全做完，再把所有反向全做完。简单但有大量 pipeline bubble——GPU 大量空闲等待。</p>
+        <p><strong>1F1B</strong>：前向和反向交替执行。Warmup 阶段填满流水线；Steady State 全力 1F1B；Cooldown 阶段排空流水线。空闲槽位只在 warmup 前面和 cooldown 后面，中间的 steady state 全在计算。</p>
+        <p>1F1B 还使用双向通信：在 steady state 阶段，一个 GPU 同时发送前向结果给下一个 stage，并接收来自下一个 stage 的反向梯度——打包成一次 <code>batch_isend_irecv</code> 调用。</p>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1.25rem; font-size:0.9em;">
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <th style="padding:0.5rem; text-align:left;"></th>
+            <th style="padding:0.5rem; text-align:left;">Step 5 Naive DP</th>
+            <th style="padding:0.5rem; text-align:left;">Step 6 Bucket DP</th>
+          </tr>
+          <tr><td style="padding:0.5rem;">通信方式</td><td style="padding:0.5rem;">同步，逐参数 all-reduce</td><td style="padding:0.5rem;">异步，按桶 all-reduce</td></tr>
+          <tr><td style="padding:0.5rem;">梯度精度</td><td style="padding:0.5rem;">bf16（和参数一样）</td><td style="padding:0.5rem;">float32 累加，更稳定</td></tr>
+          <tr><td style="padding:0.5rem;">计算/通信重叠</td><td style="padding:0.5rem;">无</td><td style="padding:0.5rem;">有（async_op=True）</td></tr>
+          <tr><td style="padding:0.5rem;">代码复杂度</td><td style="padding:0.5rem;">~30 行</td><td style="padding:0.5rem;">~220 行</td></tr>
+        </table>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
