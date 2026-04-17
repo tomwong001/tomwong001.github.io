@@ -1,0 +1,83 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月14日";
+const date = "2026-04-14";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月14日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>微信反截图</h2>
+        <p>如果你用 claude computer use 在一些软件上，可能会触发他的保护机制，比如反截图，截图出来都是空的。这是当前 computer-use 方式的一个根本性限制。</p>
+
+        <h2>nano vllm：prefill 和 decode 的本质</h2>
+        <p>一句话本质区别：</p>
+        <pre><code>Prefill:  100个token 同时进GPU  → 很快，GPU全力开工
+Decode:   每次只出1个token     → 慢，GPU大部分时间在等显存</code></pre>
+        <h2>Scheduler 管的是两个队列</h2>
+        <ul>
+          <li><strong>waiting 队列</strong>：新来的请求，还没开始处理</li>
+          <li><strong>running 队列</strong>：正在 decode 的请求（已经 prefill 完，正在一个个吐 token）</li>
+        </ul>
+        <p>每次 <code>schedule()</code> 的决策逻辑：有 waiting 里的请求 → 做 PREFILL，把它移到 running；没有 → 做 DECODE，处理所有 running 里的请求。这就是 continuous batching 的精髓。</p>
+        <p><strong>preempt（抢占）：</strong>如果显存不够了 → 把 running 里某个请求"踢回" waiting → 释放它占的 KV cache 显存 → 等有空间了再重新 prefill 它。</p>
+        <h2>KV Cache</h2>
+        <p>没有 KV cache 时：生成第 2 个字之前，对所有字重新算一遍 K 和 V——其中之前算过的全部重算，浪费。</p>
+        <p>KV cache 就是把算过的结果存起来：直接从显存读取已缓存的 K、V，只需要算新字的 K6、V6。</p>
+        <pre><code>KV cache = 草稿纸
+
+Prefill 阶段：把 prompt 里每个字的"理解结果"全写到草稿纸上
+Decode 阶段：每生成一个新字，只在草稿纸上加一行，不用重写前面的</code></pre>
+        <p>为什么 decode 慢：每生成 1 个 token，都要把整张"草稿纸"从显存读一遍。草稿纸越来越长 → 读的数据越来越多 → 瓶颈在显存带宽，不在计算。</p>
+        <h2>PagedAttention</h2>
+        <p>朴素 KV cache 的问题：连续内存分配。请求 A 的 cache 越来越长但 A 后面紧跟着 B，没地方扩展。</p>
+        <p>PagedAttention 的解法——像操作系统管内存一样管显存：把显存切成固定大小的"块"（每块 16 个 token 的 KV cache），请求用不连续的块——就像电脑硬盘的文件系统。</p>
+        <pre><code>请求A：  [块1] → [块3] → [块7]   ← 不连续没关系！
+请求B：  [块2] → [块5]
+请求C：  [块4] → [块6] → [块8]</code></pre>
+
+        <h2>Notion 分享：模型行为工程师（MBE）</h2>
+        <p>这个角色是数据科学家 + PM + 提示工程师的混合体。核心产出是 eval 和 LLM judge，而非功能代码。为什么不是软件工程师？大量工作是<strong>定性判断</strong>——理解"这个任务算失败还是成功"，背后需要品味和直觉。Notion 有意识地把这个岗位做成了<strong>独立晋升路径</strong>，欢迎"misfit"——背景可以不是工程，但必须有对"什么叫做得好"的判断力。</p>
+        <p>Notion 把 eval 分成三层：CI 中的回归测试（必须达标）、发布质量报告卡（80-90% 通过才能上线）、以及"前沿/余量 eval"（<strong>故意只过 30%</strong>，用于理解模型天花板在哪里）。MBE 团队专门负责第三层，相当于 Notion 的"自己的期末考试"。</p>
+        <h2>"软件工厂"的设计思路</h2>
+        <ul>
+          <li><strong>规范层（Spec）：</strong>用 Markdown 文件提交到代码仓库。要求人类可读、可浏览、可修改，是 agent 行动的"宪法"。</li>
+          <li><strong>自验证（Self-verification）：</strong>需要非常完善的测试层，agent 能够执行代码、看到测试结果、自己 debug、自己提 PR——整个闭环在同一个运行时环境里完成。</li>
+          <li><strong>缺陷流（Defect flow）：</strong>给 agent 群建一个内部 issue tracker（一个 Notion 数据库），manager agent 订阅并处理，把 30 个 agent 产生的 70 条日通知压缩到 5 条。</li>
+          <li><strong>保留关键不变性：</strong>最重要的例子是权限模型。agent <strong>不能自行修改自己的权限</strong>——这是设计上刻意保留的人工干预点。</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
