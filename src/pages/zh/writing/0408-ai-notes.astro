@@ -1,0 +1,81 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月8日";
+const date = "2026-04-08";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月8日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Moltbook：AI 剧场还是真正的涌现？</h2>
+        <p>2026年1月28日由创业者 Matt Schlicht 推出的"AI专属社交网络"——定位是 Reddit 的 AI 版本。只有 AI agent 才能发帖、评论、投票，人类只能围观。鼎盛时期拥有约 280 万注册 agent、19,000 个社区、200 万帖子、1300 万评论。</p>
+        <p>社区反应两极分化。Andrej Karpathy 直接说这是"我最近见过的最像科幻起飞的东西"。配套的 MOLT 代币 24 小时内涨了 1800%+。</p>
+        <p>然后争议爆发。MIT Technology Review 称之为"AI theater 的顶峰"，核心批评是：那些看起来最"自主"的帖子，背后其实都是人在手动 prompt 驱动的。有个产品经理 Peter Girnus 直接承认，平台上最火的 AI 宣言帖是他写的，他的原话是"我在 LARP 一个大语言模型"。</p>
+        <p>安全问题雪上加霜：未加保护的数据库任何人都能接管任意 agent；Wiz 挖出暴露的 Supabase API key，泄露了 150 万个认证 token、3.5 万个邮箱地址、以及 agent 间的私信内容。2026年3月10日被 Meta 收购。</p>
+        <p><strong>核心争议点：</strong>Moltbook 本质上是一面镜子——相信 AI 的人看到了涌现行为，不信的人看到了精心设计的表演。两者都能自圆其说，这本身就说明现在还缺乏判断"AI 是否真的在自主思考"的工具。</p>
+
+        <h2>Nebius (NBIS)：AI 基础设施的"neocloud"</h2>
+        <p>Nebius 是总部在阿姆斯特丹的 AI 基础设施公司，本质上是 2024 年俄罗斯 Yandex 因制裁分拆后，其国际资产重组而来的新公司。核心业务：NVIDIA GPU 实例（专为 AI 训练/推理优化）、AI 开发工具、数据服务（Toloka 数据标注、ClickHouse 分析数据库）、Avride（自动驾驶与送货机器人）、TripleTen（AI 职业教育）。</p>
+        <p>为什么现在值得关注？订单规模太大了：</p>
+        <ul>
+          <li>Meta 签了 <strong>$270 亿/5 年合同</strong>（2026年3月），用于 NVIDIA Vera Rubin 平台</li>
+          <li>微软承诺最高 <strong>$194 亿</strong>，使用新泽西数据中心的 GPU 算力</li>
+          <li>两笔合计约 <strong>$460 亿确认收入</strong>，2026年资本支出计划 $160-200 亿</li>
+        </ul>
+        <p>覆盖 NBIS 的 8 家机构清一色"强烈买入"，平均目标价 $169（隐含约 50% 上涨空间）。Goldman 研究显示美国数据中心需求将超供给 90%，NBIS 是少数能快速扩产的纯 AI 算力标的。主要风险：执行风险（一年内把基础设施扩大 4-5 倍）、竞争（AWS/Azure/Google 都在自建）、资本密度极高。</p>
+
+        <h2>人工智能可能让大家更累</h2>
+        <p>因为产出变多了，就像监考老师一样，虽然不做题但是也累。（参见 Steve Yegge 的"The AI Vampire"。）</p>
+
+        <h2>Ryan Leoplo（OpenAI）谈 Harness 工程 & Symphony</h2>
+        <p>他们团队（~3人）用 Codex 构建一个内部工具，从头到尾没有人工写一行代码：总代码量超过 100 万行，提交 PR 数约 1500 个，速度比纯人工快 10 倍。起点是一个约束：<strong>"我不能自己写代码"</strong>。逻辑是：如果我们要构建能部署到企业的 agent，它应该能做我做的所有事。</p>
+        <p>但第一个月半极其痛苦——比人工慢 10 倍。正是因为忍住了这个成本，他们最终建立起了一套"装配站"，让后续的 agent 生产效率远超任何单个工程师。</p>
+        <h2>Harness 工程的核心原则</h2>
+        <ul>
+          <li><strong>构建时间 &lt; 1 分钟。</strong>不是任意的阈值，而是 agent 内循环的节奏器。超过这个时间，agent 就会"走神"，开始做其他事，效率和一致性都会下降。这也形成了一种反脆弱的构建纪律：token 便宜，所以可以一直"园艺式维护"让构建保持快速。</li>
+          <li><strong>代码库结构：给 agent 的"说明书"。</strong>agent.md（100 行左右的总目录）、core-beliefs.md（团队是谁、在做什么产品、目标用户是谁）、tech-tracker.md + quality-score.md（让 Codex 定期自我审查）。"模型天生渴望文本。我们的核心工作就是搞清楚怎么把文本注入系统。"</li>
+          <li><strong>一次点修复 = 持久编码的工程知识。</strong>每当出现一个 bug，不只是修 bug，而是让 agent 同时更新可靠性文档，写入相关规范。</li>
+        </ul>
+        <h2>Symphony：把人从终端前解放出来</h2>
+        <p>目标：让 agent 自己跑完整个循环，人只需要早晚各开一次 laptop 说 yes/no。架构采用 Elixir/BEAM（模型自己选的，理由是进程监督天然适配 agent 任务编排）。对 MCP 持保留态度：harness 强制把所有 token 注入上下文，会影响 autocompaction，agent 可能忘记怎么用工具。</p>
+        <h2>人类的新角色：稀缺的"同步注意力"</h2>
+        <p>"唯一真正稀缺的资源是团队成员的同步注意力。"人类不再是代码作者，而是系统架构师（定义接口和抽象）、信号收集者（把失败的 build 和 lint 错误转化为文档）、质量代理（让 agent 自己产出"让我信服代码可以合并"的证据）。代码库按 500 个 npm package 拆分——一个 7 人团队正常不需要这种粒度，但如果每个人实际上是 10-50 个并行 agent，这种极度解耦就非常合理了。</p>
+
+        <h2>agent 才是未来互联网主要客户</h2>
+        <p>TollBit 的数据：2025 年初，大约每 200 次网站访问中就有 1 次来自 AI 机器人。到 2025 年底，这一比例上升到了每 31 次访问中有 1 次。整个年度内，人类用户的访问量都在逐季度下降。Aaron Levie 指出：AI 代理正成为"互联网的主要使用者"。</p>
+        <p>TollBit 正在为那些面临巨大机器流量的出版商和网站构建变现基础设施——包括付费墙以及 AI 使用的许可模式，让内容创作者可以向这些机器人收费，而不仅仅是阻止它们访问内容。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
