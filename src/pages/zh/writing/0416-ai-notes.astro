@@ -1,0 +1,55 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月16日";
+const date = "2026-04-16";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月16日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>能量模型（EBM）</h2>
+        <p>EBM 不是新东西。能量模型（Energy-Based Models）在机器学习里已经有几十年历史：</p>
+        <ul>
+          <li><strong>Hopfield Network（1980年代）</strong> — 就是 EBM，John Hopfield 因此拿了 <strong>2024年诺贝尔物理学奖</strong></li>
+          <li><strong>玻尔兹曼机</strong> — Hinton（深度学习三巨头之一）做的，也是 EBM 的变体</li>
+          <li><strong>扩散模型（Diffusion Model）</strong> — Stable Diffusion、Midjourney 背后的原理，跟 EBM 高度相关</li>
+        </ul>
+        <p>所以这不是民科，是有扎实数学基础的主流研究方向。</p>
+        <h2>"EBM 将引领下一波革命"是谁在说？</h2>
+        <p>这个论调最响亮的代言人是 <strong>Yann LeCun</strong>（Meta AI 首席科学家，深度学习三巨头之一）。他从 2022 年开始就在各种场合说："自回归 LLM 有根本性缺陷，未来属于 JEPA（联合嵌入预测架构）"——本质上就是 EBM 的一种。</p>
+        <p>所以这不是边缘人物的主张，而是领域顶级人物的研究赌注。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
