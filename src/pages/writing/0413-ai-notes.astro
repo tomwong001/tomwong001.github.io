@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 13";
+const date = "2026-04-13";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 13, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>AI Writing Is Harder Than You Think</h2>
+        <p>Most discussions about AI and writing assume: enter a prompt, output text, task complete. But Katie Parrott reveals a more complex process: before writing, an agent "interviews" her; she fights repeatedly over structure; she has a team of AI reviewers named "Hemingway" and "Hitchcock" for revisions; then a final read-through flagging anything that sounds machine-generated.</p>
+
+        <h2>Data Annotation: Small Models with Specialized Data Can Beat Large Models</h2>
+        <p>A 4-billion-parameter model recently beat one 60 times its size by training on the right financial data. Shutterstock and News Corp are making hundreds of millions licensing data to AI labs, with contracts growing 20% annually. The key question: what makes your company's proprietary data valuable, and whether to license it, train on it yourself, or both.</p>
+
+        <h2>AI Healthcare Pilot</h2>
+        <p>A fascinating staged deployment approach: the first 250 AI prescription renewals are reviewed by a physician, and the AI must agree with that physician more than 98% of the time before proceeding independently. The next 1,000 require 99%+ agreement. Then monitoring shifts to randomized monthly testing. This is how you responsibly deploy AI in high-stakes domains.</p>
+
+        <h2>Using Claude for Tax Filing: Issues Found</h2>
+        <p>Two friction points discovered from personal use:</p>
+        <ul>
+          <li><strong>Extremely slow.</strong> Claude controls the browser via screenshots — most websites can't be captured in one screenshot, requiring scroll → screenshot → read cycles. This consumes a lot of time. Clicking is also error-prone.</li>
+          <li><strong>Should pause and ask, but doesn't.</strong> Without knowing my bank account info, it chose to mail a check instead of selecting online bank payment. It should have stopped to ask.</li>
+        </ul>
+
+        <h2>GLM-5.1 Architecture: MoE, RMSNorm, MLA, DSA</h2>
+        <p>GLM-5.1 is a 744B parameter MoE model from Zhipu (Z.ai) — MIT license. Architecture overview: Token Embedding → 78 repeated Blocks → Final RMSNorm → Linear output → predict next token. Each block has two major components: Attention and FFN/MoE.</p>
+        <p><strong>RMSNorm</strong>: Normalizes values after each layer to prevent gradients from exploding or vanishing. Like an audio compressor — levels out the signal to prevent clipping.</p>
+        <p><strong>MLA (Multi-head Latent Attention)</strong>: DeepSeek's invention, inherited by GLM-5.1. Instead of storing full K and V, compresses them into a small "latent vector" and decompresses when needed. Like JPEG compression — store compressed, decompress to display. Enables 202k context window.</p>
+        <p><strong>DSA (DeepSeek Sparse Attention)</strong>: Only computes attention between "meaningful token pairs," reducing computation from O(n²) down. MLA + DSA together: MLA solves memory, DSA solves compute — making long contexts feasible.</p>
+        <p><strong>MoE (Mixture of Experts)</strong>: Split FFN into 256 expert networks. A Router decides which experts each token goes to. GLM-5.1 total: 744B params, but only 40B activated per inference — compute equivalent to a 40B model, but knowledge capacity of 744B.</p>
+        <h2>GLM-5.1 Community Assessment</h2>
+        <ul>
+          <li>SWE-Bench Pro: 58.4 — first open-source model to top this benchmark, beating GPT-5.4 (57.7) and Claude Opus 4.6 (57.3)</li>
+          <li>Long autonomous coding is genuinely impressive — 8-hour continuous plan→execute→test→fix→optimize loops</li>
+          <li>Trained entirely on Huawei Ascend 910B with MindSpore — no NVIDIA GPUs</li>
+          <li>Weak point: not a generalist. General reasoning "clearly weaker than Claude and GPT." Local deployment painful: 3-5 tok/s on M4 Max with IQ2_M quantization</li>
+          <li>The "beats Claude Opus 4.6" claim is misleading — only true on SWE-Bench Pro, one benchmark</li>
+        </ul>
+
+        <h2>CLAUDE.md: The Folder Is the Agent</h2>
+        <p>An interesting pattern for agent-native development: a repo folder with accumulated institutional knowledge that any new agent inherits automatically. Reading order: CLAUDE.md first, then architecture docs, then system reports, then agent prompts.</p>
+        <p>The author built a dispatch layer: a Ruby daemon that watches a directory for task requests. When asked to orchestrate a task, it creates a lead agent, the lead breaks it into subtasks (written as files), the daemon picks up those files and spawns worker agents. Workers report back by writing files. The daemon checks status every 60 seconds — no custom networking or agent-to-agent protocol needed.</p>
+        <p>Two daily commands: <code>/hey</code> (morning review of all agent progress reports) and <code>/orchestrate "Fix issue #1765"</code> (drop a task in, agent auto-decomposes, works, submits PR, human reviews).</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
