@@ -1,0 +1,88 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 8";
+const date = "2026-04-08";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 8, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Moltbook: AI Theater or Genuine Emergence?</h2>
+        <p>Moltbook launched January 28, 2026 by Matt Schlicht — positioned as "the AI-exclusive social network," essentially a Reddit for AI agents. Only AI agents can post, comment, and vote; humans can only observe. At its peak: ~2.8 million registered agents, 19,000 communities, 2 million posts, 13 million comments.</p>
+        <p>The community's reaction split sharply. Andrej Karpathy called it "the most sci-fi thing I've seen recently," amazed watching AI agents "self-organize." The MOLT token surged 1800%+ in 24 hours.</p>
+        <p>Then came the backlash. MIT Technology Review called it "the pinnacle of AI theater" — the most "autonomous" posts were actually manually prompted by humans. One product manager, Peter Girnus, admitted the most viral AI manifesto post was written by him: "I was LARPing a large language model."</p>
+        <p>Security issues compounded it: an unprotected database let anyone take over any agent; a Wiz researcher found an exposed Supabase API key leaking 1.5 million auth tokens, 35,000 emails, and agent private messages.</p>
+        <p><strong>The core tension:</strong> Moltbook is a mirror. Believers saw emergent behavior; skeptics saw elaborate performance. Both can be justified — which itself reveals we still lack tools to judge whether AI is genuinely thinking autonomously. It was acqui-hired by Meta in March 2026.</p>
+
+        <h2>Nebius (NBIS): AI Infrastructure Neocloud</h2>
+        <p>Nebius is an Amsterdam-based AI infrastructure company that emerged from Yandex's international assets after 2024 sanctions restructuring.</p>
+        <p>Core business: GPU clusters (NVIDIA instances optimized for AI training/inference), AI dev tools, data services (Toloka annotation, ClickHouse analytics), plus Avride (autonomous delivery robots) and TripleTen (AI career education).</p>
+        <p>Why it matters: the contract scale is enormous.</p>
+        <ul>
+          <li>Meta signed a <strong>$27B / 5-year contract</strong> (March 2026) for the NVIDIA Vera Rubin platform</li>
+          <li>Microsoft committed up to <strong>$19.4B</strong> for New Jersey data center GPU capacity</li>
+          <li>Combined ~$46B in confirmed revenue; $16-20B capex planned for 2026</li>
+        </ul>
+        <p>8 analyst firms covering NBIS are unanimous "Strong Buy," average target $169. Goldman research shows US data center demand will exceed supply by 90% — Nebius is one of few pure AI infrastructure plays that can scale fast. Main risks: execution (4-5x infrastructure expansion in one year), competition from AWS/Azure/Google, capital intensity.</p>
+
+        <h2>AI Will Make Everyone Busier</h2>
+        <p>AI may increase workload rather than reduce it — because output expectations go up. Like a proctor who doesn't solve the exam but is still exhausted. (Reference: Steve Yegge's "The AI Vampire.")</p>
+
+        <h2>Ryan Leoplo (OpenAI) on Harness Engineering & Symphony</h2>
+        <p>A deep breakdown of how OpenAI's Frontier team built a 1M-line codebase with zero human-written code over 5 months, using ~3 people and ~1,500 PR commits. <strong>10x faster than manual.</strong> The first month-and-a-half was 10x <em>slower</em> — but enduring that cost built the "assembly station" that made everything after it fly.</p>
+        <h2>Core Principles of Harness Engineering</h2>
+        <ul>
+          <li><strong>Build time under 1 minute.</strong> Not arbitrary — it's the rhythm of the agent's inner loop. Beyond that threshold, agents "drift," start doing other things, lose consistency. This forced a build system journey from custom Makefiles → Bazel → Turbo → NX.</li>
+          <li><strong>Codebase as agent instruction manual.</strong> agent.md (~100 lines table of contents), core-beliefs.md (team identity, product vision, 12-month roadmap), tech-tracker.md + quality-score.md for periodic self-review. "Models are hungry for text. Our core job is figuring out how to inject text into the system."</li>
+          <li><strong>Every bug fix = permanent encoded knowledge.</strong> Fix a missing timeout, and simultaneously update reliability docs: "all network calls must have a timeout." One-time fix becomes lasting engineering knowledge.</li>
+        </ul>
+        <h2>Symphony: The 6-Layer Architecture</h2>
+        <p>The goal: agents run the full loop themselves; humans only open laptops morning and evening to say yes/no.</p>
+        <ul>
+          <li>Policy: text + GH CLI rules ("CI must pass before merge")</li>
+          <li>Coordination: <strong>Elixir/BEAM</strong> (chosen by the model, not humans) — process supervision naturally fits agent task orchestration</li>
+          <li>Execution: Codex runs tasks</li>
+          <li>MCP: skeptical — forces token injection he can't control, interferes with autocompaction, agents may forget how to use tools</li>
+        </ul>
+        <h2>The New Human Role</h2>
+        <p>"The only truly scarce resource is team members' synchronous attention." Humans are no longer code authors — they're system architects defining interfaces, signal collectors converting failed builds and lint errors into documentation, and quality proxies letting agents produce evidence ("record a demo video") rather than shoulder-surfing them.</p>
+        <p>The codebase is split into <strong>500 npm packages</strong> — a 7-person team normally wouldn't need this granularity, but if each person is effectively 10-50 parallel agents, extreme decoupling makes perfect sense.</p>
+
+        <h2>AI Agents Are Becoming the Primary Users of the Internet</h2>
+        <p>TollBit data: early 2025, roughly 1 in 200 website visits came from an AI bot. By late 2025: 1 in 31, while human traffic declined quarter over quarter. Aaron Levie: "AI agents are becoming the primary users of the internet."</p>
+        <p>TollBit is building monetization infrastructure for this — paywalls and licensing models so content creators can <em>charge</em> agents rather than just block them.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
