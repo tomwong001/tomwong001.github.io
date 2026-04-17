@@ -1,0 +1,88 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 9";
+const date = "2026-04-09";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 9, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Generative Engine Optimization (GEO)</h2>
+        <p>GEO will be an increasingly important focus area. AI models are already showing preferences between each other — this creates a new optimization surface beyond traditional SEO.</p>
+
+        <h2>Mythos: A Nuclear Weapon in Code</h2>
+        <p>Mythos scores 93.9% on SWE-bench Verified, up from 80.8% for the previous version — an unprecedented 13-point jump that means it "crushes any programming task, including finding security vulnerabilities in software."</p>
+        <p>My take: Mythos has become a nuclear weapon. The reason it's not being released publicly is that anyone could use it to find security vulnerabilities, which could cause catastrophic damage to the existing ecosystem. It's like everyone fighting with guns, and suddenly someone shows up with a nuclear weapon.</p>
+        <p>Anthropic launched Project Glasswing instead of public release — allowing a handful of partners (AWS, Apple, Google, Microsoft, NVIDIA, Cisco, CrowdStrike, JPMorgan Chase, Linux Foundation) to use the system, with $100M in credits and $4M for open-source security work. This signals that cutting-edge AI is rapidly shifting from impressive benchmarks to controlled cyber infrastructure, rather than consumer products.</p>
+
+        <h2>Picotron: Hands-on Distributed Training (Part 1)</h2>
+        <p>Running a 360M parameter LLaMA model on random data. First step result: <strong>Loss = 11.0</strong></p>
+        <p>Is Loss = 11.0 reasonable? ln(49152) ≈ 10.8. Randomly guessing one of 49,152 words, cross-entropy is ~10.8. So 11.0 means the model hasn't learned anything yet — as expected after just one step.</p>
+        <h2>Key Distributed Training Concepts</h2>
+        <ul>
+          <li><strong>LOCAL_RANK</strong>: Which GPU am I on this machine. Starts at 0.</li>
+          <li><strong>RANK (global rank)</strong>: Which GPU am I globally. With 2 machines of 4 GPUs each, RANK goes from 0 to 7.</li>
+          <li><strong>WORLD_SIZE</strong>: Total number of GPUs participating in training.</li>
+        </ul>
+        <p><strong>dist.barrier()</strong>: A synchronization wall. All GPUs must reach this point before any can continue — like meeting at a mountain waypoint before hiking together.</p>
+        <p><strong>NCCL</strong> (pronounced "nickel"): NVIDIA's GPU communication library, optimized for GPU-to-GPU data transfer. With NVLink, can reach hundreds of GB/s.</p>
+        <h2>Language Model Training Target</h2>
+        <pre><code>input_ids  = [I, love, eating]      → [5, 12, 8]
+target_ids = [love, eating, apples]  → [12, 8, 33]</code></pre>
+        <p>Target is input shifted one position right. The model learns: given previous tokens, predict the next one.</p>
+
+        <h2>Data Parallel Step 5 vs Step 6: Naive vs Bucket</h2>
+        <p>Naive DP: each parameter does all-reduce individually, synchronously. With hundreds of parameters, that's hundreds of all-reduce calls.</p>
+        <p>Bucket DP: pack parameters into ~25MB buckets. When all parameters in a bucket have gradients ready, fire an async all-reduce (<code>async_op=True</code>) — computation and communication overlap. This is the core idea behind PyTorch DDP.</p>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1.25rem; font-size:0.9em;">
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <th style="padding:0.5rem; text-align:left;"></th>
+            <th style="padding:0.5rem; text-align:left;">Step 5 Naive</th>
+            <th style="padding:0.5rem; text-align:left;">Step 6 Bucket</th>
+          </tr>
+          <tr><td style="padding:0.5rem;">Communication</td><td style="padding:0.5rem;">Sync, per-parameter all-reduce</td><td style="padding:0.5rem;">Async, per-bucket all-reduce</td></tr>
+          <tr><td style="padding:0.5rem;">Gradient precision</td><td style="padding:0.5rem;">bf16 (same as params)</td><td style="padding:0.5rem;">float32 accumulation, more stable</td></tr>
+          <tr><td style="padding:0.5rem;">Compute/comm overlap</td><td style="padding:0.5rem;">None</td><td style="padding:0.5rem;">Yes (async_op=True)</td></tr>
+        </table>
+
+        <h2>Pipeline Parallel: AFAB and 1F1B Schedules</h2>
+        <p>PP splits the model <strong>by layer</strong>: GPU 0 handles layers 0-7, GPU 1 handles 8-15, etc. Data flows like an assembly line.</p>
+        <p><strong>AFAB (All Forward All Backward)</strong>: first complete all micro-batch forwards, then all backwards. Simple but creates large pipeline bubbles — GPUs sit idle waiting.</p>
+        <p><strong>1F1B</strong>: alternate forward and backward every step. Warmup phase fills the pipeline; steady state runs 1F1B continuously; cooldown drains it. The idle slots are only at the start and end — the middle is fully utilized.</p>
+        <p>1F1B also uses bidirectional communication: in steady state, a GPU simultaneously sends forward results to the next stage AND receives backward gradients from it — packed into one <code>batch_isend_irecv</code> call.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
