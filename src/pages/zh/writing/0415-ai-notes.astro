@@ -1,0 +1,90 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月15日";
+const date = "2026-04-15";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月15日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>based on Reddit：本地模型排名</h2>
+        <p>以下是人们实际推荐的模型，而不仅仅是 benchmark 第一：</p>
+        <ul>
+          <li><strong>Qwen 3.5</strong> — 目前跨使用场景最广泛推荐的模型家族</li>
+          <li><strong>Gemma 4</strong> — 本地可用性口碑很好，尤其是中小型部署</li>
+          <li><strong>GLM-5 / GLM-4.7</strong> — 在广泛开源模型排名中名列前茅</li>
+          <li><strong>MiniMax M2.5 / M2.7</strong> — 反复被推荐用于 agentic 和工具密集型工作</li>
+          <li><strong>DeepSeek V3.2</strong> — 仍然是最强开源通用模型的前排选手</li>
+          <li><strong>GPT-oss 20B</strong> — 越来越多被推荐为实用的本地选项</li>
+        </ul>
+        <p>本地编程领域：压倒性共识是 <strong>Qwen3-Coder-Next</strong>。</p>
+
+        <h2>如何让 AI 做成你想要的网站样式</h2>
+        <p>图像的带宽高于文字。很难用文字来引导模型。你可以写一段关于想要"干净、现代、有大量留白"的文字，但这几乎是无用的——你总是会得到默认的风格。</p>
+        <p>图片可以让模型做出独特的设计，因为它们携带了更多的信息。截图包含了关于间距、颜色和布局的数百个微决策，而这些是你无法用文字定义的。因此，除非你有代码示例，否则<strong>参考图片是引导 AI 的最佳方式</strong>。</p>
+
+        <h2>2026 年人工智能工程师路线图</h2>
+        <p>大多数开发者都在构建玩具，而世界需要的是系统。要变得不可或缺，你必须深入构建——理解编排、内存和本地推理。五个生产级项目等级：</p>
+        <ul>
+          <li><strong>初级</strong>：具有 SLM 的 AI 驱动移动应用——边缘 AI + 资源优化（量化、电池优化、离线优先同步）</li>
+          <li><strong>中级</strong>：自我改进的编码代理——代理循环（计划→执行→测试→反思）、记忆层次结构、沙箱策略</li>
+          <li><strong>高级</strong>：为视频编辑器设计的光标——多模态 AI + 复杂工具集成</li>
+          <li><strong>专家</strong>：个人生活操作系统代理——深度上下文 + 隐私优先架构</li>
+          <li><strong>大师</strong>：自主企业工作流代理——生产级编排、多代理委托、审计跟踪、RBAC</li>
+        </ul>
+
+        <h2>robot tax</h2>
+        <p>宾夕法尼亚大学 + 波士顿大学的博弈论论文：每家公司裁员降低成本 → 被裁员工停止消费 → 各行各业收入崩溃 → 裁光员工的公司自己也破产了。这是一个有数学支撑的囚徒困境。自动化你能短期活下去，不自动化你被竞争对手干掉，但所有人都自动化就摧毁了让所有公司可行的需求基础。</p>
+        <p>研究者找到的唯一解决方案：皮古税（Pigouvian automation tax）—— "机器人税"。UBI 和利润税解决不了结构性问题。</p>
+
+        <h2>我想说：很多所谓的 agent 调度其实非常简单</h2>
+        <p>看了 Sparkle（一个 Mac 文件整理应用）的架构：它先用 Opus 4.6（聪明且昂贵）分析文件确定文件夹结构，用户确认后，再用 Haiku 4.5（快速、便宜）来分类新文件。"Q1 invoice.pdf" → Finance，不需要大量 AI 推理。</p>
+        <p>我的想法：现在很多所谓的 agent 调度其实也是非常简单的，就是难的东西用高级模型，简单的执行类、不需要大量思考的，用低级模型，然后两个中间交互一下，可能就是用 skills 交互。</p>
+
+        <h2>a16z 报告</h2>
+        <ul>
+          <li><strong>ChatGPT 依然强但护城河在变。</strong>周活 9 亿用户，约 20% 的 ChatGPT 用户同一周也用 Gemini——忠诚度靠的不再是"没得选"，而是上下文积累（数据、装的应用、连接的服务）。</li>
+          <li><strong>平台分化很清晰。</strong>OpenAI 走消费者超级应用路线，Anthropic 走专业基础设施路线（MCP、Claude Code、企业 API）。有点像当年 iOS vs Android 的分化，不是一场战争，是两个不同的市场。</li>
+          <li><strong>创意工具的洗牌。</strong>2023 年 top 10 里 9 个有 7 个是图像生成器，现在只剩 3 个。Midjourney 从 top 10 跌到第 46 名。存活下来的（Suno 做音乐、ElevenLabs 做语音克隆）靠的是"有观点的特性"。</li>
+          <li><strong>测量方式在失效。</strong>当 AI 变成到处都有的功能（Excel 里、浏览器里、系统级），网页访问量和 MAU 就越来越无法反映真实使用情况了。比如一个全职用 Claude Code 的工程师，根本不会出现在这个榜单的统计里。</li>
+        </ul>
+
+        <h2>Karpathy 的观点</h2>
+        <p>两个群体在各说各话。第一类：去年某个时候尝试了 ChatGPT 的免费版，对它的各种怪癖和幻觉嘲笑。第二类：每月支付 $200 使用最先进的前沿代理模型（OpenAI Codex / Claude Code），在编程、数学和研究领域专业使用。这第二类人正在经历"AI 精神错乱"——今年在这些领域的进步简直令人震惊。</p>
+        <p>关键在于：这些领域有明确的、可验证的奖励函数（单元测试通过与否），容易做强化学习，同时在 B2B 环境中最有价值，所以研究团队的最大部分都集中在改进它们。</p>
+        <p>我是完全同意的。国内现在有一些人，问了豆包一个问题，豆包回答错了，就说 AI 不行。可能是 prompt 不对，可能是表达不清楚，也可能豆包目前就是没做好。相反程序员群体内，如果是在用世界顶尖模型，大规模用的，你一定会被震惊，甚至我可以说 arguably AGI 已经到来。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
