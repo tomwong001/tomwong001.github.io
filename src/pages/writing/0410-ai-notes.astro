@@ -1,0 +1,103 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 10";
+const date = "2026-04-10";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 10, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Meta's New Model: Muse Spark</h2>
+        <p>Meta abandoned the Llama series and launched a new model family called <strong>Muse</strong>. The first release is <strong>Muse Spark</strong>, positioned as "small and fast" — the entry-level version of the series. Led by Alexandr Wang (whose company Scale AI was acquired by Meta), the team spent <strong>9 months</strong> rebuilding the entire AI training architecture from scratch.</p>
+        <p>The most important number: <strong>10x efficiency improvement</strong>. Same capability, requiring only one-tenth the compute of Llama 4 Maverick. This is a massive engineering breakthrough.</p>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1.25rem; font-size:0.9em;">
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <th style="padding:0.5rem; text-align:left;">Benchmark</th>
+            <th style="padding:0.5rem; text-align:left;">Muse Spark</th>
+            <th style="padding:0.5rem; text-align:left;">Claude Opus</th>
+          </tr>
+          <tr><td style="padding:0.5rem;">CharXiv Reasoning</td><td style="padding:0.5rem;"><strong>86.4 ✅ #1</strong></td><td style="padding:0.5rem;">lower</td></tr>
+          <tr><td style="padding:0.5rem;">HealthBench Hard</td><td style="padding:0.5rem;"><strong>42.8 ✅</strong></td><td style="padding:0.5rem;">14.8</td></tr>
+          <tr><td style="padding:0.5rem;">SWE-Bench Verified</td><td style="padding:0.5rem;">77.4 ⚠️ weak point</td><td style="padding:0.5rem;"><strong>80.8</strong></td></tr>
+        </table>
+        <p>Medical reasoning is particularly strong — the training data was curated by over 1,000 doctors.</p>
+        <p><strong>Contemplating mode</strong>: parallel multi-agent reasoning — not one model thinking alone, but multiple sub-agents reasoning in parallel, then aggregating results.</p>
+        <p><strong>Strategic shift: from open to closed source.</strong> Meta no longer wants to be "Linux for AI" — instead directly deploying AI across its product matrix (WhatsApp, Instagram, Threads, Ray-Ban glasses) to reach billions of ordinary users.</p>
+
+        <h2>Meta.ai's 16 Hidden Tools</h2>
+        <p>Researcher Simon Willison directly asked meta.ai's chat interface "what tools do you have?" — it answered honestly, exposing 16 hidden tools: browser search/open, Python code interpreter, HTML artifact creation (similar to Claude Artifacts), pixel-level visual grounding, sub-agent spawning, personal content search (Instagram/Threads/Facebook), file editing, and Google/Outlook calendar + email integration.</p>
+        <p>Most interesting: <code>visual_grounding</code> — tested on an AI-generated image of a raccoon, it identified 12 whiskers (each with coordinates), 8 paws, eyes, ears, and the garbage hat's position box. This isn't calling an external API — it's the model's native capability through tool calls.</p>
+
+        <h2>Two New Thoughts</h2>
+        <h2>I. AI Tools Are Essentially a New Kind of Game</h2>
+        <p>Claude Code, Codex — these "skills + AI" tools look like productivity tools, but structurally they're closer to a <strong>variant of games</strong>. The core mechanism that makes games addictive is called <strong>agency</strong> — you control a character, the character actually affects the world, and this immediate feedback of "my action has effects" is the root of addiction. AI agent tools give you exactly the same feeling.</p>
+        <p>But what makes it more interesting than games: a game's world is closed — lose, restart, consequences are contained. AI agents operate on the <strong>real world</strong> — real files, real deployments, real consequences. This combines the satisfaction of games with the sense of meaning from the real world — an unprecedented interaction paradigm.</p>
+
+        <h2>II. Vibe Coding Is to Traditional Programming What Web Fiction Is to Classic Literature</h2>
+        <p>Before web novels, "writing a novel" had barriers — you needed to refine your prose, pass through publishers, before anyone could read it. Web novels removed the gatekeepers; writing and publishing dropped in threshold, resulting in explosive growth in quantity and variety.</p>
+        <p>Vibe Coding is taking the same path. Previously, "making software" required knowing architecture, debugging, deployment. Now the threshold is: <strong>do you have a real need?</strong> Those tools made with AI might have chaotic architecture in an old programmer's eyes — but as long as they solve real problems, they'll have massive audiences.</p>
+        <p>Hidden here is the embryo of a new profession — <strong>not the people writing code, but the people who can judge whether AI-written code is usable.</strong></p>
+
+        <h2>Nanotron: Deep Dive on Parallelism</h2>
+        <h2>One-sentence Mental Model</h2>
+        <p>All parallelism in LLM training answers the same question: when model + data + optimizer states + activations can't fit in one GPU, which dimension do you cut, what stays, what gets transmitted, who computes, who communicates?</p>
+        <h2>The Six Parallelism Strategies</h2>
+        <ul>
+          <li><strong>DP (Data Parallel)</strong>: same model copied to all GPUs, each sees different batches. Communication: all-reduce gradients (once per step). Best choice when model fits on one GPU.</li>
+          <li><strong>TP (Tensor Parallel)</strong>: cut weight matrices (W_q/W_o/W_1/W_2 by column or row). Communication: all-reduce activations (2x per layer). Use within single machine with NVLink.</li>
+          <li><strong>PP (Pipeline Parallel)</strong>: cut by layers. Communication: point-to-point (send activation, recv gradient). Usable across machines with low bandwidth.</li>
+          <li><strong>SP (Sequence Parallel)</strong>: cut activation's sequence dimension. Reduces activation memory significantly. Usually coupled with TP.</li>
+          <li><strong>CP (Context Parallel)</strong>: more aggressive sequence cutting for long contexts (≥32K), cutting K/V cache.</li>
+          <li><strong>EP (Expert Parallel)</strong>: MoE models only — route tokens to different expert GPUs via all-to-all communication.</li>
+        </ul>
+        <h2>ZeRO: Not a New Dimension, but Sharding Optimization on DP</h2>
+        <ul>
+          <li><strong>ZeRO-1</strong>: shard optimizer states (Adam m, v) — saves 8 bytes × params. Almost free.</li>
+          <li><strong>ZeRO-2</strong>: + shard gradients</li>
+          <li><strong>ZeRO-3 (= FSDP)</strong>: + shard weights themselves — extreme memory savings, but more all-gather calls</li>
+        </ul>
+        <h2>Training Memory Formula</h2>
+        <pre><code>Training memory ≈ 16 × N_params + activations
+
+Weights (bf16)        : 2 bytes × N_params
+Gradients (bf16)      : 2 bytes × N_params
+Adam states (fp32 m,v): 8 bytes × N_params
+Master weights (fp32) : 4 bytes × N_params</code></pre>
+        <p>LLaMA-7B already can't fit in one 80GB H100 for training (needs 100+ GB). This is why all serious LLM training uses at least ZeRO-1 + TP.</p>
+        <h2>Picotron vs Nanotron</h2>
+        <p>Picotron teaches you "how each parallelism works individually." Nanotron teaches you "how they combine and enable resume, FP8 training, sequence parallel." The former is a blackboard; the latter is a factory.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
