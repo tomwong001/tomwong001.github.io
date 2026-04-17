@@ -1,0 +1,90 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月7日";
+const date = "2026-04-07";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月7日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>1. 图片生成的核心壁垒不是"好看"，而是"准确"</h2>
+        <p>图片生成不在于多炫酷，真实使用场景里更需要的是准确度。比如更改一个字，能否改正确。</p>
+        <blockquote style="border-left: 3px solid var(--color-accent); padding-left: 1rem; margin: 1.5rem 0; color: var(--color-text-muted); font-style: italic;">
+          Because if we're being honest, image models haven't really struggled with making things look good for a while now. That part is mostly solved. The harder part has been credibility.
+        </blockquote>
+        <p><strong>为什么改一个字比生成炫酷图片更难？</strong></p>
+        <p><strong>生成 vs. 编辑，是两种本质上不同的任务。</strong> 生成一张炫酷图片时，模型有完全的创作自由，只要整体看起来好看、协调就算成功，评判标准是模糊的、主观的。但改一个字是有标准答案的——要么对，要么错。这把"创作任务"变成了"精准操作任务"。</p>
+        <p><strong>扩散模型（diffusion models）的工作方式天然不擅长"局部外科手术"。</strong> 它们本质上是在学习"什么像什么"的统计规律，非常擅长捕捉高层次的模式——氛围、风格、质感。但改一个字要求它同时做到：语义理解、视觉精准（像素级别的匹配）、上下文保留（不破坏周围的一切）。</p>
+
+        <h2>2. Diffusion Model 原理精讲</h2>
+        <p><strong>一句话核心：</strong>训练时把图片一步步加噪声直到变成纯随机噪声；推理时从随机噪声开始，让神经网络一步步"猜出并去掉噪声"，最终还原出图片。</p>
+        <h2>第一步：正向过程（Forward Process）</h2>
+        <pre><code>q(xₜ | xₜ₋₁) = N(xₜ; √(1-βₜ) · xₜ₋₁, βₜ · I)</code></pre>
+        <p>关键技巧（跳步采样）：</p>
+        <pre><code>xₜ = √(ᾱₜ) · x₀ + √(1 - ᾱₜ) · ε,    ε ~ N(0, I)</code></pre>
+        <pre><code>import torch
+
+def forward_sample(x0, t, alphas_cumprod):
+    sqrt_alpha_bar = alphas_cumprod[t] ** 0.5
+    sqrt_one_minus = (1 - alphas_cumprod[t]) ** 0.5
+    eps = torch.randn_like(x0)
+    xt = sqrt_alpha_bar * x0 + sqrt_one_minus * eps
+    return xt, eps</code></pre>
+        <h2>第二步：反向过程（Reverse Process）</h2>
+        <p>反向过程就是学习：给你一张加了噪声的图 xₜ 和时间步 t，神经网络 εθ 预测"当时加进去的那个噪声 ε 是什么"。Loss 函数（极其简单）：</p>
+        <pre><code>L = E[ || ε - εθ(xₜ, t) ||² ]</code></pre>
+        <h2>三个关键洞察</h2>
+        <ul>
+          <li><strong>预测噪声比预测图片更容易。</strong>噪声是标准正态分布，结构简单；直接预测图片 x₀ 的话，输出空间太复杂。</li>
+          <li><strong>把生成问题分解成 1000 个小问题。</strong>每一步只需去掉一点点噪声，每步的任务都很简单，模型容易学好。</li>
+          <li><strong>时间步 t 是一个条件输入。</strong>同一个神经网络处理所有 t，通过 Sinusoidal Embedding 告诉模型"现在噪声有多严重"。</li>
+        </ul>
+
+        <h2>3. 为什么局部编辑难？模型"知道"A 长什么样，为什么还是改不好？</h2>
+        <p>这里有一个关键区分：模型"知道 A 长什么样"有两种完全不同的含义。</p>
+        <ul>
+          <li><strong>你理解的"知道"：</strong>A = 两条斜线加一横，B = 一竖加两个半圆，改 A→B 是一个符号替换操作。这是符号规则。</li>
+          <li><strong>模型的"知道"：</strong>在训练数据里见过几百万张有 A 的图，学到了"这种像素排列在这种上下文里概率很高"。这是统计模式。</li>
+        </ul>
+        <p>编辑时问题暴露了：你把 A 遮住，周围像素已经固定，而那些固定的周围像素，<strong>在统计上最匹配的仍然是 A，不是 B</strong>。模型在"我要填 B"和"这个上下文统计上更像 A"之间产生拉扯，结果就变形了。</p>
+
+        <h2>a16z 未来趋势</h2>
+        <p>数据飞轮的重要性，而且最好是能够随着模型能力 scale，而不是被替代的；AI 帮助人连接；可解释性。</p>
+
+        <h2>关于 getviktor 的思考</h2>
+        <p>之前是 chat，现在是 agent，未来的方向到底是一个 worker 专精一个方向，还是说一个人专精 n 个方向，比如 getviktor 这样的连接很多 tools 的。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
