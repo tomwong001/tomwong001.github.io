@@ -1,0 +1,86 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 14";
+const date = "2026-04-14";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 14, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>WeChat Anti-Screenshot</h2>
+        <p>If you use Claude Computer Use on certain apps, it may trigger their protection mechanisms — for example, anti-screenshot features that produce blank captures. This is a fundamental limitation of current computer-use approaches.</p>
+
+        <h2>nano-vLLM: Prefill vs Decode</h2>
+        <p>The fundamental difference in one line:</p>
+        <pre><code>Prefill:  100 tokens enter GPU simultaneously  → fast, GPU fully engaged
+Decode:   only 1 token output at a time          → slow, GPU mostly waiting for memory</code></pre>
+        <h2>The Scheduler: Traffic Controller</h2>
+        <p>Two queues:</p>
+        <ul>
+          <li><strong>waiting queue</strong>: new requests not yet processed</li>
+          <li><strong>running queue</strong>: requests that have completed prefill, now in decode</li>
+        </ul>
+        <p>Each <code>schedule()</code> call: if there are waiting requests → do PREFILL (move to running). If waiting is empty → do DECODE (process all running requests). This is the essence of continuous batching.</p>
+        <p><strong>Preempt</strong>: if memory runs out, "kick" a running request back to waiting, release its KV cache memory, restart when space is available.</p>
+        <h2>KV Cache</h2>
+        <p>Without KV cache: generating the 2nd token requires recomputing K and V for all previous tokens — wasteful duplication.</p>
+        <p>With KV cache: store computed K, V for each token. When generating a new token, read cached values directly, only compute K, V for the new token.</p>
+        <pre><code>KV cache = scratch paper
+
+Prefill: write understanding results for every token in prompt on scratch paper
+Decode:  each new token adds one line to scratch paper, doesn't rewrite previous lines</code></pre>
+        <p>Why decode is slow: every token generation requires reading the entire "scratch paper" from memory. The longer the paper gets, the more data needs to be read — bottleneck is memory bandwidth, not compute.</p>
+        <h2>PagedAttention</h2>
+        <p>Problem with naive KV cache: continuous memory allocation. Request A's cache grows but Request B is right behind it in memory — nowhere to expand.</p>
+        <p>PagedAttention solution: cut memory into fixed-size "blocks" (16 tokens' KV cache each). Requests can use non-contiguous blocks — like a file system on a hard drive. Need more space? Find a free block and attach it.</p>
+        <pre><code>Request A:  [block 1] → [block 3] → [block 7]   ← non-contiguous is fine
+Request B:  [block 2] → [block 5]
+Request C:  [block 4] → [block 6] → [block 8]</code></pre>
+
+        <h2>Notion on Model Behavior Engineers</h2>
+        <p>A new role emerging at AI companies: <strong>Model Behavior Engineer (MBE)</strong>. Data scientist + PM + prompt engineer hybrid. Core output is evals and LLM judges, not feature code. Now mostly uses coding agents to auto-generate evals rather than writing them manually.</p>
+        <p>The role requires judgment about "what counts as doing well" — not general engineering ability, but specialized cognitive work. Notion deliberately made this an independent career ladder, welcoming "misfits" — background doesn't have to be engineering, but must have taste.</p>
+        <p>Notion's 3-tier eval system: CI regression tests (must pass), release quality report cards (80-90% pass to ship), and "frontier evals" (intentionally only 30% pass — used to understand model ceiling). The MBE team focuses on tier 3 — "their own final exam" for giving Anthropic/OpenAI high-quality pre-release model feedback.</p>
+        <h2>The "Software Factory" Design</h2>
+        <p>Simon's goal: maintain key invariants with minimal human intervention. Components:</p>
+        <ul>
+          <li><strong>Spec layer</strong>: Markdown files in the repo. Human-readable, browsable, editable — the agent's "constitution."</li>
+          <li><strong>Self-verification</strong>: comprehensive test layers so agents can execute code, see test results, debug themselves, submit PRs — all in one runtime environment.</li>
+          <li><strong>Defect flow</strong>: an internal issue tracker (Notion database) that agents can file problems into. A manager agent subscribes and processes them, compressing 70 daily notifications from 30 agents into 5.</li>
+          <li><strong>Key invariant preservation</strong>: agents cannot modify their own permissions — a deliberately preserved human intervention point.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
