@@ -1,0 +1,91 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 7";
+const date = "2026-04-07";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 7, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>1. The real barrier in image generation isn't beauty — it's accuracy</h2>
+        <p>Image generation isn't about how flashy things look. In real-world use cases, what matters more is <strong>accuracy</strong>. Changing a single character in an image — can the model get it right?</p>
+        <blockquote style="border-left: 3px solid var(--color-accent); padding-left: 1rem; margin: 1.5rem 0; color: var(--color-text-muted); font-style: italic;">
+          Because if we're being honest, image models haven't really struggled with making things look good for a while now. That part is mostly solved. The harder part has been credibility. A lot of models are still better at giving you the impression of something than actually getting it right.
+        </blockquote>
+        <p><strong>Why is changing one character harder than generating a stunning image?</strong></p>
+        <p>Generation vs. editing are fundamentally different tasks. When generating an image, the model has full creative freedom — there's no single correct answer. But changing a character has a ground truth: it's either right or wrong. This turns a "creative task" into a "precision operation."</p>
+        <p>Diffusion models work by learning statistical patterns at a high level — atmosphere, style, texture. To change a character, the model must simultaneously understand the symbol semantically, match it visually at the pixel level, and preserve everything around it. That's far harder than generating a cyberpunk cityscape.</p>
+
+        <h2>2. How Diffusion Models Work</h2>
+        <p><strong>Core idea:</strong> Training adds noise step-by-step until the image becomes pure random noise. Inference starts from random noise and has the neural network gradually "denoise" back to an image.</p>
+        <h2>Forward Process — Destroying the Image</h2>
+        <p>Given a real image x₀, we add Gaussian noise over T steps (e.g. T=1000):</p>
+        <pre><code>q(xₜ | xₜ₋₁) = N(xₜ; √(1-βₜ) · xₜ₋₁, βₜ · I)</code></pre>
+        <p>Each step slightly compresses the previous image and adds noise. Key trick — direct jump to any timestep t:</p>
+        <pre><code>xₜ = √(ᾱₜ) · x₀ + √(1 - ᾱₜ) · ε,    ε ~ N(0, I)</code></pre>
+        <pre><code>import torch
+
+def forward_sample(x0, t, alphas_cumprod):
+    sqrt_alpha_bar = alphas_cumprod[t] ** 0.5
+    sqrt_one_minus = (1 - alphas_cumprod[t]) ** 0.5
+    eps = torch.randn_like(x0)
+    xt = sqrt_alpha_bar * x0 + sqrt_one_minus * eps
+    return xt, eps</code></pre>
+        <h2>Reverse Process — Learning to Denoise</h2>
+        <p>Train a neural network εθ to predict "what noise was added" given a noisy image xₜ and timestep t. The loss is just MSE:</p>
+        <pre><code>L = E[ || ε - εθ(xₜ, t) ||² ]</code></pre>
+        <h2>Three Key Insights</h2>
+        <ul>
+          <li><strong>Predicting noise is easier than predicting the image.</strong> Noise is standard normal — simple structure. Predicting x₀ directly is too complex.</li>
+          <li><strong>Breaking generation into 1000 small problems.</strong> Each step only removes a tiny bit of noise, making each subtask easy.</li>
+          <li><strong>Timestep t is a conditional input.</strong> Sinusoidal embeddings tell the model "how noisy is it now" so it adjusts behavior accordingly.</li>
+        </ul>
+
+        <h2>3. Why Local Editing is So Hard</h2>
+        <p>There's a critical distinction between two senses of the model "knowing" what A looks like:</p>
+        <ul>
+          <li><strong>Your understanding:</strong> A = two slanted lines plus a crossbar. Changing A→B is a symbol substitution. This is a rule-based operation.</li>
+          <li><strong>The model's understanding:</strong> It's seen millions of images containing A and learned that "this pixel arrangement has high probability in this context." This is a statistical pattern.</li>
+        </ul>
+        <p>When generating, the difference is invisible. But during editing, the problem surfaces: the surrounding pixels are fixed, and statistically, they still match A better than B. The model gets pulled between "I need to fill in B" and "the context statistically looks like A." The result is distortion.</p>
+
+        <h2>a16z Future Trends</h2>
+        <p>Key themes: the importance of data flywheels that can scale with model capabilities rather than be replaced by them; AI enabling human connection; interpretability.</p>
+
+        <h2>The Viktor Question</h2>
+        <p>What do we actually need? Previously it was chat, now it's agents. The future direction: a worker specialized in one domain, or one specialized in N domains connecting many tools — like getviktor?</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
