@@ -1,0 +1,78 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月13日";
+const date = "2026-04-13";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月13日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>ai 写作比你想象的要难</h2>
+        <p>关于 AI 与写作的讨论通常认为，输入提示词，输出文本，任务就完成了。但 Katie Parrott 揭示了其中更为复杂的过程：在动笔之前，有智能体与她进行"面试"；在文章结构上，她需要反复修改与争取；她还有一组名为"海明威"和"希区柯克"的 AI 评论员来协助修改；最后还会进行一遍通读，标记出所有听起来像机器生成的内容。</p>
+
+        <h2>data annotation：小模型配专业数据可能比大模型效果更好</h2>
+        <p>一个 40 亿参数的模型，通过训练正确的金融数据，最近击败了一个体量大它 60 倍的模型。Shutterstock 和 News Corp 通过向 AI 实验室授权数据获利数亿美元，合同每年增长 20%。关键问题：你公司的私有数据有多少价值，以及是授权出去、自己训练，还是两者都做。</p>
+
+        <h2>人工智能医疗试点项目</h2>
+        <p>一种有趣的分阶段部署方式：前 250 次 AI 处方审核需由医生进行把关，只有当 AI 的判断与医生的意见一致率超过 98% 时，才能自动完成后续流程。接下来的 1,000 次处方审核则要求一致性率更高，需达到 99% 以上。之后监管方式转为每月随机检测。这是在高风险领域负责任部署 AI 的方式。</p>
+
+        <h2>我自己用 claude 报税发现的一些问题</h2>
+        <p>两个卡点：</p>
+        <ul>
+          <li><strong>效率奇低。</strong>目前 claude 用自带的插件控制浏览器，大部分情况下没有手动输入快，而且是要慢十几倍。主要原因是目前它读取浏览器内容靠截图，然后大部分网站又不能一下子全部截图好，需要他上下滑动，截图，读取信息，会消耗很多时间。还有就是点击页面经常有错误。</li>
+          <li><strong>中途有一些地方他应该停下来问我，结果没有。</strong>比如他因为不知道我的银行账户信息，所以选择了让我寄支票去付税，而没有选择线上填银行账户然后线上付款。</li>
+        </ul>
+
+        <h2>GLM-5.1 架构解读：MoE、RMSNorm、MLA、DSA</h2>
+        <p>GLM-5.1 是智谱（Z.ai）的 744B 参数 MoE 开源模型（每个 token 激活 40B 参数），MIT 协议。整体结构从下到上：<strong>输入文字 → Token Embedding → 78 个重复的 Block → Final RMSNorm → Linear 输出层 → 预测下一个词。</strong>每个 block 里有两大组件：Attention 和 FFN/MoE。</p>
+        <p><strong>RMSNorm（归一化层）：</strong>就像音频的"压缩器"，把声音电平拉平，防止爆音。每经过一层，就把数值"归一化"一次，强制拉回到合理范围。</p>
+        <p><strong>MLA（Multi-head Latent Attention / 多头潜在注意力）：</strong>DeepSeek 发明的，GLM-5.1 直接继承了它。不直接存完整的 K 和 V，而是先把它们压缩成一个很小的"潜在向量"，用的时候再解压回来。就像把 4K 图压缩成 JPEG 存着，需要显示时再还原，内存占用大幅下降。GLM-5.1 支持 202k 上下文，MLA 功不可没。</p>
+        <p><strong>DSA（DeepSeek Sparse Attention / 稀疏注意力）：</strong>只在"有意义的词对"之间算注意力，跳过大量无关组合，把计算量从 O(n²) 降下来。MLA + DSA 同时存在于每个 block——MLA 解决内存，DSA 解决计算量。</p>
+        <p><strong>MoE（Mixture of Experts / 专家混合）：</strong>把 FFN 那一层拆成 256 个"专家"，每个专家是一个独立的小网络。Router 路由器对每个 token 决策："你去找哪几个专家处理"。GLM-5.1 总参数 744B，每次推理只用到 40B 的参数，计算量相当于 40B 小模型，但知识容量是 744B 大模型。</p>
+        <h2>GLM-5.1 社区评价</h2>
+        <ul>
+          <li>SWE-Bench Pro 58.4 分，首次以开源模型身份登顶，超过 GPT-5.4（57.7）和 Claude Opus 4.6（57.3）</li>
+          <li>长时自主编码能力让人印象深刻——可以持续 8 小时自主"计划→执行→测试→修复→优化"循环</li>
+          <li>全程在华为昇腾 910B 上用 MindSpore 训练，没用任何 Nvidia GPU</li>
+          <li>弱点：不是通才模型，通用推理能力"明显弱于 Claude 和 GPT"。本地运行痛苦：IQ2_M 量化在 M4 Max 上只有 3-5 tok/s</li>
+          <li>"击败 Claude Opus 4.6"的说法有误导性——只在 SWE-Bench Pro 这一个基准上成立</li>
+        </ul>
+
+        <h2>Claude.md：文件夹就是 agent</h2>
+        <p>一种有趣的 agent 原生开发模式：一个 repo 文件夹里包含积累的机构知识，任何新代理都会自动继承这些知识。阅读顺序：先读 CLAUDE.md，然后是架构文档，再是助手系统报告，最后是助手的提示词。</p>
+        <p>作者构建了一个"调度层"：一个 Ruby 守护进程，监听任务请求，自动把任务分配到对应的文件夹，worker 跑完把结果写回文件，他只需要看最终结果。他每天用两个命令：<code>/hey</code>（早上看一遍所有 agent 的进展汇报）和 <code>/orchestrate "Fix issue #1765"</code>（丢一个任务进去，agent 自动拆解、干活、提 PR，他来审查）。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
