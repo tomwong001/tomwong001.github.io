@@ -1,0 +1,296 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 17";
+const date = "2026-04-17";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 17, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Follow Claude's X Account</h2>
+        <p>Case in point: today's reset wasn't announced to us in advance. If we'd known yesterday, we could have used it much more aggressively. Following official channels actually saves tokens.</p>
+
+        <h2>Overseeing Agents Is the Future, Not Writing Code</h2>
+        <p>Dan Shipper's take: dev work is headed toward <strong>overseeing agents</strong>, not writing code. The idea that CLI will eat UI is nixed. With a CLI-first workflow, you mostly supervise through text: commands, logs, git state, diffs, terminal output. Now that agents are doing the coding, that's not a good primary interface.</p>
+        <p>Instead, the future coding UI is centered on managing parallel work, staying aware of git/task context, and — most importantly — having access to a preview of what you're building.</p>
+        <p>I find this interesting. Many people say CLI is the future, but is the future really only for programmers to oversee agents? Like reporting to colleagues, you have to speak plain language to non-technical folks too. UI is plain language. Plain language is needed.</p>
+
+        <h2>Two Things That Surprised Me About Opus 4.7</h2>
+        <ol>
+          <li>It dispatched Haiku to handle doc exploration tasks while I was on Opus 4.7 Max. That's clever — it's actively cutting token consumption and boosting speed.</li>
+          <li>It could identify which template website our Chinese resume came from. I genuinely did not expect that.</li>
+        </ol>
+
+        <h2>Fast Mode Claude Stopped Working</h2>
+        <p>Worked on 4.6, stopped after the update. Frustrating.</p>
+        <p>Also, the positioning of these two modes is unclear:</p>
+        <ul>
+          <li><strong>Allow bypass permissions mode</strong>: skips all permission checks so Claude works uninterrupted. Good for fixing lint errors or generating boilerplate. Letting Claude run arbitrary commands is risky — data loss, system corruption, prompt injection attacks.</li>
+          <li><strong>Allow auto permissions mode</strong>: lets Claude handle permission decisions during coding sessions so developers can run longer tasks without manual approvals. Also includes additional safeguards against prompt injections.</li>
+        </ul>
+        <p>Not obvious which one to reach for when.</p>
+
+        <h2>OpenAI Codex Update</h2>
+        <p>OpenAI quietly acquired a company called Software Apps Inc, who launched a macOS AI companion called Sky about a year ago. This team was obsessed with the Mac, and somehow built a magical experience — largely because they were controlling the Mac in the background. You work on one document, Codex clicks buttons and performs actions on another, without interrupting you.</p>
+        <p>I hear computer use is pretty smooth now. Computer use UX is becoming a mainstream product category: OpenAI's Codex desktop/computer-use update drew unusually strong practitioner reactions. Some called sub-agents + computer use "very close" to what AGI actually feels like.</p>
+
+        <h2>Warp Terminal Supports Any CLI Agent</h2>
+        <p>Warp, in my opinion the best terminal experience out there, just shipped <strong>first-class support for any CLI agent</strong> — Claude Code, Codex, OpenCode, Gemini CLI — all running side by side in vertical tabs with live status indicators.</p>
+        <p>The killer feature here, and it solves what I think is the single worst part about Claude Code, is <strong>notifications when agents need you</strong>. If you've used Claude Code you know the pain of constantly checking if it's waiting for permission or input. Warp notifies you. You step in, approve, go back to what you were doing. They also added integrated code review, a rich multimodal input editor, and — this is wild — <strong>remote control from mobile</strong>.</p>
+
+        <h2>Claude Code Team Best Advice</h2>
+        <ul>
+          <li><strong>Delegate, don't micromanage</strong> — hand the whole task over, don't hover on every step.</li>
+          <li><strong>Put full goal + constraints + acceptance criteria up front</strong> — front-load the information.</li>
+          <li><strong>Tell the model how to verify</strong> — encode testing workflows in claude.md or skills.</li>
+        </ul>
+        <p>That strongly suggests Anthropic optimized toward autonomous task loops where explicit validation is central.</p>
+
+        <h3>Build Self-Validation Loops</h3>
+        <p>Configure Claude to automatically run builds, tests, and lint to verify its own work. This lets Claude work autonomously for longer and catch its own errors, especially effective when you have Claude write tests first, then code.</p>
+
+        <h3>Develop Task Classification Intuition</h3>
+        <p>Learn to distinguish tasks suited for async processing (edge features, prototypes) from those needing sync supervision (core business logic, critical fixes). Abstract tasks at the product edge can use "auto-accept mode"; core features need tighter oversight.</p>
+
+        <h3>Write Clear, Detailed Prompts</h3>
+        <p>When multiple components share similar names or functions, be extremely specific. The better and more detailed the prompt, the more you can let Claude work independently without accidentally modifying the wrong parts of the codebase.</p>
+
+        <h2>CLAUDE.md Scoping</h2>
+        <pre><code>Tab opened in /Desktop/claudecode/:
+  reads: global + this project + memory
+
+Tab opened in /Desktop/other-project/:
+  reads: global + that project's CLAUDE.md (if any) + that project's memory
+
+→ Global CLAUDE.md is shared
+→ Project CLAUDE.md is independent
+→ Conversation context is always independent (unless you use /resume)</code></pre>
+
+        <h2>How the Claude Code Team Uses Claude Code</h2>
+        <p><strong>Auto-update docs after each session</strong>: the team has Claude Code summarize completed work and propose improvements at the end of every working session. This forms a continuous improvement loop — Claude Code keeps refining the claude.md and workflow docs based on actual usage, making subsequent iterations smoother.</p>
+        <p><strong>Parallel task management across instances</strong>: for long-running data tasks, they open multiple Claude Code instances in different repos. Each instance keeps its full context, so even hours or days later, Claude Code remembers exactly where it left off.</p>
+
+        <h2>Continuing nano-vllm</h2>
+        <p>The full inference flow:</p>
+        <pre><code>You input: "今天天气真好"
+         │
+         ▼
+    ┌─────────┐
+    │ tokenize│  ← chops text into numbers
+    └─────────┘
+         │
+         ▼
+    [15, 234, 89, 12, 456, 78]
+         │
+         ▼
+  ═══════════════════════════════
+         INFERENCE
+  ═══════════════════════════════
+         │
+         ├─ Phase 1: PREFILL
+         │   feed the whole sequence to GPU at once
+         │
+         └─ Phase 2: DECODE
+             spit out tokens one at a time</code></pre>
+
+        <h3>Batching</h3>
+        <p>Decode N requests in parallel → per-step time is roughly the same → throughput ×N. This is the <strong>core performance source</strong> of vLLM, nano-vllm, and similar inference frameworks.</p>
+        <pre><code>Static Batching:
+  wait until [A, B, C, D] all gathered → depart together
+  A finishes in 50 tokens → but has to wait for B, C, D
+  → A's "seat" sits empty, wasting memory and compute
+
+Continuous Batching:
+  A finishes, leaves immediately; new request boards immediately
+  → seats are always occupied</code></pre>
+
+        <h3>Preempt</h3>
+        <pre><code>When memory is full, nano-vllm does:
+
+before:
+  VRAM: [A 100MB] [B 200MB] [C 60MB]
+  Request D needs 150MB → can't fit
+
+preempt(A):
+  kick A back to waiting queue
+  free A's KV cache (100MB)
+
+after:
+  VRAM: [___empty___] [B 200MB] [C 60MB]
+  100MB free
+
+preempt(B) if still not enough:
+  VRAM: [___empty___] [___empty___] [C 60MB]
+  300MB free ✅
+  D comes in, allocates 150MB</code></pre>
+        <p><strong>What about the kicked-out A?</strong> Its KV cache is gone. When A's turn comes again, re-prefill — recompute the whole history (prompt + what's been generated). Recomputing beats waiting, because prefill is compute-bound and very fast.</p>
+
+        <h3>Prefix Caching</h3>
+        <pre><code>Block table:
+  block 0: K,V for "Please introduce"       (A, B both point here)
+  block 1: K,V for "Beijing's"              (A, B both point here)
+  block 2: K,V for "history,"               (A, B both point here)
+  block 3: K,V for "focus on Ming-Qing"     (only A points here)
+  block 4: K,V for "focus on Republic era"  (only B points here)
+
+Managed via block ref_count:
+  block 0 ref_count = 2 (A, B both using)
+  block 3 ref_count = 1 (only A)
+
+When A finishes: block 0 ref_count 2 → 1, don't release (B still using)
+When B finishes: block 0 ref_count 1 → 0, release</code></pre>
+        <p>Why do providers charge so little for cached system prompts? With prefix caching, a 5000-token system prompt is computed once; every subsequent call reuses the blocks. Provider's compute cost is near zero, so they pass the savings on.</p>
+
+        <h3>Generate Pseudocode</h3>
+        <pre><code>function generate(prompt, max_new_tokens):
+    # Step 1: tokenize
+    tokens = tokenize(prompt)
+
+    # Step 2: prefill — feed whole sequence, start from empty kv_cache
+    next_token, kv_cache = model(tokens, kv_cache=empty)
+    tokens.append(next_token)
+
+    # Step 3: decode loop — feed one new token, reuse kv_cache
+    for i in range(max_new_tokens - 1):
+        last_token = tokens[-1]
+        next_token, kv_cache = model([last_token], kv_cache)
+        tokens.append(next_token)
+
+    # Step 4: detokenize
+    return detokenize(tokens)</code></pre>
+
+        <h3>Two Key Realizations</h3>
+        <p>1. Q, K, V are computed from the same token via three different matrices W_Q, W_K, W_V. (That's why "model parameters" take so much memory — these W matrices are huge.)</p>
+        <p>2. kv_cache stores K and V only, not Q. (Q is recomputed every step; K, V history doesn't change, so it's stored.)</p>
+
+        <h2>Understanding Attention</h2>
+        <pre><code>Attention formula:
+  Attention(Q, K, V) = softmax(Q · K) · V
+
+Analogy:
+  Q (Query)   = "what am I looking for?"     ← current token's question
+  K (Key)     = "what type am I?"            ← each history token's label
+  V (Value)   = "my actual content"          ← each history token's info
+
+Library research:
+  Your question Q       = "I want to learn prefill"
+  Each book title K     = "Python Intro", "LLM Inference", "Transformer Paper"...
+  Each book content V   = actual text in the books
+
+  Attention:
+    1. compare Q to each K, see which book is relevant (softmax(Q·K))
+    2. read each V weighted by relevance
+    3. get a "fused" answer</code></pre>
+
+        <h2>QKV Forward</h2>
+        <pre><code>function model_forward(new_tokens, kv_cache):
+    # Step 1: for each new token, compute Q, K, V
+    for each token in new_tokens:
+        embedding = embed(token)
+        Q = embedding @ W_Q
+        K = embedding @ W_K
+        V = embedding @ W_V
+
+        # Append new K, V to kv_cache
+        kv_cache["K"].append(K)
+        kv_cache["V"].append(V)
+
+    # Step 2: attention with current Q + all K, V in kv_cache
+    all_K = kv_cache["K"]
+    all_V = kv_cache["V"]
+    context = attention(Q, all_K, all_V)
+
+    # Step 3: context → more layers → predict next token
+    logits = output_layer(context)
+    next_token = sample(logits)
+
+    return next_token, kv_cache</code></pre>
+
+        <pre><code>Prefill (3 tokens in one pass):
+
+  今 → Q1, K1, V1  ↘
+  天 → Q2, K2, V2  →  GPU parallel computes 3 sets of K, V
+  气 → Q3, K3, V3  ↗
+
+Decode (1 token in):
+
+  好 → Q4, K4, V4   ← only 1 set of K, V</code></pre>
+
+        <p><strong>Prefix caching gotcha</strong>: in nano-vllm, prefix caching is computed "by block," not by token. block_size = 256. If your prompt is only 22 tokens, you don't even fill half a block, so no hash gets generated, and the second request can't find it — miss.</p>
+
+        <h2>React Dashboards vs Jupyter Notebooks</h2>
+        <p>Jupyter Notebooks are disposable — run once, look, throw away, rewrite for the next evaluation. A React dashboard is a real web app — deploy it once and keep using it; every time you train a new model, plug the data in and view, no rewriting.</p>
+        <p>The core point: model performance visualization is complex — not just an accuracy number but multi-dimensional, interactive views. Power BI/Tableau are general; they need highly customized views to understand specific metrics in RL training. So they just have Claude Code write them a dedicated React web app.</p>
+
+        <h2>Why Still Use Figma</h2>
+        <p>Figma is still the absolute standard in design, not "outdated." It keeps iterating — it added AI features last year. The designer toolchain is Figma for visual design + Claude Code to turn designs into real code. Complementary, not competing.</p>
+        <p>The doc says they have Figma open 80% of the time — Figma actually becomes more important because of Claude Code. Designers can paste Figma screenshots directly into Claude Code to generate code prototypes.</p>
+
+        <h2>GitHub Actions Auto-Tickets</h2>
+        <p>This is an officially-supported Claude Code feature — plug Claude Code into GitHub Actions, and when someone opens an Issue or PR comment, Claude is automatically triggered to analyze and propose changes, even open a PR. The design team uses this to work through the backlog of small changes like spacing tweaks or copy changes.</p>
+
+        <h2>996 Is Dead, 24/7 Is the New Norm</h2>
+        <p>For the first time in the history of knowledge work, the person who went home did not take the only copy of their brain with them. 996 as a concept is dead; we're simply 24/7 employees now — but the 24/7 employee is not a person working 24 hours, it's a person whose agents work with enormous parallelization.</p>
+        <p>Most teams in 2026 still bottleneck on coordination rather than typing, and most organizations have barely begun to restructure. But the frontier is always where the future shows up first, and the frontier is already here. This essay is not a description of the industry at large, but rather a description of what is already happening inside the most AI-native teams.</p>
+        <p>I want to make a video on this.</p>
+
+        <h2>Probability: Programmers Can't Guarantee Their Code Runs</h2>
+        <p>This is not a future problem but a present one. Past a certain throughput, errors sneak in not because reviewers are careless but because output volume exceeds what human attention can meaningfully check, and most reviewing is done by non-deterministic models that miss things. The codebase is no longer something you know works — it's something you trust works, something whose probability you can no longer precisely describe.</p>
+        <p>This has strategic implications most leadership teams don't yet grasp. You're not building organizational capability for the model you have; you're building it for the model you don't yet have. The specs you're learning to write, the review culture you're building, the observability you're integrating, the agent fleets you're learning to command, the training rituals you're experimenting with to keep junior craft alive — none of this is for 2026 capability, it's scaffolding for 2027 and 2028 capability.</p>
+        <p>Companies building that scaffolding now will leverage the advantage in the next capability jump. Those waiting for tools to mature before restructuring will spend the first year of the next capability era learning what early adopters already know, while early adopters compound the lead.</p>
+
+        <h2>McKinsey on the Agentic Organization</h2>
+        <p><strong>Source</strong>: McKinsey Podcast — Alexis Krivkovich × Lucia Rahilly (2026-04-02)</p>
+
+        <h3>The Core Paradox</h3>
+        <p>Over 80% of companies have invested heavily in AI without seeing bottom-line returns. The problem isn't the tech — it's that organizations haven't redesigned themselves to match.</p>
+
+        <h3>Five Pillars</h3>
+        <p><strong>1. Business model</strong>: near-zero marginal delivery cost will break any moat that depends on friction. Example: an agent that automatically moves money between banks to chase the best rate → bank account stickiness disappears.</p>
+        <p><strong>2. Team structure</strong>: 75% of roles need fundamental redesign within 2-3 years. Not disappearing — their responsibility boundaries need rewriting, including management. Large orgs added 1-3 layers of management over the past decade; agents could enable "superhuman management span," flattening hierarchies and speeding decisions.</p>
+        <p><strong>3. Workflow</strong>: the biggest value isn't "use AI to do a task faster," it's <strong>end-to-end process redesign</strong>. Examples: insurance underwriting, HR hiring-to-onboarding. AAA (American Arbitration Association): agents auto-build case timelines, organize facts, generate ruling recommendations → arbitrators only judge "do I agree."</p>
+        <p><strong>4. Leadership</strong>:</p>
+        <ul>
+          <li><strong>Human in the loop</strong>: agent does part, hands off to human for the rest</li>
+          <li><strong>Human above the loop</strong>: agent completes the core process; human only makes final judgments ← this is the direction</li>
+        </ul>
+        <p><strong>5. Talent</strong>: soft skills like judgment, systems thinking, and people management become more valuable. The junior paradox: if agents take over "scut work," juniors lose the path to build judgment → the fix is making L&D a core part of the career journey, not a side activity. Change management shifts from episodic to <strong>perpetual</strong>: "Change management is no longer an episodic thing. It's a perpetual state." Use "two-way doors" (reversible experiments) — don't bet the whole company.</p>
+
+        <h3>Connection</h3>
+        <p>Same trend as Dan Shipper's "overseeing agents is the future" — McKinsey is the org-management version.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
