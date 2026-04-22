@@ -1,0 +1,159 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月19日";
+const date = "2026-04-19";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月19日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Claude Code 终端里的高频快捷键</h2>
+
+        <h3>Shift + Tab：切换三档模式（最重要）</h3>
+        <p>连按 Shift + Tab 在三种模式间循环：</p>
+        <ul>
+          <li><strong>Normal（默认）</strong>：每次改文件前问你一下。</li>
+          <li><strong>Accept edits（自动接受）</strong>：改文件不再问你。</li>
+          <li><strong>Plan mode（只规划不动手）</strong>：只讨论方案，不执行任何修改。</li>
+        </ul>
+
+        <h3>Esc：打断当前动作</h3>
+        <p>Claude 一开始跑偏，或者你想换方向时，随时按 Esc 停掉当前动作，然后直接接着说你的修正意见。</p>
+
+        <h3>@：引用文件</h3>
+        <p>输入 @ 会弹出文件补全，比如 @README.md 或 @src/auth.ts。这比复制粘贴整段文字效率高得多，也省 context。</p>
+
+        <h2>奉天：2 个 Max 套餐 + 一套工作流 = 10 倍生产力</h2>
+        <p><strong>副标</strong>：日常是怎么用 AI 写代码的——工具、环境与工作流分享</p>
+
+        <h3>引言：实践是检验真理的唯一标准</h3>
+        <p>平时面试会聊 AI-Coding 工具使用情况。大家不能自己创造 Agent 工具，这很正常；但能把别人造好的工具用好，这就是"低垂的果实"。不过大部分人的反馈是"能用，但只能简单提效"，理由往往是：AI 有幻觉、不了解业务、错误率高等等。</p>
+        <p>你问他怎么试的？之前用 XX 工具试过，散乱地聊几句，最多把一个 PRD 或功能文档直接丢给 AI，然后就草率得出结论：今天的 LLM 还不行，还不成熟，最终还是要靠人。</p>
+        <p>其实 AI 工具真不是没用，是你会的太少、都不知道怎么用。</p>
+
+        <h3>一、工具的选择：决定提效的下限</h3>
+
+        <p><strong>1. 为什么用了一年 Cursor 和 Trae 之后，全面切到了 Claude Code (CC)</strong></p>
+        <ul>
+          <li><strong>模型能力</strong>：Claude 自家模型在自家产品里没有第三方渠道的功能限制，在编码上的统治力依然在。</li>
+          <li><strong>Dangerously 模式契合 AFK 执行理念</strong>：之前搞 ralph-loop 就是在追求"给 AI 一个任务，让它自己跑完"。Cursor 做不到这个——每步都要你盯着 diff 点 accept。而 CC 的 dangerously 模式跳过了所有权限确认，让 Agent 真正自主执行，配合 Git 之后风险可控。</li>
+          <li><strong>终端原生工作流的一致性</strong>：整个工具链（Ghostty、Yazi、各种 CLI 工具）都是 terminal-native 的，CC 天然融入这个生态，切换到 IDE 反而是一种切换成本。</li>
+          <li><strong>社区和生态高玩更多</strong>：很多高手分享经验，你很容易站在"巨人的肩膀上"。</li>
+        </ul>
+        <p><strong>一句话总结</strong>：Cursor/Trae 适合"AI 辅助我写代码"的场景，CC 适合"AI 替我执行任务"的场景，后者感觉更省力，我只做判断就行。</p>
+
+        <p><strong>2. 模型选型：别贪便宜，"效果优先"才是最高 ROI</strong></p>
+        <p>越便宜、效果越差的模型，看似单 Token 成本低，实则整体 ROI 极低。为了拿到满意结果，你要花更多时间调试 Prompt、补上下文、纠正错误。对开发者来说，时间成本最贵。</p>
+        <p>目前主要用 <strong>2 个 Max 套餐</strong>：Claude-Code 以及 GLM，没有 Token 焦虑。</p>
+
+        <p><strong>3. 终端选择了 Ghostty</strong></p>
+        <p>切到 CC 之后发现终端还是方便的，尤其是多个项目并行，一般 3-4 个项目同时开发，只要 cmd+1、2、3 切换就行。配合好音乐，沉浸感和效率基本拉满。Ghostty 基本不用复杂配置，只装了 2 个插件：<strong>yazi</strong>（看目录结构）和 <strong>lazygit</strong>（看 git 状态）。</p>
+
+        <h3>二、环境的准备：打造"动口不动手"的心流环境</h3>
+        <p><strong>1. 找到你的"语音输入最优解"</strong></p>
+        <p>AI 编程的核心是思考，而不是敲键盘。专门配了桌面定向收音麦克风。试过各种工具，最终找到性价比最高的方案：<strong>自定义 ASR API + 闪电说配置 + 全局快捷键</strong>。</p>
+        <p>现在一天工作 6-7 小时，几乎不用敲键盘，想到什么直接说，AI 精准接收，大幅降低了输入门槛和疲劳感。为了解决语音输入到 CC 折叠的问题，还专门搞了一个 Mac 应用，在文本粘贴时进行拦截，逐个输入到 CC。语音输入对 Vibe Coding 的体验提升是 10 倍的。</p>
+
+        <p><strong>2. CC 的各种配置不要急</strong></p>
+        <p>CC 社区很好，类似 everything-claude-code 的项目非常多，很多人上来就着急做各种复杂配置，完全没必要。配置复杂了反而对使用要求变高，增加上手难度。</p>
+        <p>最重要的是 claude.md。网上一大堆"万字雄文"，结果任务还没开始，上下文就占了一大块。慢慢加，不要急，从少到多，太多了之后就用渐进式——里面讲清楚文件位置，CC 会自己去找，相当于按需加载。</p>
+
+        <h3>三、常用的指令和技巧</h3>
+
+        <p><strong>1. Claude Code 非常有用的 6 个命令</strong></p>
+        <ul>
+          <li><strong>insights</strong>：自动分析会话记录生成报告（项目领域、交互模式、摩擦点）。1-2 周看一次，基于此优化 CC 配置。</li>
+          <li><strong>context</strong>：查看当前会话上下文占用情况。如果启动时被过多占用，据此调整加载策略（如关闭不用的 MCP 或精简 memory.md）。</li>
+          <li><strong>loop</strong>：循环执行某个指令。常用来做测试，比如补全用例或先生成用例，然后用 loop 循环执行检查是否符合预期。</li>
+          <li><strong>new</strong>：虽然 CC 支持 1M 上下文并自动压缩，但如果觉得一个问题解决得差不多了，且接下来的任务和之前关联不大，会用 new 清空上下文开启新会话。</li>
+          <li><strong>simplify</strong>：并行启动三个专门的 review agent，分别从代码复用、质量问题、效率优化三个角度审查你的 diff。</li>
+          <li><strong>claude-md-improver</strong>：审计、评估和改进仓库里的 CLAUDE.md 文件。</li>
+        </ul>
+
+        <p><strong>2. 打通能力边界的 2 个高频 MCP 工具</strong></p>
+        <ul>
+          <li><strong>Context7</strong>：帮 AI 精准查找官方文档、API 文档，从根源上避免 AI "瞎编乱造"。</li>
+          <li><strong>Playwright</strong>：让 AI 直接操作浏览器，页面测试、数据抓取、重复人工操作流程都能交给 AI 自动化。</li>
+        </ul>
+
+        <p><strong>3. 全流程提效神器：Superpowers Skill</strong></p>
+        <p>这是每天必用的技能。几乎所有需求都会用它走完完整流程：需求脑暴、技术方案选型、任务拆解、开发计划制定。全链路都靠它提效，把模糊的想法快速落地成可执行步骤。</p>
+
+        <p><strong>4. 复杂任务杀器：Agent Team 模式</strong></p>
+        <p>处理复杂项目时，必须要区分清楚两个概念：</p>
+        <ul>
+          <li><strong>Sub Agent（总分模式）</strong>：主 Agent 把任务拆给子 Agent，子 Agent 执行完返回结果，单线程执行，无协同。</li>
+          <li><strong>Agent Team（团队协同模式）</strong>：每个子 Agent 有独立上下文和调用 Skill 的能力，子 Agent 之间可以互相通讯、同步信息、协同完成任务。</li>
+        </ul>
+        <p>标准玩法：把 Agent Team 和 Superpowers 结合起来用。专门定制了一个 Skill，给 Superpowers 的 explain 技能增加 Agent Team 候选项，遇到复杂需求直接拆分成多角色 Agent 协同完成。</p>
+
+        <h3>四、使用的 SOP 或思路</h3>
+
+        <p><strong>1. 标准项目 SOP</strong></p>
+        <p>一般做一个项目，会从 Superpowers 的脑暴启动；然后进行多轮问答，确定方案和执行计划；接着交给 Sub Agent 或 Agent Team 去执行；最后通过建立多链路的测试（单测、集成测试、E2E）来验证。有时候还会用 loop 循环调用 Playwright 做测试（包含截图）。</p>
+
+        <p><strong>2. 业务项目用不起来怎么办？</strong></p>
+        <p>很多人觉得业务项目用不起来，原因很多：怕 AI 生成代码有 BUG 要背锅、业务背景复杂自己描述不清楚、依赖太多。如果心理压力大，不如先从"个人项目"开始练手。兴趣是最好的老师，原本那些小众、低 ROI、没法定制化的需求，现在因为 AI-Coding 而变得可行。</p>
+
+        <p><strong>3. 形成属于自己的"无限游戏"</strong></p>
+        <p>通过个人项目去熟悉 LLM 的特性、熟悉工具的特性，最终目的是形成一套符合自己习惯的循环。重点不仅仅是完成项目，还要关注完成的过程。在 CC 里，我经常会中止它的执行，然后转向问它："你刚才为什么会这么思考这个问题？"、"为什么遇到这样的情况你没有考虑 XX？" 通过类似对话，打磨链路、优化 claude.md 和 memory.md，以及定制自己的 Skills。</p>
+
+        <p><strong>4. 随便 YY 一下</strong></p>
+        <p>自己搞了很多 for myself 的系统，比如草缸养鱼记录并分析水质的、理财的、就医记录的。另外就是兴趣项目——买基金之前挺晕菜，后来基于 CC 单独做了一个助手，配置了 MCP 和自定义 Skills，把有知有行的内容整理成向量知识库到本地，经常可以帮做一些市场分析、持仓建议。</p>
+        <blockquote style="border-left: 3px solid var(--color-border); padding-left: 1rem; color: var(--color-text-muted); margin: 1.25rem 0;">示例指令："创建一个 Agent Team，帮我完善 xxx.md 的方案并执行，Team 中包含 1 个产品、1 个架构师、1 个后端、1 个前端、1 个测试。"</blockquote>
+
+        <p><strong>5. 总之，就是要不断 recheck 生产的过程，把"过程优化"当做一个独立的水平项目来做。</strong></p>
+
+        <h3>五、真正用起来的一些建议：心法与避坑</h3>
+
+        <p><strong>1. 没有万能模板，找到自己的节奏</strong></p>
+        <p>不要迷信固定的 prompt 模板或万能配置文件。核心就是"坚持用，多实操"。用多了自然会有手感：什么时候该精简上下文、什么时候补全模糊指令、什么时候 AI 钻牛角尖要拉回方向。</p>
+
+        <p><strong>2. 干中学</strong></p>
+        <p>官网、Github、社区都是好资源。个人比较喜欢看 Github 上的项目，clone 下来跑跑看，然后通过 AI 不断帮你解构项目的设计与实现。听 AI 讲项目的实现细节，你会发现很多有趣的地方。</p>
+
+        <p><strong>3. 自我评估</strong></p>
+        <p>核心是把循环跑起来，重点在评估和引导 AI，而不是生产代码。具体效果提升有 2 个最明显的衡量标准：</p>
+        <ol>
+          <li>原本一个人不可能完成的任务，被你相对容易地完成了；</li>
+          <li>原本可能要 2-3 周的事情，被你在 1-2 天搞定了。如果习惯多任务并行，同时开 4-5 个项目一起跑，差不多能无缝衔接，基本上 2-3 个小时脑子就开始转不动、身体上开始跟不上 AI。</li>
+        </ol>
+
+        <p><strong>4. 给想往 Agent 方向转型朋友的建议</strong></p>
+        <p>先把手里的 AI 编程工具用好。这些我们每天在用的工具，就是目前市场上落地最好、成熟度最高的 Agent 应用。把它们的设计逻辑、能力边界、协同玩法研究透，你会发现 Agent 的核心原理并不复杂，很多能力其实已经在日常工作中用到了。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
