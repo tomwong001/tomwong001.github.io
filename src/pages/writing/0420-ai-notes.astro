@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 20";
+const date = "2026-04-20";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 20, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Paper 1: Generative Agents (Smallville)</h2>
+        <p><strong>Park et al., 2023 | Stanford | UIST'23</strong></p>
+
+        <h3>In One Sentence</h3>
+        <p>LLM-driven 25 AI characters live in a pixel town — they wake up, go to work, gossip, spontaneously organize parties. All social behavior is <em>emergent</em>, nobody wrote the script.</p>
+        <p><em>"Believable proxies of human behavior."</em></p>
+
+        <h3>Architecture Core: Three Things (p.8 Section 4, Figure 5 is key)</h3>
+        <pre><code>Perceive → Memory Stream → Retrieve → Act
+                 ↑                      ↓
+              Reflect                Plan</code></pre>
+
+        <h3>1. Memory Stream (p.8)</h3>
+        <p>Each agent has a timeline; all experiences are stored as natural-language entries:</p>
+        <ul>
+          <li><code>"Isabella Rodriguez is writing in her journal"</code></li>
+          <li><code>"The refrigerator is empty"</code></li>
+        </ul>
+        <p>Retrieval scores on three dimensions, taking a weighted sum:</p>
+        <ul>
+          <li><strong>Recency</strong>: newer memories score higher, exponential decay.</li>
+          <li><strong>Importance</strong>: have the LLM score each memory 1-10. "Brushed teeth" → 2. "Broke up" → 8.</li>
+          <li><strong>Relevance</strong>: cosine similarity of embeddings to the current situation.</li>
+        </ul>
+        <blockquote style="border-left: 3px solid var(--color-border); padding-left: 1rem; color: var(--color-text-muted); margin: 1.25rem 0;"><em>score = recency + importance + relevance</em></blockquote>
+
+        <h3>2. Reflection (p.9, Figure 7)</h3>
+        <p>When cumulative importance crosses a threshold (150), the agent stops to "think," distilling scattered observations into high-level insights:</p>
+        <p>Low-level: <code>Klaus is reading</code>, <code>Klaus is searching for references</code>, <code>Klaus is asking the librarian</code> → mid-level reflection: <code>Klaus is passionate about research</code> → high-level reflection: <code>Klaus is highly invested in research</code>.</p>
+        <p>This is the <strong>reflection tree</strong>: leaves are raw observations, higher nodes are abstractions.</p>
+
+        <h3>3. Planning (p.10)</h3>
+        <p>First, generate a coarse-grained daily plan: <code>"1) 8am wake up 2) go to pharmacy for work 3) 12pm lunch…"</code></p>
+        <p>Then recursively decompose into 5-15 minute action blocks. Plans go into the memory stream and can be modified mid-stream by new observations.</p>
+
+        <h3>The Most Striking Experiment (p.6 Section 3.4)</h3>
+        <p>Given just one seed to one agent — "Isabella wants to throw a Valentine's party" — after two days:</p>
+        <ul>
+          <li>Word spread through town organically</li>
+          <li>Maria, secretly in love with Klaus, proactively invited him</li>
+          <li>5 agents showed up at the café at the right time, spontaneously</li>
+        </ul>
+        <p><strong>No one scripted this. The agents acted it out.</strong></p>
+
+        <h3>Most Important Point for Agent Sim Projects</h3>
+        <p><strong>The p.8 formula</strong>: retrieval = weighted sum of Recency + Importance + Relevance.</p>
+        <p>This is the baseline design for all current multi-agent simulation memory retrieval. Later papers like Mem0 and Zep iterate on this. Memorize this formula — you'll see it again and again.</p>
+
+        <h3>Most Important Point for Persona Products Like Halo</h3>
+        <p><strong>The p.7 finding</strong>: even randomly deleting 80% of interview content, interview-based agents still crush composite agents (0.79 vs 0.76 accuracy).</p>
+        <p>What does this tell us? <strong>It's not the quantity of interviews that matters; it's the quality — a person's own words carry personality signals that demographics cannot capture.</strong></p>
+        <p>Another key finding (<strong>p.8 Figure 3</strong>): interview-based methods significantly reduce DPD (demographic parity difference) across ethnicity and political leanings. Demographic-based methods easily model minorities as stereotypes; interview text gets the agent to reconstruct "this specific person," not "this kind of person."</p>
+
+        <h2>Paper 2: OASIS (Large-Scale Social Network Simulation)</h2>
+
+        <h3>Finding 1: Information Spread Scale and Breadth Reproduce Reality (p.7 Figure 4)</h3>
+        <p>OASIS's information-diffusion curves closely match real Twitter data, with RMSE around 30%. Spread "depth" is lower because the recommender system can't fully replicate Twitter's algorithmic complexity.</p>
+
+        <h3>Finding 2: Group Polarization — LLM Agents Go More Extreme Than Humans (p.8 Figure 5)</h3>
+        <p>196 agents discussing a dilemma, opinions become more extreme with each interaction round. Especially the <strong>uncensored models without safety guardrails</strong> — polarize faster, use absolute expressions like "always better."</p>
+
+        <h3>Finding 3: Herd Effect — Agents Follow the Crowd More Than Humans (p.9 Figure 6)</h3>
+        <p>A post initially downvoted? Agents keep downvoting. But real humans would pause and think. <strong>Agents have stronger herd effect; humans have stronger independent judgment.</strong></p>
+
+        <h3>Finding 4: Larger Agent Populations Yield More Diverse, More Helpful Opinions (p.9-10 Figure 7)</h3>
+        <p>196 agents → 10,196 → 100,196. The same 196 core agents produce higher-quality opinions as the population grows. A larger "society" feeds them more diverse signals; opinions get deeper.</p>
+
+        <h3>Most Important Point for Halo</h3>
+        <p>This paper is the theoretical basis for "mediator agent / ice-breaker agent" designs.</p>
+        <p>In a Halo-type scenario, adding a third mediator agent when two persona agents interact — one that doesn't represent either side, only summarizes disagreements, proposes middle positions, and pushes the conversation toward convergence — is supported by this paper. Debate mechanisms are naturally suited for "two agents with different views needing to reach consensus."</p>
+
+        <h2>Love First, Know Later</h2>
+
+        <h3>Two Key Sentences for Halo (p.4 Discussion)</h3>
+        <p>The paper explicitly names four future capabilities:</p>
+        <ol>
+          <li><strong>Personalized evolution</strong>: users give feedback on agent behavior → continuous optimization via DPO/RLHF → agents become more like the real you.</li>
+          <li><strong>Bidirectional transparency</strong>: users can watch their agent interact with someone else's agent and understand what the matching system is doing.</li>
+          <li><strong>Active preference exploration</strong>: simulations uncover hidden preferences the user didn't even know they had.</li>
+          <li><strong>Limitation</strong>: currently only pairwise matching — multi-person social dynamics (group dating, friend-circle compatibility) need more complex game-theoretic frameworks.</li>
+        </ol>
+
+        <h3>Product-Level Extension</h3>
+        <p>Could you show how many people an agent is talking to and the progress — as a form of visualized "addictiveness"?</p>
+        <p>If we accept that venture economics demands addictive UX, we could design the agent-chat black-box <em>reveal moment</em> as a slot-machine lever pull — each reveal is a variable reward.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body em { color: var(--color-text); font-style: italic; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
