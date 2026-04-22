@@ -1,0 +1,159 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 19";
+const date = "2026-04-19";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 19, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>High-Frequency Claude Code Terminal Shortcuts</h2>
+
+        <h3>Shift + Tab: Cycle Three Modes (Most Important)</h3>
+        <p>Press Shift + Tab repeatedly to cycle:</p>
+        <ul>
+          <li><strong>Normal (default)</strong>: asks before modifying any file.</li>
+          <li><strong>Accept edits</strong>: stops asking — just makes the changes.</li>
+          <li><strong>Plan mode</strong>: discusses approach only, no modifications.</li>
+        </ul>
+
+        <h3>Esc: Interrupt the Current Action</h3>
+        <p>If Claude is going off-track or you want to change direction, hit Esc to stop the current action and just keep talking with your corrections.</p>
+
+        <h3>@: Reference Files</h3>
+        <p>Typing @ opens file autocomplete, e.g., @README.md or @src/auth.ts. Much more efficient than copy-pasting entire blocks, and saves context.</p>
+
+        <h2>Fengtian: Two Max Plans + One Workflow = 10x Productivity</h2>
+        <p><strong>Subtitle</strong>: How I write code with AI every day — tools, environment, and workflow.</p>
+
+        <h3>Intro: Practice Is the Only Criterion of Truth</h3>
+        <p>I often chat with candidates about their AI-coding tool usage in interviews. Most people can't build their own agent tools — that's normal; but leveraging what others have built well is "low-hanging fruit." Yet the common feedback is "it works, but only marginally improves productivity," with the usual reasons: AI hallucinates, doesn't understand the business, error-prone, etc.</p>
+        <p>You ask them how they tried it? Used XX tool before, casually chatted a few lines, at most threw a PRD or feature doc at the AI, then concluded: today's LLM isn't ready, still immature, ultimately people are the answer.</p>
+        <p>Truth is, AI tools aren't useless — you just don't know enough of how to use them.</p>
+
+        <h3>I. Tool Selection: The Floor of Productivity</h3>
+
+        <p><strong>1. Why I switched entirely to Claude Code (CC) after a year on Cursor and Trae</strong></p>
+        <ul>
+          <li><strong>Model capability</strong>: Claude's own model in Claude's own product has no third-party API restrictions; its coding dominance remains.</li>
+          <li><strong>Dangerously mode fits AFK execution</strong>: my whole ralph-loop thing was about "hand the AI a task, let it run to completion." Cursor can't do this — you babysit every diff. CC's dangerously mode skips permission prompts, letting the agent truly execute autonomously, with Git as the safety net.</li>
+          <li><strong>Terminal-native consistency</strong>: my whole toolchain (Ghostty, Yazi, various CLI tools) is terminal-native. CC fits in naturally; switching to an IDE is friction.</li>
+          <li><strong>Stronger community</strong>: lots of experts share workflows; easy to stand on the "shoulders of giants."</li>
+        </ul>
+        <p><strong>In one line</strong>: Cursor/Trae suits "AI assists me writing code"; CC suits "AI executes tasks for me." The latter feels lighter — I only judge.</p>
+
+        <p><strong>2. Model selection: don't go cheap — "results first" is the highest ROI</strong></p>
+        <p>Cheaper, weaker models look cost-efficient per token but have terrible overall ROI. To get satisfactory results, you burn more time tuning prompts, filling context, correcting errors. For developers, time is the most expensive cost.</p>
+        <p>Currently using <strong>two Max plans</strong>: Claude-Code and GLM. No token anxiety.</p>
+
+        <p><strong>3. Terminal: Ghostty</strong></p>
+        <p>After switching to CC, the terminal is actually great — especially for parallel projects. Typically 3-4 projects in development at once; cmd+1/2/3 to switch. With music on, immersion and efficiency max out. Ghostty needs almost no complex config; I installed just two plugins: <strong>yazi</strong> (directory view) and <strong>lazygit</strong> (git state).</p>
+
+        <h3>II. Environment Setup: Build a Flow Where Your Mouth Works, Not Your Hands</h3>
+        <p><strong>1. Find your "optimal voice input"</strong></p>
+        <p>The core of AI coding is thinking, not typing. I got a desktop directional microphone. After trying everything, the best cost-performance combo: <strong>custom ASR API + ShandianShuo config + global shortcut</strong>.</p>
+        <p>Now I work 6-7 hours a day barely touching the keyboard. Say what comes to mind, AI receives it accurately, massively lowering input friction and fatigue. To solve the voice-input-to-CC folding issue, I even built a Mac app that intercepts paste and feeds CC token by token. For vibe coding, voice input is a 10x experience jump.</p>
+
+        <p><strong>2. Don't rush CC configuration</strong></p>
+        <p>The CC community is great — projects like everything-claude-code abound. Many people jump straight to complex config, which is unnecessary. Heavy config raises the usage bar and adds onboarding friction.</p>
+        <p>The most important file is claude.md. There are tons of "10k-word magnum opus" templates online, but your task hasn't even started and context is already half-spent. Add slowly; start small. When it gets big, go progressive — tell CC where files live, it'll fetch them on demand.</p>
+
+        <h3>III. Common Commands and Techniques</h3>
+
+        <p><strong>1. Six very useful Claude Code commands</strong></p>
+        <ul>
+          <li><strong>insights</strong>: auto-analyzes session history into a report (domain, interaction patterns, friction points). I check every 1-2 weeks to tune CC config.</li>
+          <li><strong>context</strong>: shows current session context usage. Adjust loading strategy if startup already eats too much (close unused MCPs, trim memory.md).</li>
+          <li><strong>loop</strong>: run a command repeatedly. Good for testing — generate cases first, then loop them for verification.</li>
+          <li><strong>new</strong>: though CC supports 1M context with auto-compaction, when a topic is done and the next is unrelated, I use new to start fresh.</li>
+          <li><strong>simplify</strong>: launches three parallel review agents to check your diff from the angles of reuse, quality, and efficiency.</li>
+          <li><strong>claude-md-improver</strong>: audits, evaluates, and improves the CLAUDE.md in your repo.</li>
+        </ul>
+
+        <p><strong>2. Two high-frequency MCP tools that extend capability</strong></p>
+        <ul>
+          <li><strong>Context7</strong>: helps AI pinpoint official docs and APIs, eliminating "making things up" at the source.</li>
+          <li><strong>Playwright</strong>: lets AI drive the browser directly — page testing, scraping, repetitive flows all automate.</li>
+        </ul>
+
+        <p><strong>3. Full-cycle productivity tool: Superpowers Skill</strong></p>
+        <p>This is the skill I use every day. Almost every need runs the full flow through it: ideation, tech-stack selection, task breakdown, dev plan. It bridges fuzzy ideas and executable steps.</p>
+
+        <p><strong>4. The complex-task killer: Agent Team mode</strong></p>
+        <p>For complex projects, two concepts must be distinguished:</p>
+        <ul>
+          <li><strong>Sub Agent (hub-and-spoke)</strong>: main agent divides tasks, sub-agents execute and return. Single-threaded, no coordination.</li>
+          <li><strong>Agent Team (collaborative)</strong>: each sub-agent has independent context and can call skills; sub-agents communicate, sync info, and collaborate.</li>
+        </ul>
+        <p>Standard play: combine Agent Team + Superpowers. I built a custom skill adding Agent Team as an option for the Superpowers "explain" skill, so complex needs split into multi-role collaboration.</p>
+
+        <h3>IV. SOP and Thought Process</h3>
+
+        <p><strong>1. Standard project SOP</strong></p>
+        <p>A project usually starts with Superpowers brainstorming; then rounds of Q&A to settle plan and execution; then hand off to Sub Agent or Agent Team; finally validate with multi-layer tests (unit, integration, E2E). Sometimes I loop Playwright with screenshots for testing.</p>
+
+        <p><strong>2. What if business projects don't work?</strong></p>
+        <p>Many feel business projects don't work because: fear of being blamed for AI-generated bugs, can't clearly describe business context, too many deps (DB, cache, queue). If the pressure is that high, start with personal projects. Interest is the best teacher — those niche, low-ROI, un-customizable needs become viable with AI coding.</p>
+
+        <p><strong>3. Build your own "infinite game"</strong></p>
+        <p>Use personal projects to learn LLM behavior and tool behavior; end goal is a loop that fits your habits. It's not just about finishing projects but about the process. In CC, I often stop execution and ask: "why did you think about it that way just now?" "why didn't you consider XX in that situation?" These conversations polish the pipeline, improve claude.md and memory.md, and customize skills.</p>
+
+        <p><strong>4. Random ideas</strong></p>
+        <p>I've built many "for myself" systems: aquarium water-quality logger/analyzer, finance, medical records. And hobby projects — I used to get lost in mutual-fund investing, so I built a CC-based assistant with MCP and custom skills, turning the Youzhiyouxing content into a local vector knowledge base. It helps with market analysis and position advice.</p>
+        <blockquote style="border-left: 3px solid var(--color-border); padding-left: 1rem; color: var(--color-text-muted); margin: 1.25rem 0;">Example instruction: "Create an Agent Team to refine and execute the plan in xxx.md. The team includes one PM, one architect, one backend, one frontend, one tester."</blockquote>
+
+        <p><strong>5. Keep rechecking the production process. Treat "process optimization" as its own horizontal project.</strong></p>
+
+        <h3>V. Actual-Usage Advice: Mindset and Pitfalls</h3>
+
+        <p><strong>1. No universal template — find your own rhythm</strong></p>
+        <p>Don't worship fixed prompt templates or universal config files. The core is "keep using, practice more." With use, intuition arrives: when to trim context, when to clarify a vague command, when to pull AI back from a rabbit hole.</p>
+
+        <p><strong>2. Learn by doing</strong></p>
+        <p>Official docs, GitHub, community are all great resources. Personally I prefer GitHub projects — clone, run, have AI deconstruct the design and implementation. Listening to AI walk through implementation details, you find many interesting points.</p>
+
+        <p><strong>3. Self-assessment</strong></p>
+        <p>The core is getting the loop running; the focus is evaluating and guiding AI, not producing code. Two clearest improvement metrics:</p>
+        <ol>
+          <li>Tasks you originally couldn't finish — now relatively easy.</li>
+          <li>Things that used to take 2-3 weeks — now 1-2 days. With 4-5 projects running in parallel, you basically seamlessly hand off between them; about 2-3 hours in, the brain stalls out and the body can't keep up with AI.</li>
+        </ol>
+
+        <p><strong>4. Advice for people transitioning to agent dev</strong></p>
+        <p>First master the AI coding tools already in your hands. These daily tools are the most mature, best-landed agent apps on the market. Study their design logic, capability boundaries, and orchestration patterns — you'll realize agent core principles aren't that complex, and many capabilities are already in your daily work.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
