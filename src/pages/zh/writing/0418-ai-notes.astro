@@ -1,0 +1,77 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月18日";
+const date = "2026-04-18";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月18日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Claude Design 全流程：从灵感到成品网站</h2>
+        <p>这套流程是我从"随便看看动画"到"做出一个影视级网站"的完整 pipeline。</p>
+
+        <h3>Step 1: 去 Pinterest 找灵感</h3>
+        <p>在 Pinterest 上找到你喜欢的动画风格或视觉灵感。保存你觉得最打动你的那几张图。</p>
+
+        <h3>Step 2: 用 AI 生成背景和角色</h3>
+        <p>把 Pinterest 上的图粘贴进 AI 工具，用以下 prompt：</p>
+        <p><strong>Prompt 1（背景）</strong>：</p>
+        <p><em>Create a background just like this. It should be abstract since this is the background for my desktop wallpaper.</em></p>
+        <p><strong>Prompt 2（角色）</strong>：</p>
+        <p><em>Create a character just like this, expand so their full height is visible.</em></p>
+
+        <h3>Step 3: 用 Seedance 2.0 做动画</h3>
+        <p>把生成的图片拿到<strong>小云雀（豆包）的 Seedance 2.0</strong>，prompt：</p>
+        <p><em>Animate this, no camera movement, no extra elements to be added, no zoom in and zoom out, looping animation.</em></p>
+
+        <h3>Step 4: 用 motionsites.ai 做网站</h3>
+        <p>到 motionsites.ai 选一个模板。如果你不喜欢默认模板，想要不同的布局、字号或配色，就在上面调整。</p>
+
+        <h3>Step 5: 从 Landbook 找布局灵感</h3>
+        <p>说你想做 X 个 section。把 Landbook 上看到的布局作为<strong>灵感</strong>来使用，而不是照搬。参考结构、留白、层次——但自己重新实现，这样成品才有自己的味道。</p>
+
+        <h3>整个 pipeline 的关键点</h3>
+        <ul>
+          <li>灵感来源：Pinterest（静态视觉）</li>
+          <li>素材生成：AI（背景 + 角色，参考图做引导）</li>
+          <li>动效：Seedance 2.0（把静态图变成循环动画）</li>
+          <li>载体：motionsites.ai 模板（快速起步）</li>
+          <li>布局参考：Landbook（不抄，做 inspiration）</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body em { color: var(--color-text); font-style: italic; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
