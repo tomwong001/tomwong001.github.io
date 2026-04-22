@@ -1,0 +1,115 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 21";
+const date = "2026-04-21";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 21, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>How reliable are benchmarks today?</h2>
+        <p>Agentic benchmarks are in a decent place, but benchmarks are no longer trusted as a correlate to real-world performance. A key example of this gray area is Gemini 3's incredible benchmark scores paired with its remarkable irrelevance in where AI tools are currently being tested and deployed (agents). These trends point to obvious and lasting flaws in our measurements.</p>
+
+        <h2>RLVR explained</h2>
+        <p>RLVR stands for <strong>Reinforcement Learning with Verifiable Rewards</strong>. Literally: "RL using rewards you can verify."</p>
+        <p>The fastest way to understand it is to compare it to RLHF.</p>
+
+        <p><strong>What's wrong with RLHF</strong></p>
+        <p>In RLHF the reward signal comes from human labelers' preference judgments — "this answer is better than that one." That judgment is subjective, fuzzy, and expensive. Worse, the model can learn to "please humans" instead of "actually do the task right" — the classic reward hacking failure mode.</p>
+
+        <p><strong>The core idea of RLVR</strong></p>
+        <p>RLVR swaps in a different reward source: <strong>only train on tasks whose answers can be objectively verified</strong>.</p>
+
+        <ul>
+          <li>Math: is the answer correct? A program can check automatically.</li>
+          <li>Code: do the test cases pass? Just execute and see.</li>
+          <li>Formal logic, theorem proving: a verifier decides directly.</li>
+        </ul>
+
+        <p>The reward signal becomes a clean 0/1 hard signal. No humans needed, fully automatable at scale, and the model can't bluff its way through.</p>
+
+        <p><strong>Why it became mainstream</strong></p>
+        <p>DeepSeek-R1 was the landmark case. They found that training with RLVR alone on math and code caused the model to spontaneously develop chain-of-thought, self-reflection, and backtracking behaviors — none of which were taught directly. RL discovered them. Much stronger than pure SFT, and cheaper.</p>
+
+        <p><strong>Limitations</strong></p>
+        <p>RLVR only works for tasks with an objective answer. Quality of writing, fidelity of translation, clarity of explanation — none of these can be auto-verified. RLHF and other methods are still necessary for those.</p>
+
+        <h2>Kimi K2.6</h2>
+        <p>Moonshot says K2.6 can run continuously for 12 hours, execute over 4,000 tool calls in a single session, and coordinate up to 300 parallel sub-agents on larger tasks.</p>
+        <p>My reaction to the showcase demos: hard to really judge which design is better. Too staged.</p>
+
+        <h2>Hermes agent design patterns</h2>
+        <p><strong>1. Stateless parallel units</strong></p>
+        <p>A normal agent remembers prior conversation and files, but when many agents run at once they contaminate each other. Adding a flag like <code>skip_memory=True</code> makes the agent "use-once-and-throw-away" — every run is fresh, which is what makes large-scale parallelism actually work.</p>
+
+        <p><strong>2. Don't blindly retry on failure</strong></p>
+        <p>The traditional approach is: task failed, try again. The smarter approach is: when something fails, structurally record "why it failed, which step broke, what tool was called," then let the LLM analyze that trace and re-plan — not brainlessly rerun.</p>
+
+        <p><strong>3. Inject context dynamically</strong></p>
+        <p>Different subtasks need different background knowledge. Instead of cramming everything into one giant prompt, put per-directory instruction files (<code>AGENTS.md</code>) in each folder. When the agent enters a directory it reads that directory's notes. Load on demand, cleaner.</p>
+
+        <p>The ecosystem is also shifting toward <strong>self-improving harnesses</strong> and long-running operation: hermes-skill-factory, maestro, icarus-plugin, and cloud templates, alongside the "Externalized Intelligence in LLM Agents" survey — which frames capability as increasingly living outside the model weights, in memory systems, tools, protocols, and harnesses.</p>
+
+        <h2>The "build a website" demand is saturated</h2>
+        <p>Manus and Lovable were some of the earliest, then Claude Design, then Kimi K2.6 agent.</p>
+        <p>These are web-building systems that generate full production-ready sites from a single prompt, combining high-level design, interactive visuals, and backend infra in a single run. They use React, TypeScript, Tailwind, Three.js, and similar.</p>
+        <p>My prediction: next step is building apps. Further out, one idea spins up a company — incorporation, legal, launch, everything bundled, maybe even the agent assigning work to humans.</p>
+
+        <h2>Build-your-dashboard</h2>
+        <p>Anthropic's new Cowork feature lets Claude build live dashboards, trackers, and internal tools connected to apps like Slack, Salesforce, Google Drive, Asana, and Jira, with reports that refresh whenever reopened. Work that once required BI software, data pipelines, and technical teams can now begin with a prompt and a permission click. In one early example, Claude built a Google and Meta ads dashboard in under a minute, pulling campaign data, spotting trends, scheduling recurring tasks, and helping generate new creatives.</p>
+
+        <h2>The post-commodity economy</h2>
+        <p>This essay by University of Chicago economist Alex Imas argues that AI automation won't eliminate human labor — it will give rise to a "post-commodity economy."</p>
+
+        <p><strong>Core logic</strong></p>
+        <p>Starting from the Starbucks case: the company could have fully automated, but instead chose to hire more baristas, push handwritten names on cups, and ceramic mugs — because customers want more than a cup of coffee, they want an experience. This exposes the key question: when AI can produce nearly every commodity, <strong>what becomes scarce?</strong></p>
+
+        <p><strong>The historical pattern of structural change</strong></p>
+        <p>Economics has a precedent. Agriculture once employed 40% of the U.S. workforce; today it's under 2%. People didn't starve — mechanization made agriculture cheap, incomes rose, and spending shifted elsewhere. The key point: when people get richer, they don't just buy more of the same — they shift to higher income-elastic goods, like better restaurants, more interesting experiences, more thoughtful service.</p>
+
+        <p><strong>Mimetic desire and scarcity</strong></p>
+        <p>The essay brings in Girard's "mimetic desire" concept: humans want what others want but can't have. This pursuit of exclusivity, status, and provenance can never be fully satisfied. The author's experiments show that willingness to pay nearly doubles once people learn that some will be excluded from access to the good. Another study shows that AI involvement weakens the sense of "one-of-a-kindness," compressing the premium.</p>
+
+        <p><strong>Rise of the "relational sector"</strong></p>
+        <p>The author predicts that AI will keep making automatable commodity production cheaper, and that's precisely what will push consumption toward "relational services" — nurses, therapists, teachers, artisans, chefs, performers, community workers. The core value in these fields is <strong>human participation itself</strong>, which AI cannot truly replicate.</p>
+
+        <p><strong>Rebutting "demand collapse"</strong></p>
+        <p>The essay also addresses the pessimistic take: AI eliminates jobs → workers lose income → purchasing power collapses → economy shrinks. The author argues that the comparative nature of mimetic desire means demand for premium, humanized products doesn't saturate easily, giving the economy enough pressure valves to absorb structural transition.</p>
+
+        <p><strong>Closing</strong></p>
+        <p>The durable work of the future isn't "monitoring AI" or "prompt engineering" — it's work where human participation itself is the value. Every past wave of tech replacing labor didn't collapse the economy, it transformed it. AI may be no different — just with the transformation pointed toward the more human, less mass-producible side.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
