@@ -1,0 +1,296 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月17日";
+const date = "2026-04-17";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月17日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>关注 Claude 在 X 上的账号</h2>
+        <p>比如今天 reset，我们就没有得到这个消息，不然昨天我们可以大幅度地用。关注官方动态是真能省 token 的。</p>
+
+        <h2>Oversee Agents 是未来方向，而不是 Write Code</h2>
+        <p>Dan Shipper 的观点：开发工作正在走向<strong>监督 agents</strong>，而不是写代码。被否定的假设：CLI 会吞噬 UI。在以 CLI 为主的工作流中，你主要通过文本来监督：命令、日志、git 状态、diff、终端输出。但现在 agent 在写代码，这已经不是一个好的主界面了。</p>
+        <p>未来的 coding UI 会围绕：管理并行工作、保持 git/任务上下文的感知，最重要的是——对你正在构建的东西有实时预览。</p>
+        <p>我觉得这个很有意思。很多人会说 CLI 就是未来，但未来到底是不是只有程序员能够 oversee agents？就像同事做汇报，也要照顾到 non-technical background 的同事，要说人话。UI 其实就是人话。人话是被需要的。</p>
+
+        <h2>Opus 4.7 让我惊讶的两点</h2>
+        <ol>
+          <li>它派出 haiku 去处理文档探索类的东西，然后我用的是 Opus 4.7 max。这个很神奇，等于说它在主动减少 token 的消耗量并且提升速度。</li>
+          <li>它能识别出我们中文简历用的是哪个网站上的模板，这个我确实没想到。</li>
+        </ol>
+
+        <h2>Fast Mode Claude 用不了了</h2>
+        <p>4.6 能用，更新了就用不了，也是服了。</p>
+        <p>另外看到两个新 mode 目前定位不太清楚：</p>
+        <ul>
+          <li><strong>Allow bypass permissions mode</strong>：跳过所有权限检查，让 Claude 不受干扰地工作。适合修 lint 错误、生成样板代码这种场景。但让 Claude 跑任意命令是有风险的，可能导致数据丢失、系统损坏或通过 prompt injection 泄露数据。</li>
+          <li><strong>Allow auto permissions mode</strong>：Auto mode 让 Claude 在 coding session 中自己决定权限，这样开发者可以跑更长的任务而不被 Claude 频繁打断。Auto mode 也包含针对 prompt injection 的额外保护。</li>
+        </ul>
+        <p>这两个 mode 的定位和边界目前还不太清楚。</p>
+
+        <h2>OpenAI Codex 更新</h2>
+        <p>OpenAI 悄悄收购了一家叫 Software Apps Inc 的公司，该公司大约一年前推出了一款名为 Sky 的 macOS AI 伴侣。这个团队对 Mac 非常痴迷，他们竟然打造了一种神奇的体验——很大一部分原因是他们在后台控制着 Mac。你在一个文档上工作，Codex 在另一个文档上点击按钮并执行操作，而不会打断你。</p>
+        <p>听说 computer use 现在很顺滑？Computer use UX 正成为主流产品类别：OpenAI 的 Codex 桌面/computer use 更新引起了异常强烈的从业者反应。有人称子代理 + computer use "非常接近"实际感觉中的 AGI。</p>
+
+        <h2>Warp Terminal 支持所有 CLI Agent</h2>
+        <p>Warp 在我看来是最好的终端体验，刚刚发布了<strong>对任何 CLI agent 的一流支持</strong>——Claude Code、Codex、OpenCode、Gemini CLI，全部可以并排运行在垂直标签页里，带实时状态指示器。</p>
+        <p>杀手级功能，也解决了我认为 Claude Code 最痛的点——<strong>agent 需要你时的通知</strong>。如果你用过 Claude Code，你就知道不停检查它是不是在等权限或输入的痛。Warp 会通知你。你过去批准一下，回去继续做你的事。他们还加了集成的代码审查、富多模态输入编辑器，以及——这个很疯——<strong>手机远程控制</strong>。</p>
+
+        <h2>Claude Code 团队的最佳建议</h2>
+        <ul>
+          <li><strong>委派，不要微管</strong>——把任务完整交给 agent，别每步都管。</li>
+          <li><strong>把完整的目标 + 约束 + 验收标准放在前面</strong>——一次性把信息给足。</li>
+          <li><strong>告诉模型如何验证</strong>——把测试工作流写进 claude.md 或 skills。</li>
+        </ul>
+        <p>这强烈暗示 Anthropic 优化的方向是自主任务循环，其中显式的 validation 是核心。</p>
+
+        <h3>建立自验证循环</h3>
+        <p>配置 Claude 自动运行构建、测试和 lint 来验证自己的工作。这让 Claude 能更长时间地自主工作并自行发现错误，在让 Claude 先写测试再写代码时尤为有效。</p>
+
+        <h3>培养任务分类直觉</h3>
+        <p>学会区分哪些任务适合异步处理（边缘功能、原型开发），哪些需要同步监督（核心业务逻辑、关键修复）。产品边缘的抽象任务可以用"自动接受模式"处理，而核心功能需要更严密的监督。</p>
+
+        <h3>写清晰、详细的提示</h3>
+        <p>当多个组件名称或功能相似时，请求要极其具体。提示越好越详细，就越能放心让 Claude 独立工作，而不会意外修改代码库中错误的地方。</p>
+
+        <h2>CLAUDE.md 的作用范围</h2>
+        <pre><code>你在 /Desktop/claudecode/ 下开的 tab：
+  读：全局 + 这个项目 + 记忆
+
+你在 /Desktop/其他项目/ 下开的 tab：
+  读：全局 + 那个项目的 CLAUDE.md（如果有）+ 那个项目的记忆
+
+→ 全局 CLAUDE.md 是共享的
+→ 项目 CLAUDE.md 是独立的
+→ 对话上下文永远是独立的（除非你用 /resume）</code></pre>
+
+        <h2>Claude Code 团队自己怎么用 Claude Code</h2>
+        <p><strong>会话结束后自动更新文档</strong>：团队让 Claude Code 在每次工作会话结束时总结已完成的工作并提出改进建议。这形成了持续改进的闭环——Claude Code 根据实际使用情况不断完善 claude.md 文档和工作流说明，让后续迭代越来越顺畅。</p>
+        <p><strong>跨多个实例并行管理任务</strong>：在处理长时间运行的数据任务时，他们在不同仓库里为不同项目打开多个 Claude Code 实例。每个实例都保有完整的上下文，即使几小时或几天后再切换回来，Claude Code 也能精确记得之前做到哪里、正在做什么。</p>
+
+        <h2>继续学习 nano-vllm</h2>
+        <p>整个推理流程：</p>
+        <pre><code>你输入: "今天天气真好"
+         │
+         ▼
+    ┌─────────┐
+    │ tokenize│  ← 把文字切成数字
+    └─────────┘
+         │
+         ▼
+    [15, 234, 89, 12, 456, 78]
+         │
+         ▼
+  ═══════════════════════════════
+         INFERENCE（推理）
+  ═══════════════════════════════
+         │
+         ├─ 阶段1: PREFILL
+         │   把整串数字一次性喂给 GPU
+         │
+         └─ 阶段2: DECODE
+             一个 token 一个 token 地吐</code></pre>
+
+        <h3>Batching（批处理）</h3>
+        <p>同时 decode N 个请求 → 单步时间差不多 → 吞吐量 ×N。这是 vLLM、nano-vllm 这类推理框架<strong>最核心的性能来源</strong>。</p>
+        <pre><code>Static Batching:
+  等 [A, B, C, D] 凑齐 → 一起出发
+  A 用 50 个 token 说完了 → 但还要等 B、C、D 一起结束
+  → A 占的"座位"白白空着
+
+Continuous Batching:
+  A 结束立刻下车，新人立刻上车
+  → 座位永远有人坐</code></pre>
+
+        <h3>Preempt（抢占）</h3>
+        <pre><code>显存不够时，nano-vllm 的做法：
+
+before:
+  显存: [A 100MB] [B 200MB] [C 60MB]
+  请求 D 需要 150MB → 挤不进来
+
+操作 preempt(A):
+  把 A 踢回 waiting 队列
+  释放 A 的 KV cache (100MB)
+
+after:
+  显存: [___空___] [B 200MB] [C 60MB]
+  现在有 100MB 空闲
+
+继续 preempt(B):
+  显存: [___空___] [___空___] [C 60MB]
+  现在有 300MB 空闲 ✅
+  请求 D 进来，分配 150MB</code></pre>
+        <p><strong>被踢出去的 A 怎么办？</strong>A 的 KV cache 没了，等下再轮到它的时候，重新 prefill 一次——把整个历史（prompt + 已经生成的）重算一遍。"重算"比"等着"快得多，因为 prefill 是 compute-bound，非常快。</p>
+
+        <h3>Prefix Caching</h3>
+        <pre><code>block 表：
+  block 0: "请介绍"的 K、V        (A、B 都指向这里)
+  block 1: "北京的"的 K、V        (A、B 都指向这里)
+  block 2: "历史，"的 K、V        (A、B 都指向这里)
+  block 3: "重点讲明清"的 K、V    (只有 A 指向)
+  block 4: "重点讲民国"的 K、V    (只有 B 指向)
+
+用 block 的 ref_count（引用计数）管理：
+  block 0 的 ref_count = 2  (A、B 在用)
+  block 3 的 ref_count = 1  (只有 A 用)
+
+当 A 结束：block 0 的 ref_count 从 2 → 1，不释放
+当 B 也结束：block 0 的 ref_count 从 1 → 0，才释放</code></pre>
+        <p>为什么服务商能给出极低的 system prompt 价格？用了 prefix caching 后，5000 tokens 的 system prompt 只有第一次算，后续全部复用 block。服务商几乎没花算力，所以收你超便宜的价。</p>
+
+        <h3>Generate 伪代码</h3>
+        <pre><code>function generate(prompt, max_new_tokens):
+    # Step 1: tokenize
+    tokens = tokenize(prompt)
+
+    # Step 2: prefill —— 把整个 tokens 一次喂进去
+    next_token, kv_cache = model(tokens, kv_cache=empty)
+    tokens.append(next_token)
+
+    # Step 3: decode loop —— 每次只喂上一个新 token
+    for i in range(max_new_tokens - 1):
+        last_token = tokens[-1]
+        next_token, kv_cache = model([last_token], kv_cache)
+        tokens.append(next_token)
+
+    # Step 4: detokenize
+    return detokenize(tokens)</code></pre>
+
+        <h3>两个关键认知</h3>
+        <p>1. Q、K、V 是从同一个 token 通过三个不同的矩阵 W_Q、W_K、W_V 算出来的（这就是为什么"模型参数"占显存大——这些 W 矩阵巨大）。</p>
+        <p>2. kv_cache 只存 K 和 V，不存 Q（Q 每步现算，K、V 历史不变存起来）。</p>
+
+        <h2>简单理解 Attention</h2>
+        <pre><code>Attention 公式：
+  Attention(Q, K, V) = softmax(Q · K) · V
+
+用比喻：
+  Q (Query)   = "我要找什么？"     ← 当前 token 的问题
+  K (Key)     = "我是什么类型？"   ← 历史每个 token 的标签
+  V (Value)   = "我的实际内容"     ← 历史每个 token 的信息
+
+图书馆查资料：
+  你的问题 Q          = "我想学 prefill"
+  每本书的书名 K       = "Python 入门"、"LLM 推理"、"Transformer 论文"...
+  每本书的内容 V       = 书里的具体文字
+
+  attention 就是：
+    1. 拿 Q 跟每个 K 比，看哪本书相关（softmax(Q·K)）
+    2. 按相关度加权读每本书的 V
+    3. 得到一个"融合"的答案</code></pre>
+
+        <h2>QKV Forward</h2>
+        <pre><code>function model_forward(new_tokens, kv_cache):
+    # Step 1: 对每个新 token，算出它的 Q, K, V
+    for each token in new_tokens:
+        embedding = embed(token)
+        Q = embedding @ W_Q
+        K = embedding @ W_K
+        V = embedding @ W_V
+
+        # 把新的 K, V 追加到 kv_cache
+        kv_cache["K"].append(K)
+        kv_cache["V"].append(V)
+
+    # Step 2: 用当前 Q + kv_cache 里所有的 K, V 做 attention
+    all_K = kv_cache["K"]
+    all_V = kv_cache["V"]
+    context = attention(Q, all_K, all_V)
+
+    # Step 3: context → 更多层 → 预测下一个 token
+    logits = output_layer(context)
+    next_token = sample(logits)
+
+    return next_token, kv_cache</code></pre>
+
+        <pre><code>Prefill（3 个 token 一次进模型）:
+
+  今 → Q1, K1, V1  ↘
+  天 → Q2, K2, V2  →  GPU 并行算完 3 份 K、V
+  气 → Q3, K3, V3  ↗
+
+Decode（1 个 token 进模型）:
+
+  好 → Q4, K4, V4   ← 只算 1 份 K、V</code></pre>
+
+        <p><strong>Prefix caching 的坑：</strong>nano-vllm 里 prefix caching 是"按块计算的"，不是按 token。block_size = 256，如果 prompt 才 22 个 token，连半块都没装满，根本不会生成 hash，第二个请求也就查不到——miss。</p>
+
+        <h2>React 仪表盘 vs Jupyter Notebook</h2>
+        <p>Jupyter Notebook 是临时的——跑一次、看一下、然后扔掉，下次评估又要重新写。React 仪表盘是一个真正的 Web 应用，部署之后可以一直用，每次新模型训练完直接把数据接进去就能看，不用重写任何东西。</p>
+        <p>他们强调的核心点是：模型性能的可视化其实很复杂，不是看一个 accuracy 数字就够了，需要多维度、交互式地看。Power BI/Tableau 这类工具是通用的，但他们需要高度定制化的视图来理解 RL 训练中的特定指标。所以干脆让 Claude Code 直接帮他们写一个专属 React Web App。</p>
+
+        <h2>为什么还用 Figma</h2>
+        <p>Figma 现在仍然是设计行业的绝对标准，并没有"老"。它一直在迭代，去年还推出了 AI 功能。设计师的工具链是：Figma 做视觉设计 + Claude Code 把设计转成真实代码，两者是互补关系，不是替代关系。</p>
+        <p>文档里说他们用 Figma 80% 的时间都打开着，说明 Figma 反而因为 Claude Code 变得更重要了——设计师可以直接把 Figma 截图粘进 Claude Code 来生成代码原型。</p>
+
+        <h2>GitHub Actions 自动工单</h2>
+        <p>这个是 Claude Code 官方支持的一个功能——可以把 Claude Code 接入 GitHub Actions，当有人提 Issue 或 PR comment 时自动触发 Claude 来分析并提出修改建议甚至直接开 PR。设计团队用这个来处理积压的小改动，比如改个间距、改个文案。</p>
+
+        <h2>996 已经消散，24/7 才是新常态</h2>
+        <p>在知识工作史上，第一次有人回家时没有把大脑的副本带在身边。996 作为一个概念已经消亡，我们现在是 24/7 的员工——但 24/7 的员工并不是一个工作 24 小时的人，而是一个 agent 能够进行巨大并行化的人。</p>
+        <p>到 2026 年，大多数团队仍然在协调上存在瓶颈，而不是在打字上，大多数组织才开始进行重组。但前沿总是未来最先出现的地方，而前沿已经在这里了。这篇文章并不是对整个行业的描述，而是对已经在最 AI 原生的团队中发生的事情的描述。</p>
+        <p>之后我想要做一期这个相关的视频。</p>
+
+        <h2>概率问题：程序员无法保证自己代码一定可以跑</h2>
+        <p>这不是一个未来的问题，而是一个现在的问题。在某个吞吐量之后，错误会溜进来不是因为审查者粗心，而是因为输出量已经超过了人类注意力可以有意义地检查的范围，而且进行大部分审查的模型本身是非确定性的，并且会错过很多。代码库不再是一个你知道它能正常工作的东西，而是一个你相信它能正常工作的东西，一个你无法再精确描述概率的东西。</p>
+        <p>这对大多数领导团队来说具有战略意义，但尚未完全理解。你并不是在为你已有的模型构建组织能力，而是在为你尚未拥有的模型构建能力。你正在学习编写的规范、正在建立的审查文化、正在集成的可观测性、正在学习指挥的代理舰队、正在试验的培训仪式——所有这些都不是针对 2026 年的能力，而是为 2027 年和 2028 年的能力搭建的脚手架。</p>
+        <p>现在正在搭建这种脚手架的公司，将在下一次能力跃迁中利用这一优势，而那些等待工具成熟后再重新调整组织的公司，将在下一个能力时代的第一年学习早期采用者已经知道的东西，而早期采用者则会不断积累优势。</p>
+
+        <h2>McKinsey：代理型组织（Agentic Organization）</h2>
+        <p><strong>来源</strong>：McKinsey Podcast — Alexis Krivkovich × Lucia Rahilly（2026-04-02）</p>
+
+        <h3>核心悖论</h3>
+        <p>超过 80% 的公司对 AI 进行了大规模投资，却尚未看到底线回报。问题不在技术，在于组织没有跟上重新设计。</p>
+
+        <h3>五个支柱</h3>
+        <p><strong>1. 商业模式</strong>：近零边际成本的交付能力，将打破所有依赖摩擦的护城河。比如：agent 替用户自动在各银行间搬钱追最优利率 → 银行账户黏性消失。</p>
+        <p><strong>2. 团队结构</strong>：75% 的岗位需要在 2-3 年内根本性重塑。不是消失，是职责边界全部要重写，包括管理层。大型组织过去十年多增加了 1-3 层管理，agent 可能让高管实现"超人管理幅度"，压缩层级、加速决策。</p>
+        <p><strong>3. 工作流程</strong>：最大价值不是"用 AI 把某个任务做快"，而是<strong>端到端重构整条流程</strong>。例子：保险承保全流程重构；HR 从招聘到入职的全流程重构；AAA（美国仲裁协会）：agent 自动整理案件时间线、梳理事实、生成裁决建议 → 仲裁员只需判断"我是否同意"。</p>
+        <p><strong>4. 领导力</strong>：</p>
+        <ul>
+          <li><strong>Human in the loop</strong>：agent 做部分步骤，交给人处理其余部分</li>
+          <li><strong>Human above the loop</strong>：agent 完成整个核心流程，人只做最终判断 ← 这是方向</li>
+        </ul>
+        <p><strong>5. 人才</strong>：判断力、系统思维、人际管理等软技能反而更值钱。Junior 员工悖论：如果 agent 接管了所有"打杂"工作，新人失去积累判断力的路径 → 解法是把 L&D 从边缘活动变成职业旅程核心。变革管理从"阶段性"变为<strong>永续状态</strong>："Change management is no longer an episodic thing. It's a perpetual state." 用"双向门"（可逆实验），别押注整个公司。</p>
+
+        <h3>关联</h3>
+        <p>和上面 Dan Shipper 的"oversee agents 是未来方向"是同一趋势，McKinsey 这篇是企业组织管理版本。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
