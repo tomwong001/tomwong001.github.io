@@ -1,0 +1,115 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月21日";
+const date = "2026-04-21";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月21日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>benchmarks 目前的可靠性？</h2>
+        <p>代理基准（agentic benchmarks）目前处于一个不错的状态，但基准已经不再像过去那样被视为真实世界性能的可靠关联指标。这个灰色地带的一个典型例子是 Gemini 3：基准分数惊艳，但在当前 AI 工具真正被测试和部署的领域（也就是 agents）里几乎毫无存在感。这种反差说明，我们现有的测量体系存在明显且持久的缺陷。</p>
+
+        <h2>RLVR 是什么</h2>
+        <p>RLVR 是 <strong>Reinforcement Learning with Verifiable Rewards</strong>，直译就是"用可验证奖励做强化学习"。</p>
+        <p>理解它最快的方式是跟 RLHF 对比。</p>
+
+        <p><strong>RLHF 的问题在哪里</strong></p>
+        <p>RLHF 里，奖励信号来自人类标注者的偏好判断——"这个回答比那个好"。这个判断是主观的、模糊的，而且成本很高。更麻烦的是，模型可能学会"取悦人类"而不是"真正做对事情"，也就是所谓的 reward hacking。</p>
+
+        <p><strong>RLVR 的核心思想</strong></p>
+        <p>RLVR 换了一种奖励来源：<strong>只在答案可以被客观验证的任务上训练</strong>。</p>
+
+        <ul>
+          <li>数学题：答案对不对，程序自动算一下就知道</li>
+          <li>代码：能不能跑通测试用例，直接执行就知道</li>
+          <li>形式逻辑、定理证明：有没有语法错误，验证器直接判</li>
+        </ul>
+
+        <p>这样奖励信号是 0/1 的硬信号，不需要人来评判，可以大规模自动化，也不会被模型糊弄过去。</p>
+
+        <p><strong>为什么现在变成主流</strong></p>
+        <p>DeepSeek-R1 是个标志性案例。他们发现，只用 RLVR 在数学和代码上训练，模型自发涌现出了"链式思考"、自我反思、回溯等推理行为——这些能力不是直接教的，是强化学习摸索出来的。效果比纯 SFT（监督微调）强得多，还便宜。</p>
+
+        <p><strong>局限在哪里</strong></p>
+        <p>RLVR 只能用在有客观答案的任务上。写作好不好、翻译地不地道、解释清不清楚——这些没法自动验证，RLHF 或者其他方法还是必要的。</p>
+
+        <h2>Kimi K2.6</h2>
+        <p>Moonshot 表示 K2.6 可以连续运行 12 小时，在一个会话中进行超过 4,000 次工具调用，并在更大任务上协调多达 300 个并行子代理。</p>
+        <p>官方放出来的对比图有点太过了——你到底怎么客观评判哪个设计更好？</p>
+
+        <h2>Hermes agent 的几个设计模式</h2>
+        <p><strong>1. 无状态并行单元</strong></p>
+        <p>普通 agent 会记住之前的对话和文件，但这样多个 agent 同时跑起来会互相干扰。加上 <code>skip_memory=True</code> 这类参数，让 agent 变成"用完即丢"的状态，每次都是全新的，这样才能真正并行跑很多个。</p>
+
+        <p><strong>2. 失败了不要盲目重试</strong></p>
+        <p>传统做法是任务失败了就直接再试一次。更聪明的做法是：失败时把"失败的原因、哪一步出错、调用了什么工具"这些信息结构化地记录下来，然后让 LLM 分析这些信息，重新规划怎么做，而不是无脑重跑。</p>
+
+        <p><strong>3. 动态注入上下文</strong></p>
+        <p>不同的子任务需要不同的背景知识。与其把所有信息一股脑塞进同一个 prompt，不如在不同目录下放各自的说明文件（<code>AGENTS.md</code>），agent 执行到哪个目录，才读取那个目录的说明。按需加载，更干净。</p>
+
+        <p>生态系统也在向<strong>自我改进的套件（self-improving harnesses）</strong>和长期运行方向转变：例如 hermes-skill-factory、maestro、icarus-plugin 和云模板，以及对"LLM 代理中外部化智能"这一调查的讨论——该调查将能力描述为越来越多地存在于模型权重之外——在内存系统、工具、协议和 harness 中。</p>
+
+        <h2>"构建网页"这个需求已经被大量应用满足</h2>
+        <p>Manus、Lovable 是最早一批，然后 Claude Design，再到 Kimi K2.6 agent。</p>
+        <p>这些是网页构建系统，可以从单个提示生成完整的生产就绪网站，在单次运行中把高级设计、交互视觉效果和后端基础设施结合在一起。用 React、TypeScript、Tailwind、Three.js 这样的工具栈。</p>
+        <p>我的预测：下一步是构建 app，再往后是"一个 idea 构建一家公司"，包括上线、法务等等，所有服务都可以打包，甚至 agent 给人派活。</p>
+
+        <h2>Build dashboard</h2>
+        <p>Anthropic 的全新 Cowork 功能使 Claude 能够构建实时仪表板、跟踪器和内部工具，这些工具与 Slack、Salesforce、Google Drive、Asana 和 Jira 等应用程序相连，并且报告会在每次重新打开时刷新。曾经需要商业智能软件、数据管道和技术团队的工作，现在只需一个提示和一次权限点击即可开始。在一个早期示例中，Claude 在不到一分钟的时间内构建了一个谷歌和 Meta 广告仪表板，提取了活动数据、发现趋势、安排重复性任务，并帮助生成新的创意。</p>
+
+        <h2>后商品经济</h2>
+        <p>这篇文章由芝加哥大学经济学家 Alex Imas 撰写，核心论点是：AI 自动化不会让人类劳动消失，而是会催生一个"后商品经济"。</p>
+
+        <p><strong>核心逻辑</strong></p>
+        <p>文章从星巴克的案例出发：这家公司本可以完全自动化，却最终选择雇佣更多咖啡师、推行手写杯名和陶瓷杯——因为顾客要的不只是一杯咖啡，而是一种体验。这揭示了一个关键问题：当 AI 能生产几乎所有商品时，<strong>什么会变得稀缺？</strong></p>
+
+        <p><strong>结构性变革的历史规律</strong></p>
+        <p>经济学早有先例。农业曾雇用美国 40% 的劳动力，如今不到 2%，但人们并没有挨饿——机械化让农业变得便宜，人们的收入提高了，消费转向了其他地方。关键在于：人变富后，不会只买更多同类商品，而是转向"收入弹性更高"的产品，比如更好的餐厅、更有趣的体验、更贴心的服务。</p>
+
+        <p><strong>模仿欲望与稀缺性</strong></p>
+        <p>文章引入了哲学家吉拉德的"模仿欲望"概念：人类渴望得到他人也渴望却得不到的东西。这种对排他性、地位和来源感的追求，是永远无法被完全满足的。作者的实验数据显示，当人们得知某商品会有人被排除在外，他们的支付意愿几乎翻倍。另一项研究则发现，AI 介入会削弱作品的"独一性感知"，导致溢价缩水。</p>
+
+        <p><strong>"关系部门"的崛起</strong></p>
+        <p>作者预测，AI 会让可自动化的商品生产越来越便宜，但这恰恰会推动消费向"关系型服务"转移——护士、治疗师、教师、工匠、厨师、表演者、社区服务者……这些领域的核心价值在于<strong>人本身的参与</strong>，而这正是 AI 无法真正复制的。</p>
+
+        <p><strong>对"需求崩溃"的反驳</strong></p>
+        <p>文章还回应了一种悲观预测：AI 消灭就业 → 工人没收入 → 购买力崩溃 → 经济萎缩。作者认为，模仿性欲望的比较性特征意味着对高端、人性化产品的需求不会轻易饱和，经济有足够的"泄压阀"来承接结构性转型。</p>
+
+        <p><strong>结语</strong></p>
+        <p>未来真正持久的工作，不是"监控 AI"或"提示词工程"，而是那些人类参与本身就构成价值的工作。历史上，技术每一次大规模替代劳动，经济都没有崩溃，而是转型了。AI 这次可能也不例外——只是转型的方向，是朝着更有人情味、更难被量产的那一侧。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
