@@ -1,0 +1,131 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月20日";
+const date = "2026-04-20";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月20日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Paper 1: Generative Agents (Smallville)</h2>
+        <p><strong>Park et al., 2023 | Stanford | UIST'23</strong></p>
+
+        <h3>一句话是什么</h3>
+        <p>用 LLM 驱动 25 个 AI 角色住在一个像素小镇里，他们会起床、上班、聊八卦、自发组织派对——所有社交行为都是"涌现"出来的，没有人写剧本。</p>
+        <p><em>"Believable proxies of human behavior"</em> — 可信的人类行为代理。</p>
+
+        <h3>架构核心：三件事（第 8 页 Section 4，Figure 5 最重要）</h3>
+        <pre><code>感知(Perceive) → 记忆流(Memory Stream) → 检索(Retrieve) → 行动(Act)
+                        ↑                          ↓
+                     反思(Reflect)            计划(Plan)</code></pre>
+
+        <h3>① Memory Stream（记忆流）— 第 8 页</h3>
+        <p>每个 agent 有一条时间线，所有经历都存成自然语言条目，比如：</p>
+        <ul>
+          <li><code>"Isabella Rodriguez is writing in her journal"</code></li>
+          <li><code>"The refrigerator is empty"</code></li>
+        </ul>
+        <p>检索时用三个维度打分，取加权和：</p>
+        <ul>
+          <li><strong>Recency（最近性）</strong>：越新的记忆分越高，指数衰减。</li>
+          <li><strong>Importance（重要性）</strong>：让 LLM 给每条记忆打 1-10 分，"刷牙"得 2 分，"分手"得 8 分。</li>
+          <li><strong>Relevance（相关性）</strong>：与当前情境的 embedding 余弦相似度。</li>
+        </ul>
+        <blockquote style="border-left: 3px solid var(--color-border); padding-left: 1rem; color: var(--color-text-muted); margin: 1.25rem 0;"><em>score = recency + importance + relevance</em></blockquote>
+
+        <h3>② Reflection（反思）— 第 9 页，Figure 7</h3>
+        <p>当重要性分数累计超过阈值（150），agent 会停下来"想一想"，把零散观察升华成高层洞察：</p>
+        <p>底层观察：<code>Klaus 在读书</code>、<code>Klaus 在找资料</code>、<code>Klaus 在问图书管理员</code> → 中层反思：<code>Klaus 热衷于研究</code> → 高层反思：<code>Klaus 对研究高度投入</code>。</p>
+        <p>这就是<strong>反思树（reflection tree）</strong>，叶子是原始观察，越往上越抽象。</p>
+
+        <h3>③ Planning（计划）— 第 10 页</h3>
+        <p>先生成一天的粗粒度计划：<code>"1) 8am 起床 2) 去药店上班 3) 12pm 吃午饭…"</code></p>
+        <p>再递归分解成 5-15 分钟的具体行动块。计划存入记忆流，可以中途因新观察而修改。</p>
+
+        <h3>最精彩的实验结果（第 6 页 Section 3.4）</h3>
+        <p>只给一个 agent "Isabella 想举办情人节派对"这一条初始种子，两天后：</p>
+        <ul>
+          <li>消息自发在全镇传播</li>
+          <li>Maria 因为暗恋 Klaus 而主动邀请他</li>
+          <li>5 个 agent 在正确时间自发出现在咖啡馆</li>
+        </ul>
+        <p><strong>没有人写这些剧情，完全是 agent 自己演出来的。</strong></p>
+
+        <h3>对我做 agent sim 最重要的一点</h3>
+        <p><strong>第 8 页这个公式</strong>：检索 = Recency + Importance + Relevance 三者加权。</p>
+        <p>这是目前所有 multi-agent simulation 项目的记忆检索基准设计，后面 Mem0、Zep 那几篇都是在改进这套思路。记住这个公式，读后面的论文时你会看到它反复出现。</p>
+
+        <h3>对我做 Halo 这类 persona 产品最重要的一点</h3>
+        <p><strong>第 7 页这个发现</strong>：即使把访谈内容随机删掉 80%，interview-based agent 依然以 0.79 准确率碾压 composite agent（0.76）。</p>
+        <p>这说明什么？<strong>不是访谈的"量"重要，是访谈的"质"——这个人用自己的语言说过的话，本身就携带了人口统计信息捕捉不到的个性信号。</strong></p>
+        <p>另一个重要发现（<strong>第 8 页 Figure 3</strong>）：Interview-based 方法显著降低了跨族裔、跨政治倾向的偏差（DPD）。Demographic-based 方法容易把少数群体模拟成刻板印象，而访谈文本让 agent 还原的是"这个具体的人"而不是"这类人"。</p>
+
+        <h2>Paper 2: OASIS（大规模社交网络模拟）</h2>
+
+        <h3>Finding 1：信息传播规模和广度能复现真实世界（第 7 页 Figure 4）</h3>
+        <p>OASIS 模拟出的信息扩散曲线和 Twitter 真实数据基本吻合，RMSE 误差约 30%。传播"深度"偏低，因为推荐系统没法完全还原真实 Twitter 算法的复杂度。</p>
+
+        <h3>Finding 2：群体极化——LLM agent 比真人更容易走极端（第 8 页 Figure 5）</h3>
+        <p>让 196 个 agent 讨论一个两难问题，随着互动轮次增加，意见越来越极端。尤其是<strong>去掉安全护栏的 uncensored 模型</strong>，极化速度更快，会用"always better"这类绝对化表达。</p>
+
+        <h3>Finding 3：羊群效应——agent 比人类更容易跟风（第 9 页 Figure 6）</h3>
+        <p>一条帖子最初被踩了，agent 后续会继续踩；但真实人类看到同样情况会先思考再决定。<strong>Agent 有更强的羊群效应，人类有更强的独立判断。</strong></p>
+
+        <h3>Finding 4：agent 规模越大，意见越多元、越有帮助（第 9-10 页 Figure 7）</h3>
+        <p>196 个 agent → 10,196 个 → 100,196 个，同样 196 个核心 agent 的意见质量随规模提升。更大的"社会"给了他们更多元的反馈，意见变得更有深度。</p>
+
+        <h3>对 Halo 最重要的一点</h3>
+        <p>这篇是"mediator agent / ice-breaker agent"设计的理论基础。</p>
+        <p>在 Halo 这样的场景里，两个 persona agent 互动时如果加入第三个 mediator agent——它不代表任何一方，只负责总结双方的分歧、提出中间立场、推动对话收敛——从这篇论文来看是有理论支撑的。辩论机制天然适合处理"两个 agent 视角不同、需要达成某种共识"的场景。</p>
+
+        <h2>Love First, Know Later</h2>
+
+        <h3>对 Halo 最重要的两句话（第 4 页 Discussion）</h3>
+        <p>论文明确说了四个未来能力：</p>
+        <ol>
+          <li><strong>Personalized evolution</strong>：用户对 agent 行为给反馈 → DPO/RLHF 方式持续优化 → agent 越来越像真实的你。</li>
+          <li><strong>Bidirectional transparency</strong>：用户可以观看自己的 agent 和别人的 agent 互动，理解配对系统在做什么。</li>
+          <li><strong>Active preference exploration</strong>：通过模拟发现用户自己都不知道的隐性偏好。</li>
+          <li><strong>局限</strong>：目前只做两人配对，多人社交动态（群体约会、朋友圈兼容性）需要更复杂的博弈论框架。</li>
+        </ol>
+
+        <h3>产品层面的延伸思考</h3>
+        <p>是不是可以显示 agent 在和多少人聊、进度怎么样——相当于一种可视化的"成瘾性"？</p>
+        <p>接受 venture 经济学要求上瘾 UX，可以把 agent chat 黑箱的<em>揭示瞬间</em>设计成老虎机的一次拉杆——每次揭示就是一次变量奖励。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.15rem; margin-top: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body em { color: var(--color-text); font-style: italic; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
