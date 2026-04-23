@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 23";
+const date = "2026-04-23";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 23, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Shopify's AI adoption and the quality loop</h2>
+        <p>Internal AI tool usage at Shopify is now close to 100%. December 2025 was the inflection point — every category of tool saw an explosive jump. The company gives every employee an unlimited token budget and mandates that everyone use at least a Claude Opus 4.6-class model. CLI-style tools (Claude Code and similar) are growing noticeably faster than IDE plugins (Copilot / Cursor).</p>
+
+        <p><strong>Token budget and code quality.</strong> Mikhail agrees with Jensen Huang's framing of token budgets, but stresses that the real lever isn't how many agents you run in parallel — it's setting up high-quality <em>critique loops</em>. One agent generates, another high-quality model reviews, and the pair iterates. The average quality of AI-written code is higher than human-written code, but because it writes so much more, the absolute number of bugs landing in production goes up. That makes PR review the highest-leverage place to invest.</p>
+
+        <h2>Shopify's three internal systems</h2>
+        <ul>
+          <li><strong>Tangle</strong> — an orchestration platform for ML experiments and data processing. Solves reproducibility, team collaboration, and dev-to-prod deployment pain. The core trick is content-hash-based caching: when multiple teams redo the same computation, results are shared automatically, which produces network effects.</li>
+          <li><strong>Tangent</strong> — an Auto Research loop built on top of Tangle. Agents run large volumes of experiments autonomously and keep optimizing target metrics. It has already driven real wins: search throughput 800 → 4200 QPS, prompt compression, storage optimization. It's now being used by PMs and other non-engineers.</li>
+          <li><strong>SimGym</strong> — a customer behavior simulation system built on Shopify's historical transaction data. The moat is the decades of real user behavior — without that data, the simulated agents just do whatever the prompt says. The system models real buyer behavior inside the browser and gives merchants concrete conversion optimization recommendations. Daily active users are climbing.</li>
+        </ul>
+
+        <h2>Liquid AI — the only competitive non-Transformer architecture Mikhail has seen</h2>
+        <p>Shopify is a real production user of Liquid AI (a non-Transformer architecture), primarily for two scenarios: low-latency paths like search query understanding (&lt;30ms), and large-scale batch tasks like product catalog classification and Sidekick Pulse. Mikhail calls it the only genuinely competitive non-Transformer architecture he's seen, and says it's actively eating internal share from models like Qwen inside Shopify.</p>
+
+        <p><strong>Bottom line:</strong> Shopify is pushing AI into almost every core system — engineering, search, product catalog, customer simulation — and using the scale of its historical data to build a moat that's hard to replicate.</p>
+
+        <h2>Planning needs humans</h2>
+        <p>Play to your strengths. Kiran's compound engineering framework splits engineering work into four steps: plan, work, review, compound. AI takes over execution. "LLMs are very good at depth-first execution, following steps, working for hours or even days — and that's true right now," Kiran says. What's left for flesh-and-blood humans is the bookends: <strong>planning</strong>, where you frame the problem, and <strong>review</strong>, where you decide whether the output actually feels right. That's the bread.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
