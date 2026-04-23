@@ -35,6 +35,21 @@ const date = "2026-04-22";
         <p>Benchmarks show a big jump, especially on practical image tasks: Arena reports GPT-Image-2 as #1 across all Image Arena leaderboards — 1512 on text-to-image, 1513 on single-image editing, 1464 on multi-image editing — with a striking +242 Elo lead over the next model on text-to-image.</p>
         <p>Independent reactions center on the same theme: this isn't just prettier art, it's a more usable model for UI, prototypes, documents, productivity visuals, and reference-driven design loops. The most interesting systems-level implication is that image generation is becoming the front-end for coding agents: generate a UI spec as an image, then have Codex or another code agent implement against that visual reference.</p>
 
+        <h2>ChatGPT Images 2.0 — reasoning built into the generator</h2>
+        <p>OpenAI launched ChatGPT Images 2.0, a major upgrade that pushes image generation beyond pretty pictures and into real creative work. The biggest shift is the built-in reasoning and thinking capability: before generating, the model can spend time interpreting prompts, planning outputs, checking details, and even pulling in web context when needed. It behaves more like a creative assistant than a standard image generator.</p>
+
+        <p>With reasoning enabled, ChatGPT Images 2.0 can create up to eight image variations from a single prompt while keeping characters, objects, and visual style consistent across every output. OpenAI says this makes longer-form visual storytelling and multi-asset campaigns far easier to produce.</p>
+
+        <p>Other upgrades:</p>
+        <ul>
+          <li>Much better text rendering in Japanese, Korean, Chinese, Hindi, and Bengali.</li>
+          <li>More current world knowledge, updated through December 2025.</li>
+          <li>Stronger style replication — texture, lighting, composition, and mood.</li>
+          <li>Especially useful for branding work: logos, product shots, campaigns, consistent business visuals.</li>
+        </ul>
+
+        <p>Riley Brown's demo is a good illustration of what the new reasoning loop unlocks: given a task involving a book, the model autonomously searches for the real book's barcode and adds it to the generated image. That's the point — not just pixels, but the agentic behavior of gathering context before drawing.</p>
+
         <h2>Hugging Face's ml-intern: the strongest open agent-in-the-loop release of the set</h2>
         <p>HF introduced <code>ml-intern</code>, an open-source agent that automates the <strong>post-training research loop</strong>: reading papers, following citation graphs, collecting and reformatting datasets, launching training jobs, evaluating runs, and iterating on failures.</p>
         <p>The reported examples are notable because they're <strong>end-to-end loops, not just coding demos</strong>:</p>
@@ -44,6 +59,20 @@ const date = "2026-04-22";
           <li>A math setup wrote a full GRPO script and recovered from reward collapse via ablations</li>
         </ul>
         <p>Community tests quickly showed it can autonomously fine-tune and publish artifacts back to the Hub (example: a SAM fine-tuning run).</p>
+
+        <h2>SEO and GEO — autonomous agents for search distribution</h2>
+        <p>RankAI positions itself as an autonomous agent that handles SEO and GEO (Generative Engine Optimization) to pull buyers from both Google and ChatGPT. Interesting category. Here's how the tech stack likely breaks down:</p>
+
+        <ul>
+          <li><strong>Content generation layer.</strong> Almost certainly GPT-4 / Claude / Gemini APIs plus custom prompt engineering and content templates to batch-produce SEO-conformant articles. Standard playbook for this kind of tool.</li>
+          <li><strong>Keyword database.</strong> They claim "billions of keywords" — this typically comes from buying third-party data (SEMrush, Ahrefs APIs) or scraping Google Suggest and People Also Ask, then clustering and classifying by intent.</li>
+          <li><strong>CMS integration.</strong> WordPress REST API, Shopify API, Webflow API — direct push via official endpoints for "auto-publish." Not technically hard, standard integration work.</li>
+          <li><strong>GEO (Generative Engine Optimization).</strong> This is their differentiator. The core idea: embed structured data (Schema.org), FAQ format, and clear entity relationships into content so LLMs are more likely to cite these pages during retrieval-augmented generation (RAG) or in training data. Essentially prompt design for AI search.</li>
+          <li><strong>Monitoring and feedback loop.</strong> Connect Google Search Console API to pull click and impression data; when a page underperforms, trigger a rewrite. Classic evaluate-optimize automation pipeline.</li>
+        </ul>
+
+        <h2>Google: AI now generates 75% of its new code</h2>
+        <p>Reported milestone from Google — AI is now responsible for 75% of newly written code internally. One more data point in the trend where the ratio of AI-authored to human-authored code keeps climbing across top-tier engineering orgs.</p>
       </div>
     </article>
   </div>
