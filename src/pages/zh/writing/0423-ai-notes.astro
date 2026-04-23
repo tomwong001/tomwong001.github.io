@@ -1,0 +1,63 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月23日";
+const date = "2026-04-23";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月23日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Shopify 的 AI 采用现状与质量循环</h2>
+        <p>Shopify 内部 AI 工具使用率已经接近 100%。2025 年 12 月是关键转折点，各类工具使用量出现爆发式增长。公司为所有员工提供无限 token 预算，并要求至少使用 Claude Opus 4.6 级别的模型。CLI 类工具（如 Claude Code）的增速明显快于传统 IDE 插件（如 Copilot / Cursor）。</p>
+
+        <p><strong>Token 预算与代码质量。</strong>Mikhail 认同 Jensen Huang 关于 token 预算的方向，但强调关键不在于并行跑多少个 agent，而在于设置高质量的"批评循环"——一个 agent 生成，另一个高质量模型审查，两者反复迭代。AI 写的代码平均质量高于人类，但因为写得太多，流入生产的 bug 总量反而上升，因此 PR review 环节的投入至关重要。</p>
+
+        <h2>Shopify 的三大内部系统</h2>
+        <ul>
+          <li><strong>Tangle</strong>——ML 实验与数据处理的编排平台，解决可复现性、团队协作和开发到生产部署的痛点。核心亮点是基于内容哈希的缓存：多个团队做重复计算时，结果会自动共享，由此产生网络效应。</li>
+          <li><strong>Tangent</strong>——建立在 Tangle 之上的自动研究（Auto Research）循环。Agent 自主运行大量实验、持续优化目标指标，已经在搜索吞吐量（800 → 4200 QPS）、prompt 压缩、存储优化等方向取得显著成果，且正在被 PM 等非技术人员广泛使用。</li>
+          <li><strong>SimGym</strong>——基于 Shopify 历史交易数据的客户行为模拟系统。核心壁垒在于数十年的真实用户行为数据——没有这些数据，模拟 agent 只会按 prompt 行事。系统能模拟买家在浏览器中的真实行为，给商家提供具体的转化率优化建议，目前每日用户数持续增长。</li>
+        </ul>
+
+        <h2>Liquid AI——Mikhail 见过的唯一真正有竞争力的非 Transformer 架构</h2>
+        <p>Shopify 是 Liquid AI（非 Transformer 架构）的真实生产用户，主要用于两个场景：低延迟路径，如搜索查询理解（&lt;30ms）；以及大规模批量任务，如商品目录分类和 Sidekick Pulse。Mikhail 认为这是他见过的唯一真正具备竞争力的非 Transformer 架构，并且正在从 Qwen 等模型手中抢占 Shopify 内部的份额。</p>
+
+        <p><strong>底线：</strong>Shopify 正在把 AI 渗透到工程、搜索、商品目录、客户模拟等几乎所有核心系统，并通过历史数据规模构建难以复制的竞争壁垒。</p>
+
+        <h2>Planning 是需要人类的</h2>
+        <p>发挥自己的优势。Kiran 的复合工程（compound engineering）框架把工程工作流程拆成四步：计划、工作、审查、复合。AI 负责执行阶段。"LLM 非常擅长深度执行——跟着步骤做事、连续工作几个小时甚至几天——现在就是这样，"Kiran 说。留给血肉之躯人类的，是前后两步：<strong>计划</strong>，在这里你定义问题；以及<strong>审查</strong>，在这里你判断输出是不是真的对劲。那才是面包。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
