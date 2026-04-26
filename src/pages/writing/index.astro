@@ -7,6 +7,14 @@ const lang = 'en';
 // Sample posts data - in a real setup these would come from markdown content collections
 const posts = [
   {
+    title: "Where Sages Agree",
+    date: "2026-04-26",
+    type: "book",
+    slug: "where-sages-agree",
+    excerpt: "A book on where four wisdom traditions converge — Zen, Confucianism, Stoicism, and Adlerian psychology — on what it means to live well in an anxious age.",
+    comingSoon: false
+  },
+  {
     title: "AI Notes — April 25",
     date: "2026-04-25",
     type: "learning-log",
@@ -209,7 +217,8 @@ function getTypeLabel(type: string): string {
     'share': 'Share',
     'product-thought': 'Product',
     'ai-commentary': 'AI',
-    'learning-log': 'Learning Log'
+    'learning-log': 'Learning Log',
+    'book': 'Book'
   };
   return labels[type] || type;
 }
