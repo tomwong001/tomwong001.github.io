@@ -54,10 +54,21 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
       </div>
       <nav class="chapter-nav">
         {bookData.map((ch) => (
-          <a href={`#chapter-${String(ch.num).padStart(2, '0')}`} data-chapter={ch.num} class="chapter-link">
-            <span class="chapter-num">{ch.num}</span>
-            <span class="chapter-name">{ch.shortTitle}</span>
-          </a>
+          <div class="chapter-group">
+            <a href={`#chapter-${String(ch.num).padStart(2, '0')}`} data-target={`chapter-${String(ch.num).padStart(2, '0')}`} class="chapter-link">
+              <span class="chapter-num">{ch.num}</span>
+              <span class="chapter-name">{ch.shortTitle}</span>
+            </a>
+            {ch.sections && ch.sections.length > 0 && (
+              <ul class="section-list">
+                {ch.sections.map((s) => (
+                  <li>
+                    <a href={`#${s.id}`} data-target={s.id} class="section-link">{s.title}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         ))}
       </nav>
     </aside>
@@ -145,20 +156,16 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
     }
   });
 
-  // === Highlight current chapter via IntersectionObserver ===
-  const links = Array.from(document.querySelectorAll('.chapter-link'));
+  // === Highlight current chapter / section via IntersectionObserver ===
+  const navLinks = Array.from(document.querySelectorAll('.chapter-link, .section-link'));
   const linkMap = new Map();
-  links.forEach((l) => {
-    const num = l.getAttribute('data-chapter');
-    if (num) linkMap.set('chapter-' + String(num).padStart(2, '0'), l);
+  navLinks.forEach((l) => {
+    const target = l.getAttribute('data-target');
+    if (target) linkMap.set(target, l);
   });
 
   const visible = new Set();
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) visible.add(e.target.id);
-      else visible.delete(e.target.id);
-    });
+  const updateActive = () => {
     let active = null;
     let minTop = Infinity;
     visible.forEach((id) => {
@@ -168,11 +175,39 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
         if (top < minTop) { minTop = top; active = id; }
       }
     });
-    links.forEach((l) => l.classList.remove('active'));
-    if (active && linkMap.has(active)) linkMap.get(active).classList.add('active');
-  }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+    navLinks.forEach((l) => l.classList.remove('active', 'parent-active'));
+    if (active && linkMap.has(active)) {
+      const link = linkMap.get(active);
+      link.classList.add('active');
+      // Mark parent chapter as parent-active (if active is a section)
+      if (active.startsWith('ch') && active.includes('-s')) {
+        const chNum = active.slice(2, 4);
+        const parent = linkMap.get('chapter-' + chNum);
+        if (parent) parent.classList.add('parent-active');
+        // Auto-scroll sidebar to show active section
+        const aside = document.getElementById('book-sidebar');
+        if (aside && link instanceof HTMLElement) {
+          const linkRect = link.getBoundingClientRect();
+          const asideRect = aside.getBoundingClientRect();
+          if (linkRect.top < asideRect.top || linkRect.bottom > asideRect.bottom) {
+            link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        }
+      }
+    }
+  };
 
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) visible.add(e.target.id);
+      else visible.delete(e.target.id);
+    });
+    updateActive();
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+  // Observe chapters AND section h2 headings
   document.querySelectorAll('.chapter').forEach((ch) => obs.observe(ch));
+  document.querySelectorAll('.chapter-body h2[id]').forEach((h) => obs.observe(h));
 
   // === Back to top ===
   const backTop = document.getElementById('back-to-top');
@@ -338,36 +373,81 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
   .chapter-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    gap: 0.5rem;
+  }
+  .chapter-group {
+    display: flex;
+    flex-direction: column;
   }
   .chapter-link {
     display: flex;
     align-items: baseline;
-    gap: 0.85rem;
-    padding: 0.55rem 0.75rem;
-    color: var(--color-text-muted);
-    font-size: 0.92rem;
+    gap: 0.7rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.35;
     border-left: 2px solid transparent;
     border-radius: 0 var(--radius) var(--radius) 0;
     transition: all var(--transition);
   }
   .chapter-link:hover {
     background: var(--color-accent-light);
-    color: var(--color-text);
+    color: var(--color-accent);
   }
-  .chapter-link.active {
+  .chapter-link.active,
+  .chapter-link.parent-active {
     border-left-color: var(--color-accent);
     color: var(--color-accent);
     background: var(--color-accent-light);
     font-weight: 600;
   }
   .chapter-link .chapter-num {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--color-text-light);
     font-variant-numeric: tabular-nums;
-    min-width: 1.25rem;
+    min-width: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
   }
-  .chapter-link.active .chapter-num { color: var(--color-accent); }
+  .chapter-link:hover .chapter-num,
+  .chapter-link.active .chapter-num,
+  .chapter-link.parent-active .chapter-num {
+    color: var(--color-accent);
+  }
+  .chapter-link .chapter-name {
+    flex: 1;
+  }
+
+  .section-list {
+    list-style: none;
+    padding: 0.15rem 0 0.25rem;
+    margin: 0 0 0.1rem 0;
+    border-left: 1px solid var(--color-border);
+    margin-left: 0.85rem;
+  }
+  .section-list li { margin: 0; }
+  .section-link {
+    display: block;
+    padding: 0.3rem 0.75rem 0.3rem 0.95rem;
+    color: var(--color-text-light);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    border-left: 2px solid transparent;
+    margin-left: -1px;
+    transition: all var(--transition);
+  }
+  .section-link:hover {
+    color: var(--color-text);
+    background: var(--color-accent-light);
+  }
+  .section-link.active {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+    background: var(--color-accent-light);
+    font-weight: 500;
+  }
 
   /* Sidebar open button (shown when sidebar collapsed) */
   .sidebar-open {
