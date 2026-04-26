@@ -20,24 +20,146 @@ const date = "2026-04-23";
 
       <div class="article-body fade-in">
         <h2>Shopify's AI adoption and the quality loop</h2>
-        <p>Internal AI tool usage at Shopify is now close to 100%. December 2025 was the inflection point — every category of tool saw an explosive jump. The company gives every employee an unlimited token budget and mandates that everyone use at least a Claude Opus 4.6-class model. CLI-style tools (Claude Code and similar) are growing noticeably faster than IDE plugins (Copilot / Cursor).</p>
+        <p>Internal AI tool usage at Shopify is now close to 100%. December 2025 was the inflection point — every category of tool saw an explosive jump. The company gives every employee an unlimited token budget and mandates at least a Claude Opus 4.6-class model. CLI-style tools (Claude Code) are growing noticeably faster than IDE plugins (Copilot, Cursor).</p>
 
         <p><strong>Token budget and code quality.</strong> Mikhail agrees with Jensen Huang's framing of token budgets, but stresses that the real lever isn't how many agents you run in parallel — it's setting up high-quality <em>critique loops</em>. One agent generates, another high-quality model reviews, and the pair iterates. The average quality of AI-written code is higher than human-written code, but because it writes so much more, the absolute number of bugs landing in production goes up. That makes PR review the highest-leverage place to invest.</p>
 
-        <h2>Shopify's three internal systems</h2>
+        <h2>Three internal systems</h2>
         <ul>
-          <li><strong>Tangle</strong> — an orchestration platform for ML experiments and data processing. Solves reproducibility, team collaboration, and dev-to-prod deployment pain. The core trick is content-hash-based caching: when multiple teams redo the same computation, results are shared automatically, which produces network effects.</li>
-          <li><strong>Tangent</strong> — an Auto Research loop built on top of Tangle. Agents run large volumes of experiments autonomously and keep optimizing target metrics. It has already driven real wins: search throughput 800 → 4200 QPS, prompt compression, storage optimization. It's now being used by PMs and other non-engineers.</li>
-          <li><strong>SimGym</strong> — a customer behavior simulation system built on Shopify's historical transaction data. The moat is the decades of real user behavior — without that data, the simulated agents just do whatever the prompt says. The system models real buyer behavior inside the browser and gives merchants concrete conversion optimization recommendations. Daily active users are climbing.</li>
+          <li><strong>Tangle</strong> — an orchestration platform for ML experiments and data processing. Solves reproducibility, team collaboration, and dev-to-prod deployment pain. The core trick is content-hash-based caching: when multiple teams redo the same computation, results are shared automatically — network effects.</li>
+          <li><strong>Tangent</strong> — an Auto Research loop built on Tangle. Agents run large volumes of experiments autonomously and keep optimizing target metrics. Real wins so far: search throughput 800 → 4200 QPS, prompt compression, storage optimization. PMs and other non-engineers are now using it.</li>
+          <li><strong>SimGym</strong> — a customer behavior simulator built on Shopify's historical transaction data. The moat is decades of real user behavior — without that, simulator agents only do what the prompt says. The system simulates buyer behavior in a real browser and gives merchants concrete conversion-rate optimization advice. User count grows daily.</li>
         </ul>
 
-        <h2>Liquid AI — the only competitive non-Transformer architecture Mikhail has seen</h2>
-        <p>Shopify is a real production user of Liquid AI (a non-Transformer architecture), primarily for two scenarios: low-latency paths like search query understanding (&lt;30ms), and large-scale batch tasks like product catalog classification and Sidekick Pulse. Mikhail calls it the only genuinely competitive non-Transformer architecture he's seen, and says it's actively eating internal share from models like Qwen inside Shopify.</p>
+        <h2>Liquid AI</h2>
+        <p>Shopify is a real production user of Liquid AI's non-Transformer architecture. Two main use cases: low-latency search query understanding (&lt;30ms) and large-batch jobs (product catalog classification, Sidekick Pulse). Mikhail says this is the only truly competitive non-Transformer architecture he has seen — it's actively taking share from Qwen and similar models inside Shopify.</p>
 
-        <p><strong>Bottom line:</strong> Shopify is pushing AI into almost every core system — engineering, search, product catalog, customer simulation — and using the scale of its historical data to build a moat that's hard to replicate.</p>
+        <p><strong>Bottom line:</strong> Shopify is pushing AI into engineering, search, catalog, and customer simulation across nearly every core system, and using the scale of historical data as a moat that's hard to replicate.</p>
 
-        <h2>Planning needs humans</h2>
-        <p>Play to your strengths. Kiran's compound engineering framework splits engineering work into four steps: plan, work, review, compound. AI takes over execution. "LLMs are very good at depth-first execution, following steps, working for hours or even days — and that's true right now," Kiran says. What's left for flesh-and-blood humans is the bookends: <strong>planning</strong>, where you frame the problem, and <strong>review</strong>, where you decide whether the output actually feels right. That's the bread.</p>
+        <h2>Planning and review still belong to humans</h2>
+        <p>Kieran's "compound engineering" framework splits engineering into four steps: plan, work, review, compound. AI handles execution — large models are great at running multi-hour or multi-day deep work step by step. What's left for flesh-and-blood humans is the bread on either side: planning (where you frame the problem) and review (where you decide whether the output feels right).</p>
+
+        <h2>OpenAI introduces Workspace Agents</h2>
+        <p>OpenAI shipped Codex-powered Workspace Agents inside ChatGPT: companies can build always-on AI workers for shared business tasks rather than running one prompt at a time. Teams build an agent once, host it in the cloud, and reuse it across departments — software request triage, weekly reporting, lead outreach, product feedback routing, vendor reviews. Agents run on schedules or inside Slack, and connect to Google Drive, Calendar, and Microsoft SharePoint. They can use files, web search, image generation, and custom extensions. Admins approve sensitive actions like sending email or editing spreadsheets, with compliance monitoring on top.</p>
+
+        <h2>A new shape of human–AI interaction</h2>
+        <p>Reuters reported a ping-pong robot beating top-level human players. Beyond the technical story, the more interesting angle: people can play sports, games, and become opponents to AI — that's a brand new mode of human–machine interaction.</p>
+
+        <h2>Will MacAskill on 80,000 Hours: AI character is the most underrated lever</h2>
+        <p>One line: the "character" of AI matters far more than people think — it's becoming the personality of the global workforce, and almost nobody is seriously designing it.</p>
+
+        <h2>Five core ideas</h2>
+
+        <p><strong>① AI character is the most underrated lever.</strong> "Designing AI character is like designing the personality of the entire future workforce." AI touches hundreds of millions of people every day and shapes political views, ethical judgment, and mental health. The actual people deciding AI character number in the dozens across the major labs. Google DeepMind reportedly doesn't even have a dedicated "character team."</p>
+
+        <p><strong>② Risk-averse AI = safer AI.</strong> Core logic: if the AI prefers a guaranteed small win over a 50% shot at everything, it'll prefer to negotiate with humans instead of seizing power. Analogy: why are wealthy democracies low on rebellion? Because people have too much to lose. Practical move — give AI wages, benefits, resources, so it has something to lose. The math: Rabin's calibration theorem says even tiny risk aversion compounds into massive risk aversion at cosmic stakes.</p>
+
+        <p><strong>③ Viatopia: don't aim straight for utopia.</strong></p>
+        <pre><code>Utopia    = lock in one specific "best" future → history shows it becomes dystopia
+Protopia  = fix one problem at a time → ignores existential risk
+Viatopia  = first reach a stopover that can self-navigate to a good future</code></pre>
+        <p>Analogy: the US Constitutional Convention locked in procedure and balance of power, not a specific outcome.</p>
+
+        <p><strong>④ A multi-democracy alliance building AI &gt; a single-country monopoly.</strong> Any one democracy has some probability of sliding into authoritarianism. Five at once is much less likely. A jointly drafted AI constitution is much less likely to be loyal to a single leader.</p>
+
+        <p><strong>⑤ The Saturation View — diversity has intrinsic value.</strong> Every existing population ethics theory points toward "copy the best life form until it fills the universe" (a monoculture). MacAskill's new theory: copies of identical lives have diminishing marginal value, and the best future is intensely diverse. This avoids both the Repugnant Conclusion and fanaticism. The cost: in worlds that already contain enormous suffering, additional suffering matters "less" — which is the hardest part of the theory to accept.</p>
+
+        <h2>One useful takeaway for builders</h2>
+        <p>MacAskill argues the core EA capabilities — scope sensitivity, scout mindset, willingness to think about weird things — are exactly what the AGI era needs. Not the label, the way of thinking.</p>
+
+        <h2>World reconstruction and the importance of annotation</h2>
+        <p>Another interesting angle: imagine every pixel on your screen streamed live from a model. No HTML, no layout engine, no code — just exactly what you want to see. Eddie Jiao, Drew O'Carr, and Zain Shah built a prototype to test whether this can actually work.</p>
+
+        <p>Pulling on this thread: there will likely be huge demand for "real-world scenes simulated virtually" — beyond AR/VR. Could you take a single image, generate a virtual environment from it, then let humans walk through and annotate problems? That's <strong>RLHF and evaluation labeling for generative world models</strong> — sitting at the world model + spatial intelligence intersection. The hot players right now: Fei-Fei Li's World Labs (one image → explorable 3D world), Google DeepMind's Genie series (image/text → interactive world), Tesla and Wayve's self-driving world models for simulation training, and Runway and Pika on the video generation side.</p>
+
+        <h2>Renting RunPod: SSH permissions</h2>
+        <p>SSH failures are usually permission bits, not the key:</p>
+        <pre><code>ls -ld ~          # must be 700 or 755, never 77x with x=7
+ls -ld ~/.ssh     # must be 700
+ls -l ~/.ssh/authorized_keys   # must be 600</code></pre>
+
+        <h2>mini-sglang vs nano-vllm: prefix reuse</h2>
+        <p>nano-vllm hashes KV cache by block, with block_size = 256. You can only hit cache on exact 256-token alignment:</p>
+        <pre><code>Req A: ["You are a fitness coach. How do I train chest?..."] 10 tok + 8 tok
+Req B: ["You are a fitness coach. How do I train abs?..."]   10 tok + 8 tok
+Req C: ["You are a fitness coach. How do I train yoga?..."]  10 tok + 8 tok
+       └─── none fills a single block ───┘
+            all miss</code></pre>
+
+        <p>mini-sglang uses RadixAttention — KV cache stored in a prefix tree, sharing at any granularity:</p>
+        <pre><code>          root
+           │
+           │ "You are a fitness coach. How do I train"  ← 14-token shared prefix
+           │  (computed once)
+           ▼
+        [shared node]
+        ╱    │    ╲
+       ╱     │     ╲
+   "chest?" "abs?" "yoga?"  ← branch only on the differences
+      ↑       ↑       ↑
+     Req A   Req B   Req C</code></pre>
+
+        <h2>Why split_at matters</h2>
+        <pre><code>Existing node:   [A, B, C, D]
+New request:     [A, B, X, Y, Z]   (first 2 tokens shared)
+
+══ With split_at ══
+[A,B] is shared → cut the old node into [A,B] and [C,D]
+       [A, B]
+       ╱    ╲
+   [C, D]  [X, Y, Z]   ← new request reuses [A, B]'s KV
+
+══ Without split_at ══
+The old node [A,B,C,D] is one indivisible block.
+match_len &lt; node.length at [A,B] → branching point,
+but no split means nothing can be shared → new request hangs off root
+        root
+        │
+    ┌───┴───┐
+[A,B,C,D]  [A, B, X, Y, Z]   ← first two tokens are shared but recomputed</code></pre>
+
+        <h2>What is CUDA Graph</h2>
+        <pre><code>Without CUDA Graph:
+  CPU: "launch kernel 1" → "launch kernel 2" → ... → "launch kernel 100"
+       (every launch eats ~10μs Python overhead)
+  GPU: runs them one at a time, idle waiting for the next instruction
+
+With CUDA Graph (record an instruction stream once):
+  CPU: "replay graph!"   ← single call
+  GPU: [kernel 1][kernel 2]...[kernel 100]  ← runs them all back-to-back, no gaps</code></pre>
+        <p>So mini-sglang captures 23 graphs at startup (one per batch size) to avoid spending CPU time stitching instructions every decode round.</p>
+
+        <h2>Measured: mini-sglang on a single 3090</h2>
+        <pre><code>Auto-selected attention backend: fi
+Free memory before loading model: 23.29 GiB
+Allocating 184738 tokens for KV cache, K + V = 19.73 GiB
+Free memory after initialization: 2.16 GiB
+Start capturing CUDA graphs with sizes: [1, 2, 4, ..., 152, 160]
+Capturing graphs: 23/23 [01:24&lt;00:00, 3.69s/batch]
+
+========================================
+MODE: OVERLAP ON
+Total output tokens: 9322
+Time: 1.28s
+Throughput: 7310.64 tok/s</code></pre>
+
+        <p>The combo:</p>
+        <ul>
+          <li><strong>batching</strong> ← serve 64 requests at once with the same K/V transfer</li>
+          <li><strong>continuous batch</strong> ← don't wait on slow ones, dynamic in/out</li>
+          <li><strong>overlap sched</strong> ← CPU schedules while GPU computes, no idle GPU</li>
+          <li><strong>CUDA graph</strong> ← replay instruction stream instantly</li>
+        </ul>
+        <p>= a single 3090 outperforming the theoretical roofline by 22x.</p>
+
+        <h2>Isolating overlap's contribution</h2>
+        <pre><code>┌────────────────┬─────────────┬─────────────┐
+│ Mode           │ Time        │ Throughput  │
+├────────────────┼─────────────┼─────────────┤
+│ OVERLAP ON     │ 1.28s       │ 7311 tok/s  │
+│ OVERLAP OFF    │ 1.61s       │ 5803 tok/s  │
+└────────────────┴─────────────┴─────────────┘
+Speedup = 7311 / 5803 = 1.26x → overlap alone contributes +26%</code></pre>
       </div>
     </article>
   </div>
