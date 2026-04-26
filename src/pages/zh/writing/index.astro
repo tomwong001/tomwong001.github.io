@@ -6,6 +6,14 @@ const lang = 'zh';
 
 const posts = [
   {
+    title: "禅宗、儒家、斯多葛、阿德勒",
+    date: "2026-04-26",
+    type: "book",
+    slug: "where-sages-agree",
+    excerpt: "一本关于东西方四大智慧传统——禅宗、儒家、斯多葛、阿德勒心理学——在"如何过好这一生"这个问题上汇合的书。",
+    comingSoon: false
+  },
+  {
     title: "AI 学习笔记 — 4月25日",
     date: "2026-04-25",
     type: "learning-log",
@@ -208,7 +216,8 @@ function getTypeLabel(type: string): string {
     'share': '分享',
     'product-thought': '产品',
     'ai-commentary': 'AI',
-    'learning-log': '学习日志'
+    'learning-log': '学习日志',
+    'book': '书'
   };
   return labels[type] || type;
 }
