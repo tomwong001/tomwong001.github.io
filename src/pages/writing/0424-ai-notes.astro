@@ -1,0 +1,132 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 24";
+const date = "2026-04-24";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 24, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>GPT-5.5 ships</h2>
+        <p>GPT-5.5 dropped today. It's fast enough to use continuously, friendly enough to collaborate with, and decisive enough to ship complex engineering work. On writing it beats every OpenAI model from the past year, and it tops the new "Senior Engineer benchmark" — which measures how well a model can rewrite a messy production codebase the way a senior would. Models that feel both easier and more powerful are rare.</p>
+
+        <p>Speed is the most obvious change. Head-to-head, GPT-5.5 is much faster than Opus 4.7, with a low-friction sense of fluency that makes it easier to iterate, stay in sync, and rely on day-to-day. It also spends more time planning and reviewing, asks more questions, and double-checks its own work before continuing — especially at higher reasoning settings.</p>
+
+        <p>Beyond benchmarks: GPT-5.5 uses about 40% fewer tokens than 5.4. It's more expensive per token, but nets out to about a 20% price increase — for a model that's smarter and faster.</p>
+
+        <h2>AI-native companies: Latent Space × Unsupervised Learning</h2>
+        <p>swyx (founder of the AI Engineer community, now at Cognition) and host Jacob Effron go deep on the 2026 AI ecosystem. Core points:</p>
+
+        <h2>① What AI engineers are obsessing about</h2>
+        <p>Top topics: harness engineering, context engineering, and skills (skill packs). Skills have become the minimum-viable packaging format for an agent — basically a markdown file plus a few scripts. That's a sign infrastructure is finally stabilizing.</p>
+
+        <h2>② Application companies outlast infrastructure companies</h2>
+        <p>AI infra companies have to disrupt themselves every year (LangChain / LangGraph being the textbook case). App companies (Sierra, Lara) play the role of "outsourced AI team" — they only need to keep up with the frontier model and customer stickiness is much higher.</p>
+
+        <h2>③ The "agent lab" playbook</h2>
+        <p>Top coding agent companies (Cursor, Cognition) start on frontier models and, once they have enough domain data, train their own proprietary models to cut cost and latency. For high-frequency, well-defined tasks like search and code completion, this is real value — not theater.</p>
+
+        <h2>④ Open source + alternative chips</h2>
+        <p>swyx flipped from his earlier pessimism on open source. One reason: non-NVIDIA chips (Cerebras, Taalas, etc.) are now hitting thousands of tokens per second, and every 10x of speed unlocks a new product experience.</p>
+
+        <p><strong>One correction:</strong> in December 2025, NVIDIA acquired Groq's core assets for ~$20B — the largest deal in NVIDIA's history. The structure is unusual: NVIDIA took the tech IP and the core leadership (including founder Jonathan Ross), but the Groq "shell" continues as an independent company under the CFO. The FTC has flagged it as one of several "merger in disguise" deals under investigation. In March 2026 NVIDIA released a new chip based on Groq LPU technology, claiming 35x the inference throughput of Blackwell on trillion-parameter models.</p>
+
+        <h2>Taalas: bake the model into silicon</h2>
+        <p>The "Talu" mentioned in the podcast is actually <strong>Taalas</strong>, a Toronto chip startup with a radical thesis: don't build a general GPU — bake the AI model's weights <strong>directly into the transistors</strong>, turning the model into a hardware circuit instead of software running on hardware.</p>
+
+        <p>The numbers are wild: their HC1 chip claims 14,000 tokens/sec — 10x faster than Cerebras, ~100x faster than a GPU, at only 200 watts (vs. 120–600 kW for a GPU rack). The cost is flexibility: each chip is custom-tailored to a specific model, and the first product is locked to Llama 3.1 8B. They closed a $219M round in February.</p>
+
+        <p>This is exactly why swyx pairs "open source + alternative silicon": companies like Taalas can only run open source models (you need the weights to bake them in), so the rise of open source ecosystems and non-NVIDIA hardware is structurally bound together.</p>
+
+        <h2>An analogy</h2>
+        <p><strong>Standard GPU:</strong> a chef who walks to the pantry, grabs ingredients, cooks, walks back, grabs more — most of the time is spent moving things. The real bottleneck in AI inference isn't compute — it's data movement. The technical name is the memory bandwidth wall.</p>
+
+        <p><strong>Taalas:</strong> burn the model weights straight into the chip's circuitry — like burning the recipe into the chef's muscle memory. The data is already where it's needed; pick it up and use it. No movement, so it's tens or hundreds of times faster.</p>
+
+        <p>The cost is obvious: this chef only knows one dish. Switching models means re-tooling the chip — about two months. It's a classic <strong>flexibility-for-speed trade</strong>: enormously valuable for shipping one model at scale, useless for research workflows that swap models constantly.</p>
+
+        <h2>⑤ The coding war is in "capability exploration" mode</h2>
+        <p>Anthropic's Claude Code is around $2.5B ARR, OpenAI and Cursor each around $2B — markets that didn't exist a year ago. The whole industry is in "spend more, get rewarded more" mode. Efficiency optimization hasn't started yet.</p>
+
+        <h2>⑥ 2026 in one line</h2>
+        <p>swyx's call: 2025 was the year of the coding agent; 2026 is the year coding agents break out and eat everything else. The chain: software ate the world → coding agents ate software → coding agents eat the world.</p>
+
+        <h2>⑦ Consumer AI hits a ceiling, coding AI keeps accelerating</h2>
+        <p>ChatGPT user growth has plateaued — looks more like the entire consumer AI category hitting a frequency-and-product-design ceiling than competitors stealing share. Coding AI, on the other hand, is genuinely a daily-active category.</p>
+
+        <h2>⑧ Traditional SaaS is being eaten</h2>
+        <p>swyx's company spent $200K on annual event management software; he thinks an AI-built custom version would cost $2K. The biggest internal blocker is team adoption — there's a real cultural rift between AI natives and traditionalists.</p>
+
+        <h2>⑨ "Dark factory" is the next frontier</h2>
+        <p>The industry has accepted "zero humans writing code." The more radical next frontier: zero humans <em>reviewing</em> code — models write and ship directly, forcing companies to rebuild test and validation systems from the ground up.</p>
+
+        <h2>⑩ Memory is the slowest scaling axis</h2>
+        <p>Context length went from 4K to 1M tokens over three years, and even with a million tokens most real workflows didn't change. Memory and personalization will be the key bottleneck of the next AI phase — and the main thing users will pick products on.</p>
+
+        <h2>⑪ The "Good Will Hunting" problem</h2>
+        <p>The closing image is striking: today's models are like Matt Damon in Good Will Hunting — they've read everything but never lived. Fei-Fei Li's "spatial intelligence" thesis points at the same gap: the model knows the word "table" but doesn't know what a table feels like. World model research exists to close that gap.</p>
+
+        <h2>OpenAI Privacy Filter: a small model that runs in your browser</h2>
+        <p>OpenAI open-sourced a genuinely useful model called <strong>Privacy Filter</strong> — 1.5B parameters, only 50M active, small enough to run fully offline in the browser. Xenova built a web demo. This kind of small model has real practical value — you could use it to filter privacy-sensitive inputs (like medical data) locally before sending the cleaned text to a cloud-based AI tool.</p>
+
+        <h2>Voice input plus cursor-aware reference</h2>
+        <p>"Here, fix THIS thing" — you don't have to say what "this" is. Claude infers from where your cursor was at the time. This combination of indexical reference plus visual context noticeably upgrades the voice-driven remote work flow.</p>
+
+        <h2>Kimi K2.6: Opus at home (if you have a data center)</h2>
+        <p>Kimi K2.6 dropped. Open source heavyweights continue to close on closed-source flagships.</p>
+
+        <h2>Medical and infra signals</h2>
+        <p>OpenAI released a clinician/medical model alongside the new Workspace Agents. Together AI reported usage growing from 30B to 300T tokens/month YoY — a large-scale indicator of inference demand expansion. Epoch AI revised down operational power at Stargate Abilene to ~0.3 GW today and pushed the full 1.2 GW milestone to Q4 2026 — frontier compute deployment remains hard to track.</p>
+
+        <h2>World ID 4.0: human verification</h2>
+        <p>World launched <strong>World ID 4.0</strong>, the new version of its proof-of-human system, designed for an internet flooded with AI-generated content. The platform uses an iris-scanning device called the Orb to mint a unique cryptographic identity. Over 18M users across 160 countries are already enrolled.</p>
+
+        <p>The bigger signal is adoption — new partners include Tinder, Zoom, DocuSign, Shopify, Okta, AWS, and Vercel. Tinder is adding verified-human badges, Zoom is testing deepfake checks for video calls, DocuSign is planning human verification for signatures.</p>
+
+        <h2>noscroll: an AI that doomscrolls X for you</h2>
+        <p>"X has the best information on the internet and the worst incentives and culture. noscroll is the AI that doomscrolls it for you and texts you just the things that matter. No feed. No brainrot. No ragebait. Just signal."</p>
+
+        <h2>Remotion + Claude Code: (almost) one-shot product video</h2>
+        <p>Austin Tedesco, Every's head of growth, spent days battling Remotion (open-source video creation) and Claude Code, then settled on a workflow he reuses every time he needs a launch or feature demo:</p>
+
+        <ul>
+          <li><strong>Step 1:</strong> Screen-record yourself using the product. All you need is raw footage of yourself clicking through features in real time.</li>
+          <li><strong>Step 2:</strong> Send the recording to a model (Austin prefers Opus) and have it draft a storyboard. The recording grounds the model in how the UI actually works and what the copy actually says — preventing the most common cause of fake-looking launch videos: plausible-but-hallucinated labels and features.</li>
+          <li><strong>Step 3:</strong> Iterate on the storyboard. Go back and forth with the model until the hook, pacing, and beat-by-beat plan feel right.</li>
+          <li><strong>Step 4:</strong> Hand the storyboard to a coding agent and have it build the video in Remotion. With the screen recording and the matching storyboard, the first full render is usually publishable. It's not a true one-shot, but it saves a lot of time.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
