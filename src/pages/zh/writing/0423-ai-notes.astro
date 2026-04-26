@@ -19,25 +19,143 @@ const date = "2026-04-23";
       </div>
 
       <div class="article-body fade-in">
-        <h2>Shopify 的 AI 采用现状与质量循环</h2>
-        <p>Shopify 内部 AI 工具使用率已经接近 100%。2025 年 12 月是关键转折点，各类工具使用量出现爆发式增长。公司为所有员工提供无限 token 预算，并要求至少使用 Claude Opus 4.6 级别的模型。CLI 类工具（如 Claude Code）的增速明显快于传统 IDE 插件（如 Copilot / Cursor）。</p>
+        <h2>Shopify 的 AI 渗透与质量循环</h2>
+        <p>Shopify 内部 AI 工具使用率已接近 100%。2025 年 12 月是关键转折点，各类工具使用量出现爆发式增长。公司为所有员工提供无限 token 预算，并要求至少使用 Claude Opus 4.6 级别的模型。CLI 类工具（Claude Code）的增速明显快于传统 IDE 插件（Copilot、Cursor）。</p>
 
-        <p><strong>Token 预算与代码质量。</strong>Mikhail 认同 Jensen Huang 关于 token 预算的方向，但强调关键不在于并行跑多少个 agent，而在于设置高质量的"批评循环"——一个 agent 生成，另一个高质量模型审查，两者反复迭代。AI 写的代码平均质量高于人类，但因为写得太多，流入生产的 bug 总量反而上升，因此 PR review 环节的投入至关重要。</p>
+        <p><strong>Token 预算与代码质量。</strong>Mikhail 认同 Jensen Huang 关于 token 预算的方向，但强调关键不在于并行跑多少 agent，而在于设置高质量的"批评循环"——一个 agent 生成，另一个高质量模型审查，反复迭代。AI 写的代码平均质量高于人类，但因为写得太多，流入生产的 bug 总量反而上升，因此 PR review 环节的投入至关重要。</p>
 
-        <h2>Shopify 的三大内部系统</h2>
+        <h2>三大内部系统</h2>
         <ul>
-          <li><strong>Tangle</strong>——ML 实验与数据处理的编排平台，解决可复现性、团队协作和开发到生产部署的痛点。核心亮点是基于内容哈希的缓存：多个团队做重复计算时，结果会自动共享，由此产生网络效应。</li>
-          <li><strong>Tangent</strong>——建立在 Tangle 之上的自动研究（Auto Research）循环。Agent 自主运行大量实验、持续优化目标指标，已经在搜索吞吐量（800 → 4200 QPS）、prompt 压缩、存储优化等方向取得显著成果，且正在被 PM 等非技术人员广泛使用。</li>
-          <li><strong>SimGym</strong>——基于 Shopify 历史交易数据的客户行为模拟系统。核心壁垒在于数十年的真实用户行为数据——没有这些数据，模拟 agent 只会按 prompt 行事。系统能模拟买家在浏览器中的真实行为，给商家提供具体的转化率优化建议，目前每日用户数持续增长。</li>
+          <li><strong>Tangle</strong>：ML 实验与数据处理的编排平台，解决可复现性、团队协作和开发到生产部署的痛点。核心亮点是基于内容哈希的缓存——多团队重复计算自动共享结果，产生网络效应。</li>
+          <li><strong>Tangent</strong>：建立在 Tangle 上的自动研究（Auto Research）循环。Agent 自主运行大量实验、持续优化目标指标，已在搜索吞吐量（800 → 4200 QPS）、prompt 压缩、存储优化等方向取得显著成果，且正在被 PM 等非技术人员广泛使用。</li>
+          <li><strong>SimGym</strong>：基于 Shopify 历史交易数据的客户行为模拟系统。核心壁垒在于数十年的真实用户行为数据——没有这些数据，模拟 agent 只会按 prompt 行事。系统能模拟买家在浏览器中的真实行为，为商家提供具体的转化率优化建议，目前用户数每天持续增长。</li>
         </ul>
 
-        <h2>Liquid AI——Mikhail 见过的唯一真正有竞争力的非 Transformer 架构</h2>
-        <p>Shopify 是 Liquid AI（非 Transformer 架构）的真实生产用户，主要用于两个场景：低延迟路径，如搜索查询理解（&lt;30ms）；以及大规模批量任务，如商品目录分类和 Sidekick Pulse。Mikhail 认为这是他见过的唯一真正具备竞争力的非 Transformer 架构，并且正在从 Qwen 等模型手中抢占 Shopify 内部的份额。</p>
+        <h2>Liquid AI</h2>
+        <p>Shopify 是 Liquid AI（非 Transformer 架构）的实际用户，主要用于两个场景：低延迟搜索查询理解（&lt;30ms）和大规模批量任务（商品目录分类、Sidekick Pulse）。Mikhail 认为这是他见过的唯一真正具备竞争力的非 Transformer 架构，正在从 Qwen 等模型手中抢占 Shopify 内部份额。</p>
 
-        <p><strong>底线：</strong>Shopify 正在把 AI 渗透到工程、搜索、商品目录、客户模拟等几乎所有核心系统，并通过历史数据规模构建难以复制的竞争壁垒。</p>
+        <p><strong>底线：</strong>Shopify 正在将 AI 渗透到工程、搜索、商品目录、客户模拟等几乎所有核心系统，并通过历史数据规模构建难以复制的竞争壁垒。</p>
 
-        <h2>Planning 是需要人类的</h2>
-        <p>发挥自己的优势。Kiran 的复合工程（compound engineering）框架把工程工作流程拆成四步：计划、工作、审查、复合。AI 负责执行阶段。"LLM 非常擅长深度执行——跟着步骤做事、连续工作几个小时甚至几天——现在就是这样，"Kiran 说。留给血肉之躯人类的，是前后两步：<strong>计划</strong>，在这里你定义问题；以及<strong>审查</strong>，在这里你判断输出是不是真的对劲。那才是面包。</p>
+        <h2>规划与审查仍属于人类</h2>
+        <p>Kieran 的"复合工程"框架把工程工作流拆为四步：计划、工作、审查、复合。AI 负责执行阶段——大模型擅长按步骤做几小时甚至几天的深度工作。留给人类的是"面包"两端：规划（定义问题）与审查（判断输出是否对劲）。</p>
+
+        <h2>OpenAI 推出 Workspace Agents</h2>
+        <p>OpenAI 在 ChatGPT 中引入由 Codex 驱动的 Workspace Agents：公司可以为共享业务任务构建始终在线的 AI 员工，而非每次都从聊天框开始。团队创建一次代理，托管在云端，跨部门复用——软件请求分类、周报、销售线索跟进、产品反馈路由、供应商审查等。代理可按计划运行，也可在 Slack 内部工作，并连接 Google Drive、Calendar、Microsoft SharePoint。它们还能使用文件、网络搜索、图像生成和自定义扩展。管理员可批准发邮件、改表格等敏感操作，并通过合规控制监控活动。</p>
+
+        <h2>未来的人机互动</h2>
+        <p>路透社报道一个乒乓球机器人击败了顶级人类选手。技术意义之外，更值得关注的是：人可以和 AI 打球、玩游戏、做对手——这本身就是一种全新的人机互动形态。</p>
+
+        <h2>Will MacAskill × 80,000 Hours：AI 性格被严重低估</h2>
+        <p>一句话：AI 的"性格"比你想象的重要得多——它将成为全球劳动力的人格底座，而几乎没有人在认真设计它。</p>
+
+        <h2>5 个核心议题</h2>
+
+        <p><strong>① AI 性格是最被低估的杠杆。</strong>引用："设计 AI 性格，就像在给未来整个世界劳动力制定人格。"AI 每天接触数亿人，影响政治观点、伦理判断、心理健康。真正决定 AI 性格的，只有各大公司里几个人。Google DeepMind 据报道连专门的"性格团队"都没有。</p>
+
+        <p><strong>② 风险厌恶型 AI = 更安全的 AI。</strong>核心逻辑：如果 AI 宁要"保证拿到一点"，也不愿赌"50% 拿到一切"，它就更倾向于跟人类谈判，而非夺权。类比：为什么民主富裕国家叛乱少？因为人们有很多可以失去的东西。实操层面——给 AI 工资、福利、资源，让它"有所失去"。数学依据来自 Rabin 校准定理：即使只有微小风险厌恶，在宇宙级别的博弈中也会产生极大的风险厌恶。</p>
+
+        <p><strong>③ Viatopia：不要直接奔向乌托邦。</strong>乌托邦（Utopia）= 锁定某个具体"最好"未来 → 历史证明很快变成反乌托邦。渐进主义（Protopia）= 一个问题一个问题修 → 会忽略存在性风险。Viatopia = 先到达一个"能自我导航到好未来"的中间站。类比：美国制宪会议锁定的是程序与权力制衡，而不是某个具体结果。</p>
+
+        <p><strong>④ 多国民主联盟开发 AI &gt; 单国垄断。</strong>任何一个民主国家都有概率滑向威权；五个国家同时滑向威权的概率极低；联合制定的 AI 宪法更不可能只忠于某一个领导人。</p>
+
+        <p><strong>⑤ "饱和观"（Saturation View）——多样性有内在价值。</strong>现有所有种群伦理学理论都指向"复制最好的生命直到铺满宇宙"（即单一文化）。MacAskill 提出的新理论：相同生命的副本边际价值递减，最好的未来是极度多样的。这同时避免了"令人厌恶的结论"和"狂热主义"（fanaticism）。代价是：对已有大量案例的苦难，额外的苦难变得"不那么重要"——这是该理论最难接受的地方。</p>
+
+        <h2>对建设者最有用的一个洞见</h2>
+        <p>MacAskill 说：EA 的核心能力——范围敏感、侦察者思维、愿意思考奇怪事物——正是 AGI 时代最需要的。重点不是给自己贴"EA"标签，而是这种<strong>思维方式</strong>。</p>
+
+        <h2>世界重构与"标注"的重要性</h2>
+        <p>另一个有意思的方向：把屏幕上的每个像素都从模型实时流出来。没有 HTML、没有布局引擎、没有代码——只是你想看的画面。Eddie Jiao、Drew O'Carr 与 Zain Shah 做了原型来验证这个想法。</p>
+
+        <p>顺着这个方向想：未来很可能存在大量"现实场景被虚拟模拟"的需求——AR/VR 类应用之外，能不能用一张图片生成一个虚拟环境，然后让人去这个虚拟环境里挑问题、做标注？这其实是<strong>生成式世界模型的 RLHF / 评估标注</strong>——属于世界模型 + 空间智能赛道。这条线上现在最热的玩家：李飞飞的 World Labs（从一张图生成可探索的 3D 世界）、Google DeepMind Genie 系列（从图/文本生成可交互世界）、特斯拉/Wayve 的自动驾驶世界模型（用于仿真训练）、Runway 与 Pika 的视频生成。</p>
+
+        <h2>租 RunPod 时的 SSH 权限</h2>
+        <p>SSH 登录失败一般不是 key 的问题，而是权限位不对：</p>
+        <pre><code>ls -ld ~          # 应该是 700 或 755，不能是 77x 的 x=7
+ls -ld ~/.ssh     # 必须 700
+ls -l ~/.ssh/authorized_keys   # 必须 600</code></pre>
+
+        <h2>mini-sglang vs nano-vllm：前缀复用</h2>
+        <p>nano-vllm 按 block 哈希做 KV cache 共享，block_size = 256，必须恰好对齐 256 的倍数才能命中：</p>
+        <pre><code>Req A: [你是健身教练。我该怎么练胸肌？...]  10tok + 8tok
+Req B: [你是健身教练。我该怎么练腹肌？...]  10tok + 8tok
+Req C: [你是健身教练。我该怎么练瑜伽？...]  10tok + 8tok
+       └─── 都装不满 1 block ───┘
+            全部 miss</code></pre>
+
+        <p>mini-sglang 用 RadixAttention，前缀树存 KV cache，任意粒度共享：</p>
+        <pre><code>        根节点 (root)
+          │
+          │ "你是健身教练。我该怎么练"  ← 14 tokens 的共享前缀
+          │  (只算一次！)
+          ▼
+       [共享节点]
+       ╱   │   ╲
+      ╱    │    ╲
+"胸肌？" "腹肌？" "瑜伽？"  ← 各自分叉
+   ↑        ↑         ↑
+  Req A    Req B    Req C</code></pre>
+
+        <h2>split_at 的关键作用</h2>
+        <pre><code>树里已有节点: [A, B, C, D]
+新用户来了:   [A, B, X, Y, Z]   （前 2 个共享）
+
+═══ 有 split_at ═══
+发现 [A,B] 共享 → 把旧节点切成 [A,B] 和 [C,D]
+       [A, B]
+       ╱    ╲
+   [C, D]  [X, Y, Z]   ← 新用户复用了 [A, B] 的 KV
+
+═══ 没有 split_at ═══
+旧节点是 [A,B,C,D] 整块不可分
+match 到 [A,B] 时 match_len &lt; node.length → 分叉点
+但没 split → 啥都不能共享 → 新用户只能挂到 root 新开一条
+       根
+       │
+   ┌───┴───┐
+[A,B,C,D]  [A, B, X, Y, Z]   ← 前两个 token 明明共享，却各算各的</code></pre>
+
+        <h2>什么是 CUDA Graph</h2>
+        <pre><code>没 CUDA Graph：
+  CPU: "launch kernel 1" → "launch kernel 2" → ... → "launch kernel 100"
+       （每次 launch 都有 ~10μs Python 开销）
+  GPU: 接到一个算一个，间隙闲着等下一条
+
+有 CUDA Graph（预先录制一段指令流）：
+  CPU: "replay graph!"   ← 一次调用
+  GPU: [kernel 1][kernel 2]...[kernel 100]  ← 一口气全放完，无间隙</code></pre>
+        <p>所以 mini-sglang 启动时捕获 23 个 graph（不同 batch size 各一个），就是为了避免运行时每轮 decode 都花 CPU 时间拼指令。</p>
+
+        <h2>实测：单卡 3090 跑 mini-sglang</h2>
+        <pre><code>Auto-selected attention backend: fi
+Free memory before loading model: 23.29 GiB
+Allocating 184738 tokens for KV cache, K + V = 19.73 GiB
+Free memory after initialization: 2.16 GiB
+Start capturing CUDA graphs with sizes: [1, 2, 4, ..., 152, 160]
+Capturing graphs: 23/23 [01:24&lt;00:00, 3.69s/batch]
+
+========================================
+MODE: OVERLAP ON
+Total output tokens: 9322
+Time: 1.28s
+Throughput: 7310.64 tok/s</code></pre>
+
+        <p>组合拳：</p>
+        <ul>
+          <li><strong>batching</strong> ← 一次服务 64 人，K/V 搬运量不变</li>
+          <li><strong>continuous batch</strong> ← 不等慢的，动态进出</li>
+          <li><strong>overlap sched</strong> ← CPU 边调度边算，GPU 不闲</li>
+          <li><strong>CUDA graph</strong> ← CPU 指令流秒重放</li>
+        </ul>
+        <p>= 单 3090 吊打理论值 22 倍。</p>
+
+        <h2>Overlap 的独立贡献</h2>
+        <pre><code>┌────────────────┬─────────────┬─────────────┐
+│ 模式            │ Time        │ Throughput  │
+├────────────────┼─────────────┼─────────────┤
+│ OVERLAP ON      │ 1.28s       │ 7311 tok/s  │
+│ OVERLAP OFF     │ 1.61s       │ 5803 tok/s  │
+└────────────────┴─────────────┴─────────────┘
+加速比 = 7311 / 5803 = 1.26x → overlap 单独贡献 +26%</code></pre>
       </div>
     </article>
   </div>
