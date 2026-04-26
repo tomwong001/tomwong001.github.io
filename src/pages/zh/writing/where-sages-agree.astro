@@ -157,47 +157,55 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
     if (target) linkMap.set(target, l);
   });
 
-  const visible = new Set();
+  const targets = Array.from(document.querySelectorAll('.chapter[id], .chapter-body h2[id]'));
+
+  let lastActive = null;
   const updateActive = () => {
+    const triggerY = window.scrollY + window.innerHeight * 0.18;
     let active = null;
-    let minTop = Infinity;
-    visible.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        const top = el.getBoundingClientRect().top;
-        if (top < minTop) { minTop = top; active = id; }
+    let activeChapter = null;
+    for (const el of targets) {
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      if (top > triggerY) break;
+      active = el.id;
+      if (active.startsWith('chapter-')) activeChapter = active;
+      else if (active.startsWith('ch') && active.includes('-s')) {
+        activeChapter = 'chapter-' + active.slice(2, 4);
       }
-    });
+    }
+    if (active === lastActive) return;
+    lastActive = active;
+
     navLinks.forEach((l) => l.classList.remove('active', 'parent-active'));
     if (active && linkMap.has(active)) {
       const link = linkMap.get(active);
       link.classList.add('active');
-      if (active.startsWith('ch') && active.includes('-s')) {
-        const chNum = active.slice(2, 4);
-        const parent = linkMap.get('chapter-' + chNum);
+      if (active.startsWith('ch') && active.includes('-s') && activeChapter) {
+        const parent = linkMap.get(activeChapter);
         if (parent) parent.classList.add('parent-active');
-        const aside = document.getElementById('book-sidebar');
-        if (aside && link instanceof HTMLElement) {
-          const linkRect = link.getBoundingClientRect();
-          const asideRect = aside.getBoundingClientRect();
-          if (linkRect.top < asideRect.top || linkRect.bottom > asideRect.bottom) {
-            link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-          }
+      }
+      const aside = document.getElementById('book-sidebar');
+      if (aside && link instanceof HTMLElement) {
+        const linkRect = link.getBoundingClientRect();
+        const asideRect = aside.getBoundingClientRect();
+        if (linkRect.top < asideRect.top + 40 || linkRect.bottom > asideRect.bottom - 40) {
+          link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
       }
     }
   };
 
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) visible.add(e.target.id);
-      else visible.delete(e.target.id);
-    });
-    updateActive();
-  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
-
-  document.querySelectorAll('.chapter').forEach((ch) => obs.observe(ch));
-  document.querySelectorAll('.chapter-body h2[id]').forEach((h) => obs.observe(h));
+  let scrollScheduled = false;
+  window.addEventListener('scroll', () => {
+    if (!scrollScheduled) {
+      scrollScheduled = true;
+      requestAnimationFrame(() => {
+        updateActive();
+        scrollScheduled = false;
+      });
+    }
+  }, { passive: true });
+  updateActive();
 
   const backTop = document.getElementById('back-to-top');
   const updateBackTop = () => {
