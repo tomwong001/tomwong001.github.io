@@ -3,10 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import bookData from '../../data/book-en.json';
 
 const lang = 'en';
-const title = "Where Sages Agree";
-const subtitle = "An Old Map for an Anxious Age";
-
-const NUM_WORDS = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve'];
+const meta = bookData.meta;
+const chapters = bookData.chapters;
 
 function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: string } {
   if (num === 0) return { eyebrow: 'Preface', main: 'Preface' };
@@ -23,37 +21,37 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
 }
 ---
 
-<Layout title={title} lang={lang}>
+<Layout title={meta.title} lang={lang}>
   <div class="reading-progress" id="reading-progress"></div>
 
   <section class="book-hero">
     <div class="hero-inner">
       <div class="cover-wrap">
-        <img src="/images/book/cover-en.jpg" alt="Where Sages Agree cover" />
+        <img src="/images/book/cover-en.jpg" alt={`${meta.title} cover`} />
       </div>
       <div class="hero-text">
-        <p class="kicker">A Book</p>
-        <h1>{title}</h1>
-        <p class="subtitle">{subtitle}</p>
-        <p class="meta">Tom Wang · 2026 · 12 chapters · ~90 min read</p>
+        <p class="kicker">{meta.kicker}</p>
+        <h1>{meta.title}</h1>
+        <p class="subtitle">{meta.subtitle}</p>
+        <p class="meta">{meta.author} · {meta.year} · {meta.chapterLabel} · ~{meta.readMinutes} {meta.readSuffix}</p>
         <div class="hero-actions">
-          <a href="#chapter-00" class="cta-primary">Start Reading ↓</a>
-          <a href="/zh/writing/where-sages-agree/" class="cta-secondary">中文版</a>
+          <a href="#chapter-00" class="cta-primary">{meta.ctaStart}</a>
+          <a href={meta.switchHref} class="cta-secondary">{meta.ctaSwitch}</a>
         </div>
       </div>
     </div>
   </section>
 
   <div class="book-reader" id="book-reader">
-    <button class="sidebar-open" id="sidebar-open" aria-label="Open table of contents">☰&nbsp; Contents</button>
+    <button class="sidebar-open" id="sidebar-open" aria-label={meta.openAria}>{meta.openLabel}</button>
 
     <aside class="book-sidebar" id="book-sidebar">
       <div class="sidebar-head">
-        <span class="sidebar-title">Contents</span>
-        <button class="sidebar-close" id="sidebar-close" aria-label="Close table of contents">×</button>
+        <span class="sidebar-title">{meta.sidebarTitle}</span>
+        <button class="sidebar-close" id="sidebar-close" aria-label={meta.closeAria}>×</button>
       </div>
       <nav class="chapter-nav">
-        {bookData.map((ch) => (
+        {chapters.map((ch) => (
           <div class="chapter-group">
             <a href={`#chapter-${String(ch.num).padStart(2, '0')}`} data-target={`chapter-${String(ch.num).padStart(2, '0')}`} class="chapter-link">
               <span class="chapter-num">{ch.num}</span>
@@ -74,7 +72,7 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
     </aside>
 
     <main class="book-content">
-      {bookData.map((ch) => {
+      {chapters.map((ch) => {
         const { eyebrow, main } = splitTitle(ch.num, ch.fullTitle);
         return (
           <section class="chapter" id={`chapter-${String(ch.num).padStart(2, '0')}`}>
@@ -88,7 +86,7 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
     </main>
   </div>
 
-  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+  <button class="back-to-top" id="back-to-top" aria-label={meta.backToTopAria}>↑</button>
 </Layout>
 
 <script>
