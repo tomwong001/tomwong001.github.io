@@ -1,0 +1,193 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 25";
+const date = "2026-04-25";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 25, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>DeepSeek-V4 vs Flash Attention vs Multi-Head Attention</h2>
+        <p>Putting these three side by side makes the difference between "algorithmic optimization" and "architectural innovation" obvious.</p>
+
+        <h2>1. Multi-Head Attention (MHA): the baseline</h2>
+        <p>Core formula:</p>
+        <pre><code>Attention(Q, K, V) = softmax(Q·Kᵀ / √d_k) · V</code></pre>
+
+        <p>Q, K, and V are split into h heads, each head computes attention independently, then the heads are concatenated.</p>
+
+        <p><strong>KV cache pain:</strong> at inference time, you have to cache K and V at every layer. Cache size = <code>2 × n_layers × seq_len × d_model × batch_size</code>, which is brutal for long sequences. Memory complexity is O(n²) — VRAM blows up at long context.</p>
+
+        <h2>2. Flash Attention: same architecture, better algorithm</h2>
+        <p>Flash Attention is <strong>not a new attention structure</strong> — it's a more efficient way of computing the same MHA.</p>
+        <ul>
+          <li><strong>Result:</strong> mathematically identical to standard MHA</li>
+          <li><strong>Core idea:</strong> tiled computation that avoids writing the full n×n attention matrix to HBM</li>
+          <li><strong>Memory access:</strong> O(n²) HBM reads/writes drops to O(n)</li>
+          <li><strong>Speed:</strong> 2-4x faster</li>
+          <li><strong>What changed:</strong> only the GPU memory access pattern (IO-aware)</li>
+        </ul>
+        <p>Analogy: same dish, but instead of laying every ingredient on the counter first, you grab and cook in sequence — same result, less counter space.</p>
+
+        <h2>3. DeepSeek-V4's CSA / HCA: actual architectural change</h2>
+        <p>This is the real innovation. It tackles MHA's <strong>structural problem</strong>, not just implementation efficiency.</p>
+
+        <h2>3.1 CSA (Compressed Sparse Attention)</h2>
+        <p>Idea: before computing attention, do a <strong>low-rank compression</strong> on K and V — squeeze the high-dimensional vectors into a low-dimensional latent space.</p>
+        <pre><code>Standard MHA:
+  K = X · Wₖ   ← dim d_model
+  V = X · Wᵥ   ← dim d_model
+
+CSA:
+  c_KV = X · W_c     ← compress to low dim d_c (d_c &lt;&lt; d_model)
+  K = c_KV · Wₖ_up   ← project back up
+  V = c_KV · Wᵥ_up</code></pre>
+        <p><strong>The KV cache only needs to store c_KV!</strong> Compression ratios of 5-10x are achievable. This is a continuation and enhancement of the MLA (Multi-head Latent Attention) idea from DeepSeek-V2/V3.</p>
+
+        <h2>3.2 HCA (Heavily Compressed Attention)</h2>
+        <p>Higher compression rate than CSA, used in <strong>certain layers</strong> (typically middle layers) where you can trade a bit of precision for more efficiency. The hybrid design means different Transformer blocks can alternate between CSA and HCA, adapting based on layer depth.</p>
+
+        <h2>3.3 Pre-Block / Post-Block Mixing</h2>
+        <pre><code>Pre-Block Mixing:  before attention, mix the current layer with neighboring layers
+Post-Block Mixing: after attention, integrate information again</code></pre>
+        <p>This is a <strong>cross-layer mixing</strong> mechanism, similar in spirit to DenseNet's dense connections — information flows more smoothly between layers.</p>
+
+        <h2>3.4 mHC residuals</h2>
+        <p>The "stacked rectangle" next to ⊕ in the diagram is the multi-Head Compression residual, an enhancement to traditional residual connections:</p>
+        <pre><code>Standard residual:  x_out = x_in + Attention(x_in)
+
+mHC residual:       x_out = Mix([x_in, x_in_compressed_1, x_in_compressed_2]) + Attention(x_in)</code></pre>
+        <p>Multiple representations at different compression levels are kept around and fused at the residual addition step, capturing multi-scale features.</p>
+
+        <h2>4. Side by side</h2>
+        <pre><code>Standard MHA
+  ↓ (same architecture, only GPU memory access optimized)
+Flash Attention (implementation optimization, identical result)
+  ↓ (architecture changes, KV representation compressed)
+MLA / CSA / HCA (architectural innovation — fundamentally less to store and compute)</code></pre>
+
+        <table>
+          <thead>
+            <tr><th>Dimension</th><th>MHA</th><th>Flash Attention</th><th>CSA/HCA (V4)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Architecture change</td><td>baseline</td><td>no</td><td>yes</td></tr>
+            <tr><td>Problem solved</td><td>—</td><td>GPU IO bottleneck</td><td>KV cache + compute</td></tr>
+            <tr><td>KV cache size</td><td>100%</td><td>100% (unchanged)</td><td>~10-20%</td></tr>
+            <tr><td>Mathematical equivalence</td><td>baseline</td><td>fully equivalent</td><td>approximate (lossy)</td></tr>
+            <tr><td>Where to use</td><td>general</td><td>any setting</td><td>large-model long-context inference</td></tr>
+            <tr><td>Main payoff</td><td>—</td><td>train / infer speed</td><td>inference memory + throughput</td></tr>
+          </tbody>
+        </table>
+
+        <h2>5. Intuition</h2>
+        <ul>
+          <li><strong>MHA:</strong> every person (head) walks into the meeting carrying their full notebook (K, V)</li>
+          <li><strong>Flash Attention:</strong> still full notebooks, but the meeting is run more efficiently — you don't lay every page on the table at once</li>
+          <li><strong>CSA/HCA:</strong> before the meeting, everyone <strong>compresses their notes into summaries</strong> and brings only the summary; original notes are looked up on demand. Much smaller table footprint, at the cost of a little detail</li>
+        </ul>
+        <p>This is why DeepSeek-V4 can keep strong performance while supporting much longer context and higher inference throughput.</p>
+
+        <h2>GPT-Image 2 + Seedance 2.0: AI short-film workflow</h2>
+        <p>Full pipeline: idea → scene sheet → storyboard → image upscaling → Seedance 2.0 prompts → generate clips → edit.</p>
+
+        <h2>Step 1 — build the scene sheet</h2>
+        <p>Drop your idea into the system prompt below at "[insert your scene idea]" — clearly describe what's happening, what the frame looks like, and how the scene progresses. Iterate until the scene is solid both visually and narratively.</p>
+
+        <p><strong>Scene sheet system prompt (structured fields):</strong></p>
+        <ul>
+          <li>Scene title</li>
+          <li>Visual format / style</li>
+          <li>Location / environment</li>
+          <li>Cast / character notes</li>
+          <li>Shot breakdown</li>
+          <li>Tone / emotional rhythm</li>
+          <li>Camera / cinematic language</li>
+          <li>Lighting design</li>
+          <li>Sound / audio design</li>
+          <li>Scene goal</li>
+        </ul>
+
+        <p><strong>Usage rules:</strong></p>
+        <ul>
+          <li>Hold a <strong>professional cinematic tone</strong>, suitable for image-to-video or film-video generation workflows</li>
+          <li>Use the bolded section headers above strictly, no format changes</li>
+          <li>Output should read like a director's scene sheet or shot breakdown — not prose, not a traditional script</li>
+        </ul>
+
+        <h2>Shot breakdown rules</h2>
+        <ul>
+          <li>Build the scene as a series of <strong>numbered shots</strong> (Shot 1, Shot 2…)</li>
+          <li>Each shot must specify: shot type (extreme close-up, wide, medium, over-the-shoulder), frame action, character behavior and timing (pauses, reactions, micro-movements), and embedded dialogue in quotes within the shot</li>
+          <li>Dialogue must be tight, natural, and cinematic — avoid info-dump lines</li>
+          <li>Add <strong>micro-beats</strong> (silence, hesitation, eye movement, tension shifts)</li>
+          <li>Make sure shots have <strong>causal continuity</strong></li>
+          <li>Lean on visual storytelling, not exposition</li>
+        </ul>
+
+        <h2>Overall creative direction</h2>
+        <ul>
+          <li>Use precise cinematic language: composition, lens, depth of field, blocking, movement</li>
+          <li>Concise text, high visual information density</li>
+          <li>Strong rhythm (tension → pause → release)</li>
+          <li>Convey emotion through visual action, framing, and timing — not direct explanation</li>
+          <li>Output should be ready to feed to a video generation model or production team</li>
+        </ul>
+
+        <h2>Step 2 — generate the storyboard</h2>
+        <p>In the same chat, ask ChatGPT:</p>
+        <blockquote><p>"Based on the scene sheet above, generate a 21:9 aspect ratio 3×3 storyboard grid, with no text or dialogue."</p></blockquote>
+        <p>You now have visual shot references you can use directly.</p>
+
+        <h2>Step 3 — pick frames and upscale</h2>
+        <p>Pick your favorite frames from the storyboard grid and upscale them (the author uses <strong>Magnific</strong> for realistic skin texture). These become your primary visual references.</p>
+
+        <h2>Step 4 — convert the scene sheet to Seedance 2.0 prompts</h2>
+        <p>Use the <strong>"Seedance 2.0 Prompt Director"</strong> GPT to convert the scene sheet into <strong>3 separate 15-second clip prompts</strong>. The idea is now structured for generation.</p>
+
+        <h2>Step 5 — generate clips and edit</h2>
+        <ol>
+          <li>Upload the upscaled references to <strong>Seedance 2.0</strong></li>
+          <li>Use the Seedance 2.0 prompts to <strong>generate 3 clips</strong></li>
+          <li>Quick edit, ship</li>
+        </ol>
+        <p>Note: the author uses the <strong>Magnific video upscaler</strong> to push the final cut to <strong>4K</strong>.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  .article-body blockquote { border-left: 3px solid var(--color-border); padding-left: 1rem; margin: 1.25rem 0; color: var(--color-text-light); font-style: italic; }
+  .article-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: 0.95rem; }
+  .article-body th, .article-body td { border: 1px solid var(--color-border); padding: 0.5rem 0.75rem; text-align: left; color: var(--color-text-muted); }
+  .article-body th { background: var(--color-card-bg); color: var(--color-text); font-weight: 600; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
