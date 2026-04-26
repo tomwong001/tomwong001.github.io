@@ -1,0 +1,193 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月25日";
+const date = "2026-04-25";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月25日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>DeepSeek-V4 架构 vs Flash Attention vs Multi-Head Attention</h2>
+        <p>把这三层放在一起对比，能看清楚"算法优化"和"架构创新"的本质区别。</p>
+
+        <h2>一、Multi-Head Attention（MHA）：基础版本</h2>
+        <p>核心公式：</p>
+        <pre><code>Attention(Q, K, V) = softmax(Q·Kᵀ / √d_k) · V</code></pre>
+
+        <p>结构上把 Q、K、V 分成 h 个头，每个头独立算注意力，最后拼接。</p>
+
+        <p><strong>KV Cache 痛点：</strong>推理时需要缓存每一层的 K、V，内存消耗巨大。缓存大小 = <code>2 × n_layers × seq_len × d_model × batch_size</code>，对长序列极其昂贵——内存复杂度 O(n²)，长序列时显存爆炸。</p>
+
+        <h2>二、Flash Attention：不改架构，只改算法</h2>
+        <p>Flash Attention <strong>不是新的注意力结构</strong>，而是 MHA 的高效计算实现。</p>
+        <ul>
+          <li><strong>计算结果：</strong>与标准 MHA 完全相同（数学等价）</li>
+          <li><strong>核心思路：</strong>分块（tiling）计算，避免把完整的 n×n 注意力矩阵写入 HBM</li>
+          <li><strong>内存访问：</strong>从 O(n²) HBM 读写降到 O(n)</li>
+          <li><strong>速度：</strong>2-4x 更快</li>
+          <li><strong>改了什么：</strong>只改 GPU 内存访问模式（IO-aware）</li>
+        </ul>
+        <p>类比：把一道需要先把所有食材摆上桌的菜，改成边拿边炒——结果一样，但省了很多台面空间。</p>
+
+        <h2>三、DeepSeek-V4 的 CSA / HCA：真正改变架构</h2>
+        <p>这才是核心创新。它解决的是 MHA 的<strong>结构性问题</strong>，而不仅仅是实现效率。</p>
+
+        <h2>3.1 CSA（Compressed Sparse Attention，压缩稀疏注意力）</h2>
+        <p>原理：在注意力计算之前，先对 K、V 做<strong>低秩压缩</strong>，把高维向量压缩到低维潜在空间。</p>
+        <pre><code>传统 MHA:
+  K = X · Wₖ   ← 维度 d_model
+  V = X · Wᵥ   ← 维度 d_model
+
+CSA:
+  c_KV = X · W_c     ← 压缩到低维 d_c（d_c &lt;&lt; d_model）
+  K = c_KV · Wₖ_up   ← 再升维回来
+  V = c_KV · Wᵥ_up</code></pre>
+        <p><strong>KV Cache 只需存 c_KV！</strong>内存压缩比可达 5-10x。这其实是 DeepSeek-V2/V3 的 MLA（Multi-head Latent Attention）思想的延续与增强版。</p>
+
+        <h2>3.2 HCA（Heavily Compressed Attention，重度压缩注意力）</h2>
+        <p>比 CSA 压缩率更高，用于<strong>某些层</strong>（通常是中间层），对精度要求略低的地方换取更大的效率提升。混合设计意味着：不同 Transformer Block 可以交替使用 CSA 和 HCA，根据层深度做自适应选择。</p>
+
+        <h2>3.3 Pre-Block / Post-Block Mixing</h2>
+        <pre><code>Pre-Block Mixing:  在进入注意力之前，混合当前层和相邻层的表示
+Post-Block Mixing: 在注意力之后，再次整合信息</code></pre>
+        <p>这是<strong>跨层信息混合</strong>机制，类似 DenseNet 的 dense connection 思想，让信息在层间更流畅地流动。</p>
+
+        <h2>3.4 mHC 残差</h2>
+        <p>图中 ⊕ 旁边的"叠层矩形"代表 multi-Head Compression 残差，是对传统残差连接的增强：</p>
+        <pre><code>传统残差:  x_out = x_in + Attention(x_in)
+
+mHC 残差:  x_out = Mix([x_in, x_in_compressed_1, x_in_compressed_2]) + Attention(x_in)</code></pre>
+        <p>维护多个不同压缩程度的表示，在残差加法时融合，捕获多尺度特征。</p>
+
+        <h2>四、三者核心差异</h2>
+        <pre><code>标准 MHA
+  ↓ （同样架构，只优化 GPU 内存访问）
+Flash Attention（实现优化，结果完全相同）
+  ↓ （改变架构，压缩 KV 表示）
+MLA / CSA / HCA（架构创新，本质上减少了需要存储和计算的信息量）</code></pre>
+
+        <table>
+          <thead>
+            <tr><th>维度</th><th>MHA</th><th>Flash Attention</th><th>CSA/HCA (V4)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>是否改变架构</td><td>基准</td><td>不改</td><td>改变</td></tr>
+            <tr><td>解决的问题</td><td>—</td><td>GPU IO 瓶颈</td><td>KV Cache + 计算量</td></tr>
+            <tr><td>KV Cache 大小</td><td>100%</td><td>100%（不变）</td><td>~10-20%</td></tr>
+            <tr><td>数学等价</td><td>基准</td><td>完全等价</td><td>近似（有信息损失）</td></tr>
+            <tr><td>适用场景</td><td>通用</td><td>所有场景可替换</td><td>大模型长序列推理</td></tr>
+            <tr><td>主要收益</td><td>—</td><td>训练/推理速度</td><td>推理内存 + 吞吐量</td></tr>
+          </tbody>
+        </table>
+
+        <h2>五、直觉理解</h2>
+        <ul>
+          <li><strong>MHA：</strong>每个人（头）都带着全套笔记（K、V）开会</li>
+          <li><strong>Flash Attention：</strong>同样每人带全套笔记，但开会流程更高效，不用把所有笔记铺满桌子</li>
+          <li><strong>CSA/HCA：</strong>开会前先把所有笔记<strong>压缩成摘要</strong>，大家只带摘要，会后再按需查原始资料——桌子占用小得多，但摘要可能丢了一点细节</li>
+        </ul>
+        <p>这就是为什么 DeepSeek-V4 能在保持强大性能的同时，支持极长上下文和更高的推理吞吐量。</p>
+
+        <h2>GPT-Image 2 + Seedance 2.0：AI 短片制作工作流</h2>
+        <p>完整流程：创意想法 → 场景表 → 分镜脚本 → 图像放大 → Seedance 2.0 提示词 → 生成片段 → 剪辑。</p>
+
+        <h2>第一步｜创建场景表</h2>
+        <p>把创意想法塞进下面这个系统提示词的"在此输入你的场景创意"位置，清晰描述场景内容（在发生什么、画面看起来什么样、场景如何推进），然后反复调整输出，直到场景在视觉和叙事上都足够扎实。</p>
+
+        <p><strong>场景表系统提示词（结构化字段）：</strong></p>
+        <ul>
+          <li>场景标题</li>
+          <li>视觉格式 / 风格</li>
+          <li>地点 / 环境</li>
+          <li>演员 / 角色说明</li>
+          <li>镜头分解</li>
+          <li>基调 / 情感节奏</li>
+          <li>摄影机 / 电影语言</li>
+          <li>灯光设计</li>
+          <li>声音 / 音频设计</li>
+          <li>场景目标</li>
+        </ul>
+
+        <p><strong>使用规则：</strong></p>
+        <ul>
+          <li>保持<strong>专业的电影级语气</strong>，适用于图生视频或电影视频生成工作流程</li>
+          <li>严格使用上方加粗字段名，格式不变</li>
+          <li>输出应读起来像导演的场景表或分镜拆解，而非散文或传统剧本</li>
+        </ul>
+
+        <h2>镜头分解的详细规则</h2>
+        <ul>
+          <li>把场景构建成一系列<strong>编号镜头</strong>（镜头 1、镜头 2……）</li>
+          <li>每个镜头明确包含：镜头类型（极端特写、全景、中景、过肩镜头）、画面动作、角色行为与时机（停顿、反应、细微动作）、嵌入对话（引号写在对应镜头内）</li>
+          <li>对白要简练、自然、有电影感——避免信息量过载的台词</li>
+          <li>加入<strong>微节拍</strong>（沉默、犹豫、眼神移动、张力转变）</li>
+          <li>确保镜头之间有<strong>因果连续性</strong></li>
+          <li>强调视觉叙事，而非直白解释</li>
+        </ul>
+
+        <h2>总体创作方向</h2>
+        <ul>
+          <li>使用精确的电影语言：构图、镜头、景深、调度和运动</li>
+          <li>文字简洁但视觉信息密度高</li>
+          <li>保持强烈的节奏感（紧张 → 停顿 → 释放）</li>
+          <li>通过视觉行为、构图和时机传达情绪，而非直接解释</li>
+          <li>输出结果应可直接被视频生成模型或电影制作团队使用</li>
+        </ul>
+
+        <h2>第二步｜生成分镜脚本</h2>
+        <p>在同一个对话里向 ChatGPT 提问：</p>
+        <blockquote><p>"根据上方的场景表，生成一张 21:9 比例的 3×3 分镜网格图，不含任何文字或对白。"</p></blockquote>
+        <p>这样就拿到了可以直接使用的视觉镜头参考。</p>
+
+        <h2>第三步｜挑选并放大图像</h2>
+        <p>从分镜网格里挑你最喜欢的帧，做图像放大（作者用 <strong>Magnific</strong> 处理真实皮肤质感）。这些放大后的画面将成为主要视觉参考图。</p>
+
+        <h2>第四步｜场景表 → Seedance 2.0 提示词</h2>
+        <p>使用 <strong>"Seedance 2.0 Prompt Director"</strong> GPT，把场景表转化为 <strong>3 段独立的 15 秒片段提示词</strong>。至此，创意已被结构化为可供生成的格式。</p>
+
+        <h2>第五步｜生成片段并剪辑</h2>
+        <ol>
+          <li>把放大后的参考图上传到 <strong>Seedance 2.0</strong></li>
+          <li>用 Seedance 2.0 提示词<strong>生成 3 段片段</strong></li>
+          <li>快速剪辑，完工</li>
+        </ol>
+        <p>附注：作者用 <strong>Magnific 视频放大器</strong>把最终成片提升至 <strong>4K 画质</strong>。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  .article-body blockquote { border-left: 3px solid var(--color-border); padding-left: 1rem; margin: 1.25rem 0; color: var(--color-text-light); font-style: italic; }
+  .article-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: 0.95rem; }
+  .article-body th, .article-body td { border: 1px solid var(--color-border); padding: 0.5rem 0.75rem; text-align: left; color: var(--color-text-muted); }
+  .article-body th { background: var(--color-card-bg); color: var(--color-text); font-weight: 600; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
