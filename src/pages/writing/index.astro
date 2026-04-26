@@ -7,11 +7,27 @@ const lang = 'en';
 // Sample posts data - in a real setup these would come from markdown content collections
 const posts = [
   {
+    title: "AI Notes — April 25",
+    date: "2026-04-25",
+    type: "learning-log",
+    slug: "0425-ai-notes",
+    excerpt: "DeepSeek-V4 vs Flash Attention vs MHA — algorithmic vs architectural innovation. CSA/HCA shrinks KV cache 5-10x via low-rank latent compression. GPT-Image 2 + Seedance 2.0 short-film workflow.",
+    comingSoon: false
+  },
+  {
+    title: "AI Notes — April 24",
+    date: "2026-04-24",
+    type: "learning-log",
+    slug: "0424-ai-notes",
+    excerpt: "GPT-5.5 ships — faster, cheaper net, smarter. swyx on AI-native: skills as the agent unit, app companies outlast infra, Taalas bakes models into silicon. World ID 4.0 hits Tinder, Zoom, DocuSign.",
+    comingSoon: false
+  },
+  {
     title: "AI Notes — April 23",
     date: "2026-04-23",
     type: "learning-log",
     slug: "0423-ai-notes",
-    excerpt: "Shopify's AI adoption hits ~100% internally. The real lever is critique loops, not parallel agents. Tangle, Tangent, SimGym. Liquid AI as the only competitive non-Transformer.",
+    excerpt: "Shopify at ~100% internal AI use, critique loops over parallel agents, Tangle/Tangent/SimGym. MacAskill on AI character as the most underrated lever. mini-sglang RadixAttention vs nano-vllm: 7311 tok/s on a single 3090.",
     comingSoon: false
   },
   {
@@ -349,3 +365,4 @@ function getTypeLabel(type: string): string {
     font-size: 0.95rem;
   }
 </style>
+
