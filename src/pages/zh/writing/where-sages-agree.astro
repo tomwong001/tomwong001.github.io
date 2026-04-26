@@ -3,56 +3,53 @@ import Layout from '../../../layouts/Layout.astro';
 import bookData from '../../../data/book-zh.json';
 
 const lang = 'zh';
-const title = "禅宗、儒家、斯多葛、阿德勒";
-const subtitle = "东西方四大思想的对话与交汇";
+const meta = bookData.meta;
+const chapters = bookData.chapters;
 
-// Helper: split fullTitle "第四章：沉稳——如山之静" into eyebrow "第四章" + title "沉稳——如山之静"
 function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: string } {
   if (num === 0) return { eyebrow: '前言', main: '前言' };
   if (num === 11) {
-    // "结语：东西方智慧的现代回响"
     const idx = fullTitle.search(/[:：]/);
     if (idx >= 0) return { eyebrow: '结语', main: fullTitle.slice(idx + 1).trim() };
     return { eyebrow: '结语', main: fullTitle };
   }
-  // "第N章：xxx" or "第N章:xxx"
   const m = fullTitle.match(/^(第[一二三四五六七八九十]+章)[:：](.*)$/);
   if (m) return { eyebrow: m[1], main: m[2].trim() };
   return { eyebrow: `第${num}章`, main: fullTitle };
 }
 ---
 
-<Layout title={title} lang={lang}>
+<Layout title={meta.title} lang={lang}>
   <div class="reading-progress" id="reading-progress"></div>
 
   <section class="book-hero">
     <div class="hero-inner">
       <div class="cover-wrap">
-        <img src="/images/book/cover-zh.jpg" alt="书籍封面" />
+        <img src="/images/book/cover-zh.jpg" alt={`${meta.title} 封面`} />
       </div>
       <div class="hero-text">
-        <p class="kicker">书籍</p>
-        <h1>{title}</h1>
-        <p class="subtitle">{subtitle}</p>
-        <p class="meta">Tom · 2026 · 12 章 · 约 90 分钟阅读</p>
+        <p class="kicker">{meta.kicker}</p>
+        <h1>{meta.title}</h1>
+        <p class="subtitle">{meta.subtitle}</p>
+        <p class="meta">{meta.author} · {meta.year} · {meta.chapterLabel} · 约 {meta.readMinutes} {meta.readSuffix}</p>
         <div class="hero-actions">
-          <a href="#chapter-00" class="cta-primary">开始阅读 ↓</a>
-          <a href="/writing/where-sages-agree/" class="cta-secondary">English</a>
+          <a href="#chapter-00" class="cta-primary">{meta.ctaStart}</a>
+          <a href={meta.switchHref} class="cta-secondary">{meta.ctaSwitch}</a>
         </div>
       </div>
     </div>
   </section>
 
   <div class="book-reader" id="book-reader">
-    <button class="sidebar-open" id="sidebar-open" aria-label="打开目录">☰&nbsp; 目录</button>
+    <button class="sidebar-open" id="sidebar-open" aria-label={meta.openAria}>{meta.openLabel}</button>
 
     <aside class="book-sidebar" id="book-sidebar">
       <div class="sidebar-head">
-        <span class="sidebar-title">目录</span>
-        <button class="sidebar-close" id="sidebar-close" aria-label="收起目录">×</button>
+        <span class="sidebar-title">{meta.sidebarTitle}</span>
+        <button class="sidebar-close" id="sidebar-close" aria-label={meta.closeAria}>×</button>
       </div>
       <nav class="chapter-nav">
-        {bookData.map((ch) => (
+        {chapters.map((ch) => (
           <div class="chapter-group">
             <a href={`#chapter-${String(ch.num).padStart(2, '0')}`} data-target={`chapter-${String(ch.num).padStart(2, '0')}`} class="chapter-link">
               <span class="chapter-num">{ch.num}</span>
@@ -73,7 +70,7 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
     </aside>
 
     <main class="book-content">
-      {bookData.map((ch) => {
+      {chapters.map((ch) => {
         const { eyebrow, main } = splitTitle(ch.num, ch.fullTitle);
         return (
           <section class="chapter" id={`chapter-${String(ch.num).padStart(2, '0')}`}>
@@ -87,7 +84,7 @@ function splitTitle(num: number, fullTitle: string): { eyebrow: string; main: st
     </main>
   </div>
 
-  <button class="back-to-top" id="back-to-top" aria-label="回到顶部">↑</button>
+  <button class="back-to-top" id="back-to-top" aria-label={meta.backToTopAria}>↑</button>
 </Layout>
 
 <script>
