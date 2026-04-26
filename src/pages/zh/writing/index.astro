@@ -6,11 +6,27 @@ const lang = 'zh';
 
 const posts = [
   {
+    title: "AI 学习笔记 — 4月25日",
+    date: "2026-04-25",
+    type: "learning-log",
+    slug: "0425-ai-notes",
+    excerpt: "DeepSeek-V4 vs Flash Attention vs MHA——算法优化与架构创新的本质差异。CSA/HCA 用低秩潜在压缩把 KV cache 缩小 5-10x。GPT-Image 2 + Seedance 2.0 短片制作工作流。",
+    comingSoon: false
+  },
+  {
+    title: "AI 学习笔记 — 4月24日",
+    date: "2026-04-24",
+    type: "learning-log",
+    slug: "0424-ai-notes",
+    excerpt: "GPT-5.5 发布——更快、综合更便宜、更聪明。swyx 谈 AI-native：skills 是 agent 的最小单位、应用公司比基础设施公司更耐打、Taalas 把模型刻进硅。World ID 4.0 接入 Tinder、Zoom、DocuSign。",
+    comingSoon: false
+  },
+  {
     title: "AI 学习笔记 — 4月23日",
     date: "2026-04-23",
     type: "learning-log",
     slug: "0423-ai-notes",
-    excerpt: "Shopify 内部 AI 使用率接近 100%。真正的杠杆是批评循环，而不是并行 agent 数量。Tangle、Tangent、SimGym 三大内部系统。Liquid AI 是唯一真正有竞争力的非 Transformer 架构。",
+    excerpt: "Shopify 内部 AI 使用率接近 100%，关键是批评循环而非并行 agent；Tangle、Tangent、SimGym 三件套。MacAskill 论 AI 性格是最被低估的杠杆。mini-sglang RadixAttention vs nano-vllm：单 3090 跑出 7311 tok/s。",
     comingSoon: false
   },
   {
@@ -348,3 +364,4 @@ function getTypeLabel(type: string): string {
     font-size: 0.95rem;
   }
 </style>
+
