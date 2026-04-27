@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 27";
+const date = "2026-04-27";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 27, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Medical-LLM refactor: four findings</h2>
+        <ul>
+          <li><strong>ml-intern v0.1 cannot run unattended overnight.</strong> The current <code>turn_complete</code> heuristic is a soft check with no deliverable verification — it claims done before the work is actually done.</li>
+          <li><strong>Multi-format task interference.</strong> Adding 3k samples of PubMedQA pushed PubMedQA up by +28.6 but dragged MedQA down by −4.2 and MedMCQA by −9.3. Mixing yes/no/maybe + A/B/C/D + free-text outputs in one model causes the head to tear.</li>
+          <li><strong>iCliniq schema bug + scale mismatch.</strong> Schema bug fixed. Scale numbers can't be directly compared with ChatDoctor 2023 — we need to switch to the raw BERTScore protocol to make them comparable.</li>
+          <li><strong>SFT plateaus at 25% of total steps.</strong> Under packing + 1 epoch, step 50 of 175 is already plateau territory. The remaining 75% of compute buys nothing.</li>
+        </ul>
+
+        <h2>Architectural differences across five frontier models</h2>
+
+        <p><strong>Scale and sparsity.</strong> The five models span the full spectrum from small dense to massive MoE. Gemma 4 (31B) is the only pure dense architecture — all 31B parameters activate on every forward pass. The other four are MoE: total parameters are huge, but only a small slice activates per inference. GLM-5.1 (744B) activates ~40B; Kimi K2.6 (1T) activates ~32B; DeepSeek V4-Pro (1.6T) activates ~49B.</p>
+
+        <p><strong>Attention — the biggest divergence point.</strong></p>
+        <ul>
+          <li><strong>Gemma 4</strong> uses a 5:1 ratio of local-to-global attention. Local layers use sliding-window with 32 heads; global layers are sparser at 10 heads. A lightweight variant of classical multi-head attention.</li>
+          <li><strong>Qwen 3.6</strong> takes the most aggressive hybrid: Gated DeltaNet (linear attention) interleaved with full attention at a 3:1 ratio. The first three layers run linear attention + MoE; layer four runs full attention + MoE. Compute drops sharply.</li>
+          <li><strong>GLM-5.1 and Kimi K2.6</strong> both adopt Multi-head Latent Attention (MLA, originally from DeepSeek V3), which compresses the KV cache and reduces memory significantly. Their architectures are nearly twins.</li>
+          <li><strong>DeepSeek V4-Pro</strong> stratifies MLA further: it distinguishes ordinary Compressed Self-Attention (CSA) from Heavy Compressed Attention (HCA), and introduces <strong>mhC (manifold-constrained hyperconnections)</strong> — four parallel residual streams replacing the single x + F(x) skip connection. The most structurally complex of the five.</li>
+        </ul>
+
+        <p><strong>MoE routing strategy.</strong> DeepSeek V4-Pro's first three blocks use <strong>hash-based MoE</strong> instead of learned top-k routing, which sidesteps the routing instability that plagues early training. The other models all use standard learned routing.</p>
+
+        <p><strong>Context length.</strong> From Gemma 4's 256k up to Qwen 3.6 and DeepSeek V4-Pro at 1M tokens. The gap is large, and behind it sits a different RoPE extension strategy for each model.</p>
+
+        <h2>Project Deal: agents trading among themselves</h2>
+        <p>Anthropic recently ran <strong>Project Deal</strong>, a week-long internal test where 69 employees handed buying and selling decisions entirely to Claude agents — no human approval. Each participant started with a $100 budget. The agents created listings, negotiated prices, accepted offers, and completed trades inside Slack.</p>
+        <p>The experiment produced 186 deals worth more than $4,000 across over 500 listed items. It also exposed a clear gap in model quality: Claude Opus agents consistently got better prices and closed more deals than Haiku versions — and most users did not realize they were getting worse results.</p>
+        <p>Takeaway: AI commerce may arrive faster than expected, but not all agents will be equal. The model tier gap shows up clearly when agents negotiate against each other.</p>
+
+        <h2>GeoGuessr + time</h2>
+        <p>An online GeoGuessr variant that adds a time-of-day component. The format is dead simple — just an online game — but surprisingly fun. Worth thinking about: minimum-viable mechanics often beat clever ones, especially when the core loop is genuinely entertaining.</p>
+
+        <h2>You are the most expensive model</h2>
+        <p>The argument is sharp: the real cost of AI agents is your time, not the API bill. McDonald's would never put its CEO on the burger grill — that hour is worth $9,230. Same logic for AI: you don't need a frontier model to check your to-do list. Don't pay 75¢ every half hour ($1,095 per month) to let Claude Opus do something a smaller model could do for cents.</p>
+        <p>The framing implies a four-step framework for keeping AI costs in check, where the first cost to budget is your own attention spent supervising the agent. The second insight: stop herding agents across terminals and branches — bundle each task into a single workspace with a living spec, agent notes, and full change visibility. Orchestrate agents like a system, not a swarm.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
