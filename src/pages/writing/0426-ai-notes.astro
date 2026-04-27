@@ -1,0 +1,102 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 26";
+const date = "2026-04-26";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 26, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>SkillsBench vs our skillrank: a postmortem</h2>
+        <p>Tomorrow I want to study <strong>skillsbench.ai/leaderboard</strong> closely and compare it against the eval system we built. The leaderboard format itself is on the right track. But SkillsBench has a lot more going on:</p>
+        <ul>
+          <li><strong>With/without skill comparison</strong> — same agent, same task, with vs. without the skill loaded.</li>
+          <li><strong>Wallclock time + token cost</strong> per run.</li>
+          <li><strong>Tasks are concrete, not categories</strong> — each one has an instruction, a verifier, results, and a trajectory.</li>
+        </ul>
+
+        <h2>Mistake 1: didn't search "who already did this"</h2>
+        <p>This was the biggest mistake. Thirty minutes of searching for "AI skill evaluation benchmark" or "skill leaderboard for agents" on day one would have surfaced SkillsBench — it has a 2026 paper, a public GitHub, and a working leaderboard. Instead we built a worse version from scratch.</p>
+        <p><strong>Lesson:</strong> Build before search = waste. Search competitors first, then decide whether to fork, contribute, or build your own.</p>
+
+        <h2>Mistake 2: LLM-as-judge instead of real execution</h2>
+        <p>Our "real execution" wasn't real execution. It was <strong>handing SKILL.md to an LLM and asking it to write a response</strong>. SkillsBench actually runs an agent in Docker, compiles a Maven project, processes a <code>.pcap</code> file, and so on.</p>
+        <ul>
+          <li>We measured: "how good is qwen-turbo's reply after reading this doc?"</li>
+          <li>SkillsBench measured: "can Claude Code, equipped with this skill, finish the task?"</li>
+        </ul>
+        <p><strong>Lesson:</strong> Real execution means real input files, real shell commands, and real output verification. Feeding SKILL.md to an LLM and grading the essay is not execution.</p>
+
+        <h2>They don't use LLM-as-judge — they use a deterministic verifier</h2>
+        <p>SkillsBench uses a <strong>deterministic verifier</strong> — a script that checks whether the agent's output meets the spec. For example:</p>
+        <ul>
+          <li>Task: upgrade this Spring Boot 2 project to Spring Boot 3 and make tests pass.</li>
+          <li>Verifier: <code>mvn test</code> exits 0 AND no <code>javax.</code> imports remain in the changed files.</li>
+          <li>Result: PASS or FAIL. No grey zone.</li>
+        </ul>
+        <p>Our approach asked qwen-turbo to read two passages and pick the better one — a subjective judgment that produces different rankings each run. A deterministic verifier gives you the same answer 100 runs in a row, which is why SkillsBench can publish 95% confidence intervals while our shadcn entry was flipping between #1 and #5.</p>
+
+        <h2>Mistake 3: pairwise comparisons instead of pass/fail</h2>
+        <p>Bradley-Terry pairwise rankings break down between similarly-skilled competitors — we watched shadcn and stitch-react flip back and forth all night. SkillsBench uses absolute pass/fail: a task either passes the verifier or it doesn't.</p>
+        <p><strong>Lesson:</strong> If pass/fail is definable, don't use pairwise. Pairwise is a fallback for tasks where pass/fail is impossible (e.g. "which essay is better"), not a default.</p>
+
+        <h2>Mistake 4: no with/without baseline</h2>
+        <p>SkillsBench's killer insight: same agent, same task — pass rate is 48.7% with the skill, 31.3% without. That directly answers "is this skill useful?"</p>
+        <p>A pure ranking can't answer that question. A ranking only says "A beats B" — it can't say "A is better than not using a skill at all."</p>
+        <p><strong>Lesson:</strong> The core eval question is "does the skill help?" — not "which is best?" Without a baseline, there is no answer.</p>
+
+        <h2>Mistake 5: scenarios were too vague to verify</h2>
+        <p>Our scenarios looked like exam essay prompts ("build me a multi-step form component"). SkillsBench's tasks look like physics problems ("here's an .stl file, compute the mass, write the answer to /root/answer.json").</p>
+        <p>The first kind requires subjective LLM judgment. The second kind can be auto-verified by a script.</p>
+        <p><strong>Lesson:</strong> A good eval task = explicit input + explicit expected output + a verifier that auto-judges.</p>
+
+        <h2>Mistake 6: classification kept flipping</h2>
+        <ul>
+          <li>Started with <code>ship_code</code> (too broad)</li>
+          <li>Expanded to 10 intents (too many)</li>
+          <li>Cut to 3 (too few)</li>
+          <li>Treated sub-skills as skills (wrong model)</li>
+          <li>Reverted to repo-level (correct)</li>
+          <li>Expanded back to 10</li>
+        </ul>
+        <p>Each pivot meant rewriting the import script, re-running evals, and redeploying. Huge time sink.</p>
+        <p><strong>Lesson:</strong> Define "what is a skill?" and "how do we verify a skill is good?" <em>before</em> writing code. Don't think it through while running.</p>
+
+        <h2>Mistake 7: too much time on infrastructure</h2>
+        <p>Fly.io deploys, OpenRouter free-tier rate limits, SQLite migrations, judge-prompt tuning — all of it is infrastructure noise, unrelated to whether the eval itself is good. SkillsBench probably runs Docker locally with a Python verifier and that's it. No Fly.io, no dashboard, no Bradley-Terry.</p>
+        <p><strong>Lesson:</strong> The core of an eval is (task, execution, verification). Dashboards and leaderboards are presentation, not the core. Get the eval right first, then ship the UI.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
