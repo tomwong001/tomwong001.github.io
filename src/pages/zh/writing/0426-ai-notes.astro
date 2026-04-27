@@ -1,0 +1,102 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月26日";
+const date = "2026-04-26";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月26日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>SkillsBench vs 我们自建的 skillrank：复盘</h2>
+        <p>明天准备认真看一下 <strong>skillsbench.ai/leaderboard</strong>，对比一下我们自己设计的 skillrank。Leaderboard 这个形式我们抓对了，但 SkillsBench 还多做了几件关键的事：</p>
+        <ul>
+          <li><strong>With / without skill 对比</strong>——同一个 agent、同一个 task，加 skill 和不加 skill 各跑一次。</li>
+          <li><strong>记录每次跑了多长时间、消耗了多少 tokens</strong>。</li>
+          <li><strong>Task 不是大类，而是一个个具体小任务</strong>，每个 task 配一份 instruction、verifier、results、trajectory。</li>
+        </ul>
+
+        <h2>错误 1：没先搜「谁已经做了这个」</h2>
+        <p>这是最大的错误。第一天哪怕花 30 分钟搜「AI skill evaluation benchmark」或「skill leaderboard for agents」，就会发现 SkillsBench——2026 年就有论文、有 GitHub、有 leaderboard。我们等于从零造了一个劣质版本。</p>
+        <p><strong>教训：</strong>Build before search = 浪费。应该先花时间搜竞品，再决定 fork、contribute 还是自己做。</p>
+
+        <h2>错误 2：用 LLM-as-judge 代替真执行</h2>
+        <p>我们的「real execution」其实不是真执行。是<strong>把 SKILL.md 丢给一个 LLM，让它写一段回答</strong>。SkillsBench 是真的让 agent 在 Docker 里跑代码、编译 Maven 项目、处理 <code>.pcap</code> 文件。</p>
+        <ul>
+          <li>我们测的是：「qwen-turbo 读了这份文档后写的回答好不好」。</li>
+          <li>SkillsBench 测的是：「Claude Code 用了这个 skill 后能不能真的完成任务」。</li>
+        </ul>
+        <p><strong>教训：</strong>Real execution 意味着真的有 input 文件、真的跑命令、真的验证 output。把 SKILL.md 丢给 LLM 让它写作文不是 execution。</p>
+
+        <h2>他们不用 LLM-as-judge，而是确定性 verifier</h2>
+        <p>SkillsBench 用的是 <strong>deterministic verifier</strong>——一个脚本，检查 agent 的输出是否符合预期。例如：</p>
+        <ul>
+          <li>Task：把这个 Spring Boot 2 项目升级到 3，跑通测试。</li>
+          <li>Verifier：<code>mvn test</code> exit code 是否为 0，且关键文件里不再有 <code>javax.</code> import。</li>
+          <li>结果：PASS 或 FAIL，没有模糊地带。</li>
+        </ul>
+        <p>我们的方法是让 qwen-turbo 读两段文字然后选「A 好还是 B 好」——这是<strong>主观判断</strong>，每次跑结果都不一样。Deterministic verifier 跑 100 次结果一样，所以 SkillsBench 能给 95% 置信区间，而我们的 shadcn 排名能从 #1 翻到 #5。</p>
+
+        <h2>错误 3：pairwise 比较而不是 pass/fail</h2>
+        <p>Bradley-Terry pairwise 排名在<strong>能力相近的选手之间</strong>效果差——我们亲眼看着 shadcn 和 stitch-react 来回翻转。SkillsBench 用的是绝对的 pass/fail：task 要么通过 verifier 要么不通过，没有模糊地带。</p>
+        <p><strong>教训：</strong>如果你能定义 pass/fail，就不要用 pairwise。Pairwise 是 pass/fail 不可能时的退路（比如「哪个文章写得好」），不是默认选择。</p>
+
+        <h2>错误 4：没有 with/without 基线对比</h2>
+        <p>SkillsBench 最杀手的 insight：<strong>同一个 agent + 同一个 task，有 skill 时 pass rate 48.7%，没 skill 时 31.3%</strong>。这直接回答了「skill 到底有没有用」这个问题。</p>
+        <p>纯排名根本回答不了这个问题。排名只说「A 比 B 好」，但没法说「A 比不用 skill 好多少」。</p>
+        <p><strong>教训：</strong>Eval 的核心问题是「skill 有没有用」，不是「A 和 B 谁好」。有 baseline 才有答案。</p>
+
+        <h2>错误 5：scenario 太宽泛，不可验证</h2>
+        <p>我们写的 scenario 像考试作文题（「给我做一个多步表单组件」）。SkillsBench 的 task 像物理实验题（「给你这个 .stl 文件，算出质量，输出到 /root/answer.json」）。</p>
+        <p>前者只能让 LLM 主观判断，后者可以用 verifier 自动检查。</p>
+        <p><strong>教训：</strong>好的 eval task = 有明确 input + 有明确 expected output + 有 verifier 能自动判断。</p>
+
+        <h2>错误 6：分类逻辑反复翻转</h2>
+        <ul>
+          <li>最开始 <code>ship_code</code>（太宽泛）</li>
+          <li>改成 10 个 intent（太多）</li>
+          <li>砍到 3 个（太少）</li>
+          <li>把 sub-skill 当 skill（模型错误）</li>
+          <li>改回 repo-level（对了）</li>
+          <li>又重新扩到 10 个</li>
+        </ul>
+        <p>每次翻转都要重写 import 脚本、重跑 eval、重新部署，时间全砸在反复 pivot 上。</p>
+        <p><strong>教训：</strong>在写代码之前，先把「什么是一个 skill」「怎么验证 skill 是否好用」想清楚。不要边跑边想。</p>
+
+        <h2>错误 7：花太多时间在基础设施上</h2>
+        <p>Fly.io 部署、OpenRouter 免费 tier rate limit、SQLite migration、judge prompt 调参……这些都是<strong>基础设施噪音</strong>，跟「eval 做得好不好」无关。SkillsBench 大概在本地跑 Docker + 写 Python verifier 就搞定了，不需要 Fly.io、不需要 dashboard、不需要 Bradley-Terry。</p>
+        <p><strong>教训：</strong>Eval 的核心是 (task, execution, verification)。Dashboard 和 leaderboard 是展示层，不是核心。先把 eval 做对，再做展示。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
