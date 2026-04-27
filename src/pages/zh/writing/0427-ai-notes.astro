@@ -1,0 +1,79 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月27日";
+const date = "2026-04-27";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月27日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>医疗 LLM 重构：四个发现</h2>
+        <ul>
+          <li><strong>ml-intern v0.1 不能 unattended overnight。</strong>当前 <code>turn_complete</code> 是软判断，没有 deliverable 校验——任务还没真做完它就声称完成了。</li>
+          <li><strong>多格式任务相互干扰。</strong>加 PubMedQA 3k 数据：PubMedQA +28.6，但 MedQA −4.2、MedMCQA −9.3。混合 yes/no/maybe + A/B/C/D + 自由文本三种输出格式时，模型的输出头会被撕裂。</li>
+          <li><strong>iCliniq schema bug + scale mismatch。</strong>Schema bug 已修；scale 跟 ChatDoctor 2023 不直接可比，需要切到 raw BERTScore 协议才能做对照。</li>
+          <li><strong>SFT 25% 步数就收敛。</strong>packing + 1 epoch 设定下，step 50/175 已经 plateau。后面 75% 的算力没有任何收益。</li>
+        </ul>
+
+        <h2>五个前沿模型的架构差异</h2>
+
+        <p><strong>规模与稀疏性。</strong>这五个模型横跨从稠密小模型到超大 MoE 的完整谱系。Gemma 4 (31B) 是唯一的纯稠密架构，所有 31B 参数每次推理都会激活。其余四个都是 MoE：总参数量巨大，但每次推理只激活一小部分——GLM-5.1 (744B) 激活约 40B、Kimi K2.6 (1T) 激活约 32B、DeepSeek V4-Pro (1.6T) 激活约 49B。</p>
+
+        <p><strong>注意力机制——最大的分化点。</strong></p>
+        <ul>
+          <li><strong>Gemma 4</strong>：5:1 的局部/全局注意力混合比例。局部用滑动窗口（32 头），全局注意力较稀疏（10 头），是经典多头注意力的轻量变体。</li>
+          <li><strong>Qwen 3.6</strong>：最激进的混合——Gated DeltaNet（线性注意力）与标准全注意力按 3:1 比例交替叠加。前三层用线性注意力 + MoE，第四层才用全注意力 + MoE，大幅降低计算复杂度。</li>
+          <li><strong>GLM-5.1 与 Kimi K2.6</strong>：都采用多头潜在注意力（MLA，DeepSeek V3 首创），通过压缩 KV cache 大幅降低显存占用，两者架构极为相似。</li>
+          <li><strong>DeepSeek V4-Pro</strong>：在 MLA 基础上进一步分层，区分了普通压缩注意力（CSA）和重度压缩注意力（HCA），并引入了 <strong>mhC（流形约束超连接）</strong>，用 4 条并行残差流替代传统的单一 x+F(x) 残差结构，是五者中结构最复杂的。</li>
+        </ul>
+
+        <p><strong>MoE 路由策略。</strong>DeepSeek V4-Pro 的前 3 个 block 用<strong>基于哈希的 MoE</strong>（而非学习到的 top-k 路由），避免了训练初期路由不稳定的问题。其余模型均用标准可学习路由。</p>
+
+        <p><strong>上下文长度。</strong>从 Gemma 4 的 256k，到 Qwen 3.6 和 DeepSeek V4-Pro 支持 1M token，差距明显。背后对应的是不同的位置编码扩展策略（都基于 RoPE）。</p>
+
+        <h2>Project Deal：让 agent 之间互相交易</h2>
+        <p>Anthropic 最近做了一个叫 <strong>Project Deal</strong> 的实验：为期一周的内部测试，69 名员工把买卖决策完全交给 Claude agent，没有任何人工审批。每个参与者起始预算 100 美元。Agent 在 Slack 里自己挂出 listing、谈价、接受报价、完成交易。</p>
+        <p>整个实验产生了 186 笔交易，总值超过 4000 美元，覆盖 500 多件物品。它也暴露了一个明显的模型质量差距：Claude Opus agent 始终能谈到更好的价格、完成更多交易；Haiku 版本则明显逊色——但大多数用户根本没意识到自己得到的是更差的结果。</p>
+        <p>启示：AI 商业化可能比预期来得更快，但 agent 之间并不平等。当 agent 互相博弈时，模型层级的差距会被放大暴露出来。</p>
+
+        <h2>GeoGuessr + 时间</h2>
+        <p>线上版的 GeoGuessr，多了一个时间维度。形态做得很简单——纯在线小游戏——但出乎意料地耐玩。值得想想：最小可行机制经常比花里胡哨的机制更有竞争力，前提是核心循环本身真的好玩。</p>
+
+        <h2>你才是最贵的那个模型</h2>
+        <p>论点很锋利：AI agent 真正的成本是你的时间，不是 API 账单。麦当劳不会让 CEO 站去烤汉堡——那 1 小时值 9230 美元。AI 同理：你不需要每件事都用 frontier 模型。没必要每半小时花 75 美分（$1,095/月）让 Claude Opus 帮你查待办事项——这种事更小的模型几分钱就能搞定。</p>
+        <p>这个框架背后的核心提示是：管控 AI 成本的第一项预算，是你自己花在监督 agent 上的注意力。第二个洞察：别再让 agent 在多个终端、多个分支之间散养——把每个任务打包到一个工作空间里，配活的 spec、agent 的笔记、完整的变更可见性。把 agent 当成一个系统去编排，而不是当成一群蜂群放出去自己跑。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
