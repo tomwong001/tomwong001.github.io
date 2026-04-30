@@ -1,0 +1,123 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 29";
+const date = "2026-04-29";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 29, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>NVIDIA Nemotron 3 Nano Omni</h2>
+        <p>The biggest infra-native model launch of the day. NVIDIA introduced <strong>Nemotron 3 Nano Omni</strong>, an open <strong>30B / A3B multimodal MoE</strong> with <strong>256K context</strong>, built for agentic workloads spanning text, image, video, audio, and documents.</p>
+        <p>Distribution was immediate across the stack: OpenRouter, LM Studio, Ollama, Unsloth, fal, Fireworks, DeepInfra, Together, Baseten, Canonical, and others all announced same-day availability.</p>
+        <p>Key specs from the follow-on posts: this is NVIDIA's first <strong>omni</strong> release with speech/audio understanding backed by a <strong>Parakeet encoder</strong>, English-only for now, and a <strong>5.95% WER</strong> on the Open ASR leaderboard. Several hosts cited <strong>~9× throughput</strong> versus comparable open omni models.</p>
+
+        <h2>Mini-SGLang: What "match" Actually Does</h2>
+        <p>One-line recall: <code>match</code> = how much prefix can already be reused from the query tree.</p>
+        <p>Plain analogy: you go to a library to find a book. The librarian (the match function) tells you "we already have chapters 1-5 of Harry Potter on the shelf, chapter 6 onwards is new."</p>
+
+        <h2>Visualization</h2>
+        <p>Suppose the radix tree currently looks like this (each [...] is a node):</p>
+        <pre><code>                 root
+                  │
+        [You are a fitness coach.]   ← 14 token shared prefix
+                  │
+           [How should I train]
+              ╱           ╲
+        [chest?]        [abs?]   ← two existing branches</code></pre>
+        <p>A new prompt comes in:</p>
+        <pre><code>"You are a fitness coach. How should I train abs? What else should I watch out for?"</code></pre>
+
+        <h2>How match Walks the Tree</h2>
+        <pre><code>match(root, prompt_tokens):
+  step 1: walk down from root
+          "You are a fitness coach." → in tree, share 14 tokens
+  step 2: walk to next node "[How should I train]"
+          "How should I train" → in tree, share 5 more tokens
+  step 3: at branch point, check children for "abs"
+          found, walk into [abs?] → share 4 more tokens
+  step 4: continue with "What else should I watch out for?"
+          children don't have this token → STOP
+          → return: matched_node=[abs?], n_matched=23
+          (first 23 tokens already in tree, the rest is new)</code></pre>
+
+        <h2>What the Two Return Values Mean</h2>
+        <pre><code>matched_node, n_matched = match(root, prompt_tokens)
+       ↓                ↓
+  which node we      total tokens
+  ended up at        matched
+  (where new stuff   (these don't need
+  gets attached)      KV recompute)</code></pre>
+
+        <h2>Why match and insert Must Pair Up</h2>
+        <pre><code>match  → tells you "first 23 tokens skip recompute"
+insert → attaches "from token 24 onwards" into the tree + KV cache
+
+no match:  don't know what's reusable → recompute everything → wasted
+no insert: computed but didn't save → next time recompute → wasted</code></pre>
+
+        <h2>Unsloth: LoRA Finetuning Modes</h2>
+        <p><strong>A) Non-merged mode (peft default):</strong></p>
+        <pre><code>inference: y = (W + α*B@A) * x
+→ slightly slower (one extra matrix add)
+→ flexible: one base model can carry multiple adapters
+   (English / Chinese / medical / ...)</code></pre>
+        <p><strong>B) Merged mode (merge_and_unload):</strong></p>
+        <pre><code>bake A, B into W: W_new = W + α*B@A
+→ inference is identical speed to a normal model
+→ but W_new is 14GB, you lose the "lightweight" advantage</code></pre>
+
+        <h2>Mimicking Dream of the Red Chamber Style with Unsloth</h2>
+        <p>The size delta is striking:</p>
+        <pre><code>Qwen3-8B (base):   16 GB
+LoRA adapter:      167 MB    ← 100x smaller</code></pre>
+        <p>I trained a small adapter and ran a "West Lake travel diary in Dream of the Red Chamber style" generation. The output had Baoyu and Daiyu having the kind of conversation you'd expect, with the period vocabulary and rhythm coming through. The actual reasoning didn't quite hold together, but <strong>the format was right</strong> — with a larger base model the same approach should work cleanly.</p>
+
+        <h2>TRL: HuggingFace's Transformer Reinforcement Learning</h2>
+        <p>TRL = Transformer Reinforcement Learning. HuggingFace's training library covering SFT / DPO / PPO / GRPO — the full stack.</p>
+        <p>What I worked through today:</p>
+        <ul>
+          <li>What TRL is: HuggingFace training library, the SFT/DPO/PPO/GRPO family</li>
+          <li>DPO data format: (prompt, chosen, rejected)</li>
+          <li>DPO loss intuition: push chosen up, push rejected down, but anchor against the reference model</li>
+          <li>On-policy vs off-policy distinction</li>
+          <li>Wrote a complete DPO training loop in pseudocode</li>
+          <li>Compared pseudocode to TRL's real code, understood the sigmoid loss</li>
+          <li>Ran it end to end: data generation + DPOTrainer + before/after comparison</li>
+          <li>Spotted the overfitting warning signs (margin too high, loss too low)</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
