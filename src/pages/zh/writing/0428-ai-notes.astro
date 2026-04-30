@@ -1,0 +1,114 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月28日";
+const date = "2026-04-28";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月28日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Sakana 的 Conductor：AI 管理 AI</h2>
+        <p>Sakana AI 发布了一个值得关注的多智能体成果。他们用强化学习训练了一个 <strong>7B 的 Conductor 模型</strong>，作用不是直接解题，而是用自然语言去编排一组前沿模型。Conductor 动态决定 <strong>调用哪个 agent、分配什么子任务、暴露哪些上下文</strong>。</p>
+        <p>报告的数据相当亮眼：<strong>LiveCodeBench 上 83.9%</strong>，<strong>GPQA-Diamond 上 87.5%</strong>，超过了池子里任何单个 worker。Hardmaru 把这个总结为「AI 管理 AI」，认为「递归自选择」是 <strong>test-time scaling</strong> 的一个新维度。</p>
+        <p>这里就引出一个有意思的问题：是一个贵的 agent 更好，还是几个便宜 agent 加智能路由更好？「递归自选择」其实指向一个更本质的方向：<strong>元认知能力比直接能力更稀缺</strong>。知道「我不擅长这个，应该交给谁」本身就是一种高价值技能。这意味着未来的竞争力可能不在于单模型有多强，而在于编排层的智能程度——Conductor 本身反而可能是最值得投资的部分。</p>
+
+        <h2>OpenAI 悄悄做 AI 优先的手机</h2>
+        <p>据报道 OpenAI 正在做自家的 AI 优先智能手机，早期计划指向 2028 年左右量产。据称在和高通、联发科合作开发定制芯片，立讯精密可能负责设计与组装。</p>
+        <p>这个设备不再以 app 为中心，而是以执行端到端任务的 AI agent 为核心。硬件针对端侧 AI 做优化，更重的负载推到 OpenAI 的云端。如果这个方向走通，可能会把手机从 <strong>app 驱动的界面</strong> 转向 <strong>结果驱动的交互</strong>，对苹果和谷歌的生态构成压力。</p>
+
+        <h2>GUI Agent 数据标注：完全不同的范式</h2>
+        <p>「操控软件完成任务」这类 AI，对应的标注需求和传统 NLP 标注是完全不同的范式。</p>
+        <p>传统 NLP 标注是「文本进，文本出」，标注员判断对错。但 GUI Agent 的标注要捕捉的是：<strong>在某个屏幕状态下，人类会做什么操作，为什么这样做</strong>。</p>
+
+        <h2>1. 屏幕录制 + 操作轨迹捕获</h2>
+        <p>工具需要同时记录：</p>
+        <ul>
+          <li>每一帧的截图（或 UI tree 的结构化 dump）</li>
+          <li>鼠标坐标、点击类型、键盘输入</li>
+          <li>时间戳</li>
+        </ul>
+        <p>目前业界用的方案类似 rrweb（web 端）或 pyautogui 配合截图。关键难点是 <strong>粒度</strong>——是记录像素坐标，还是记录语义元素（「点击了购买按钮」）？</p>
+
+        <h2>2. 任务意图标注层</h2>
+        <p>纯操作轨迹是「行为」，但模型需要理解「目的」。所以需要在轨迹上叠加标注：</p>
+        <ul>
+          <li>整体任务目标（「帮我点一份麻辣烫」）</li>
+          <li>每步子目标（「正在搜索餐厅」→「正在选菜」→「正在填地址」）</li>
+          <li>关键决策点的理由（「为什么选这家而不是那家」）</li>
+        </ul>
+        <p>这层标注成本极高，因为需要标注员真正理解任务语义。</p>
+
+        <h2>3. 状态-动作对的验证工具</h2>
+        <p>多步任务最麻烦的地方是 <strong>错误传播</strong>——第三步做错了，后面全错。标注工具需要支持：</p>
+        <ul>
+          <li>回放和分叉（在某一步重新录制另一种操作路径）</li>
+          <li>标记「此步骤是否是最优操作」</li>
+          <li>标注「此步骤失败的原因」（网络慢、UI 变了、理解错了任务）</li>
+        </ul>
+
+        <h2>4. 跨 App 任务的上下文拼接</h2>
+        <p>这是最难的部分。比如「用美团订完外卖，把订单截图发给微信好友」，涉及 App 切换、状态保持、上下文传递。标注工具需要把跨 App 的操作序列拼成一条完整轨迹，并且「App 切换」本身也是一个有意义的动作节点。</p>
+
+        <h2>当前行业怎么做</h2>
+        <ul>
+          <li><strong>Operator-style 数据</strong>：OpenAI Operator、Anthropic Computer Use 都需要大量人工演示数据，标注员在真实或沙箱环境里完成任务，工具录制全程。</li>
+          <li><strong>合成数据</strong>：用规则或另一个模型生成操作轨迹，再让人审核——但跨 App 场景合成质量差。</li>
+          <li><strong>众包平台</strong>：Scale AI、Surge 等开始提供专门的 GUI 任务标注流水线，本质是把标注员的电脑桌面变成标注工具本身。</li>
+        </ul>
+
+        <h2>真正的瓶颈</h2>
+        <p>瓶颈不是工具，而是 <strong>任务多样性和环境一致性的矛盾</strong>。真实用户的外卖 App 版本、手机型号、账号状态都不一样，导致同一个任务的「正确操作序列」在不同环境下完全不同。如何建立一个 <strong>可复现的标注沙箱环境</strong>，同时保持任务的真实分布，是这个方向目前最核心的工程挑战。</p>
+        <p>简单说：这类数据的标注工具，本质上是把标注员的整个操作桌面变成了标注介质，而不是一个表格或文本框。</p>
+
+        <h2>YC 2026 夏季创业方向征集</h2>
+        <p>YC 最新一期 RFS 像是一个论点：<strong>AI 已从功能变成基础设施</strong>。他们希望看到软件、服务和芯片被重建。14 个方向，挑几个有意思的：</p>
+        <ul>
+          <li><strong>AI 原生服务公司</strong>：不卖软件，直接卖服务结果。重点领域：保险经纪、会计税务、合规、医疗行政。服务市场规模远大于软件市场。</li>
+          <li><strong>Agent 工作流推理芯片</strong>：现有 GPU 对 Agent 循环（调工具→分支→回溯→保持上下文）利用率只有 30-40%。需要专为 Agent 执行图设计的芯片，关键在编译器。</li>
+          <li><strong>动态软件界面</strong>：用 AI 编程让每个用户成为自己的「前向部署工程师」，界面高度个性化——同一款邮件客户端，对我显示任务列表，对学生显示日历。</li>
+          <li><strong>SaaS 挑战者</strong>：AI 将软件生产成本降低了 10-100 倍，旧 SaaS 护城河消失。可以用 1/10 价格克隆产品，或重新设计工作流，或去攻打 ERP、芯片设计软件等「不可攻克」的巨头。</li>
+          <li><strong>面向 Agent 的软件</strong>：下一批「万亿用户」是 AI Agent 而非人类。需要为 Agent 重建所有软件：API/MCP/CLI 替代按钮和表单，完善文档让 Agent 自主发现和接入工具。</li>
+        </ul>
+
+        <h2>「前向部署工程师」是什么意思</h2>
+        <p>这个词来自大公司的做法——比如 Salesforce 卖给波音，会专门派一个工程师驻扎在波音内部，把软件改得符合波音的工作流。这叫 forward deployed engineer。以前只有大客户才能享受这种待遇，因为太贵了。</p>
+        <p>YC 的意思是：未来 AI 编程能力足够强之后，<strong>每个普通用户都能享受这种级别的定制</strong>，AI 就是你专属的那个驻场工程师。你告诉 AI「我希望我的邮件客户端看起来像一个任务清单，按紧急程度排序，已读的自动折叠」，AI 直接帮你 <strong>改掉软件本身</strong>——不是换个主题，而是重新生成一个只属于你的界面和交互逻辑。</p>
+
+        <h2>关于评估（Evaluations）</h2>
+        <p>好的评估设计起来出人意料地困难。最好的评估简单到可以无处不在，但又具体到可以真正衡量有意义的事情。清晰的输出、快速的反馈、明显的信号。大多数评估在其中一项上失败了。设置基础设施、解释结果或调试失败的摩擦，决定了研究人员是否会在他们的迭代循环中实际使用它。</p>
+        <p>一个伟大的基准会成为一个谢林点（Schelling point）。一旦它存在，整个领域都会围绕它展开，因为每个人都想声称自己击败了它。通过激励每个人针对它进行优化，你可以推动整个领域的发展。<strong>这就是为什么创建正确的评估有时比创建在其中表现良好的模型更有影响力。</strong></p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
