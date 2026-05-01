@@ -1,0 +1,137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 1";
+const date = "2026-05-01";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 1, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>nanochat: scaling depth and the FP8 training trick</h2>
+        <p>Working through nanochat with 8x RTX Pro 6000s. Setup notes: configure wandb, set the wandb token, bump the version in <code>pyproject.toml</code>, run inside screen.</p>
+        <p>Going from depth 12 → 24: layers double → forward pass does roughly 2x the matrix multiplies → training time doubles. Holding data volume, batch size, and everything else constant:</p>
+        <pre><code>total_time = steps × time_per_step = const × 2 = 2x</code></pre>
+
+        <h2>Traditional BF16 training vs the FP8 trick</h2>
+        <p><strong>Traditional BF16 (mainstream):</strong></p>
+        <pre><code>forward:  W_bf16 × x_bf16 → y_bf16     (bf16 precision)
+backward: dW = dL/dy × x.T               (bf16)
+update:   W += -lr × dW                  (bf16)
+memory: W (16-bit) + grad (16-bit) + Adam m,v (16-bit each)
+      = 8 bytes/param</code></pre>
+        <p><strong>The FP8 training trick:</strong> the key insight is that the <em>matmul inside forward</em> goes to fp8, but everything around it stays in bf16/fp32.</p>
+        <pre><code>forward:
+  1. quantize W (bf16 → fp8): scale = max(W) / fp8_max
+                              W_fp8 = round(W / scale)
+  2. quantize x (bf16 → fp8): same idea
+  3. matmul W_fp8 @ x_fp8 → y_fp32 (accumulate in fp32!)
+  4. cast y_fp32 back to bf16 for the next layer
+
+backward: similar quantization, but gradient accumulation always in fp32
+Adam optimizer m, v state: always fp32 (this is the bulk of memory)</code></pre>
+
+        <h2>Coding agent shootout: Claude Code, Claude Design, Cursor, Codex</h2>
+        <p>Designed a single landing-page brief — a satirical "Token Waster" SaaS — and ran the same prompt through four agents to compare design ability, autonomy, and code output.</p>
+        <p>The brief: build a complete marketing landing page for a fictitious B2B SaaS called "Token Waster", with navbar, hero (including a fake real-time "tokens wasted today" counter), three feature sections, social proof, three-tier pricing, FAQ, footer. Next.js 15 + Tailwind + shadcn/ui, single file. Restrained brand palette (no more than two primary colors plus grayscale), real copy not lorem ipsum, dark mode and mobile considered. 30-minute time budget.</p>
+        <p>Models picked at the highest tier each tool offered:</p>
+        <ul>
+          <li>Cursor: Composer 2</li>
+          <li>Codex: GPT-5.5 (highest)</li>
+          <li>Claude Code: Opus 4.7 (highest)</li>
+          <li>Claude Design: no model selector visible</li>
+        </ul>
+        <p><strong>Completion times</strong> — Claude Code 13 min, Cursor 9 min, Codex 12 min. Claude Design felt faster but I lost track since switching between panels was clunky.</p>
+        <p><strong>Interruption count during the run:</strong> Cursor allowed 3 mid-flight messages; Codex allowed 3 but doesn't really pause — it keeps running the prior task while replying to new messages, and won't change permissions mid-task.</p>
+        <p><strong>Claude Code hit a hydration bug:</strong> it had a counter component where <code>useState</code>'s initializer returned a random server number and a <code>Math.random() + Date.now()</code> client number, so React's hydration check failed. Fix is to use the same static seed on server and client, then swap to live values after mount. After surfacing the bug, Claude Code patched it correctly.</p>
+        <p><strong>GPT-5.5's page felt visually dense.</strong> Looking at its system prompt, it leans toward "dense but organized info" — which doesn't translate well to a marketing landing page where breathing room and hierarchy matter more than information density.</p>
+
+        <h2>Cursor SDK takes WolfBench</h2>
+        <p>Cursor Agent + GPT-5.5 currently sits at #1 on Terminal-Bench 2.0. Cursor opened up the same runtime and harness for third-party embedding via the Cursor SDK.</p>
+
+        <h2>Claude Code small UX bug</h2>
+        <p>Conversations that started before "auto mode" existed cannot be switched into auto mode after the fact.</p>
+
+        <h2>GPT-5.5 vs vulnerability discovery</h2>
+        <p>Per the AI Safety Institute, the publicly accessible GPT-5.5 (not the announced GPT-5.5-Cyber tier) is roughly on par with Claude Mythic at finding vulnerabilities. Earlier reporting noted Anthropic considered Claude Mythic "too dangerous to release publicly." Possible readings: either the original framing was overstated, or the model is hard to serve at scale relative to Opus.</p>
+
+        <h2>Apache 2.0 is a meaningful detail</h2>
+        <p>So when an email mentions "IBM Granite 4.1 is Apache 2.0" or "SenseNova U1 is Apache 2.0", the subtext is: <strong>you can download the model, drop it into your product, sell it, and IBM / SenseTime won't come after you and won't ask for a cut.</strong> For enterprise users this is important information — with a Llama-style conditional license, legal needs to convene first to decide if you can use it at all.</p>
+        <p>Apache 2.0 also has the <strong>patent grant clause</strong>: if you use Apache 2.0 code, the author also licenses the relevant patents to you for free. That's the layer it has over MIT and the reason enterprises feel safer — the original author can't turn around and sue you for patent infringement on their own code.</p>
+        <p>One-line memory: <strong>Apache 2.0 = "go ahead and use it, commercial use is fine, just credit me."</strong></p>
+
+        <h2>2023–2025: where AI value got captured</h2>
+        <p>From 2023 to 2025, all of the AI value got captured at the infrastructure layer. NVIDIA's blockbuster May 2023 earnings call — stock jumped 25% after the print — formally marked the start of the AI trade. In 2024, Vistra and GE Vernova were among the best S&amp;P 500 performers (up 265% and 146% respectively) as the market priced in electricity as the binding constraint. In 2025, attention turned to memory: SanDisk, Western Digital, Seagate, and Micron all up over 200% year-on-year. Plenty of other infrastructure names beat broadly, riding AI capex.</p>
+        <p>Two pieces of that landscape worth unpacking together: VR NVL72 and "neoclouds." They're two faces of the same story.</p>
+
+        <h2>VR NVL72: from chips to systems</h2>
+        <p>VR is short for <strong>Vera Rubin</strong>, NVIDIA's astronomer-naming tradition: Pascal, Volta, Turing, Ampere (A100), Hopper (H100), Blackwell (B200/B300), and next is Rubin. VR is two generations after Hopper, expected to start shipping in 2026.</p>
+        <p>NVL72 is the <strong>sales form factor</strong>. NVIDIA used to sell you single cards (one H100); now it sells you <strong>entire racks</strong>: 72 GPUs fully NVLink-interconnected in one liquid-cooled cabinet you wheel in and plug power into. The shift over the past two years has been from "selling chips" to "selling systems," because the bottleneck for large-model training and inference long stopped being single-card FLOPs and moved to inter-GPU bandwidth. Shipping a full rack guarantees the 72 cards are NVLink full-bandwidth internally, with InfiniBand between racks for the supercluster.</p>
+        <p>Why VR NVL72 looks so cheap on the price-per-PFLOP chart ($0.29/PFLOP): Rubin doubles single-card FLOPs over Blackwell, HBM4 has higher bandwidth, and the rack-level form factor saves enormous cooling and networking overhead. This is the physical reason AI compute cost keeps halving.</p>
+
+        <h2>Neoclouds: the GPU-cloud middlemen</h2>
+        <p><strong>Neocloud</strong> means "new cloud" — the GPU-only cloud providers that emerged on this AI wave, distinct from the AWS/Azure/GCP hyperscalers. Representative names: CoreWeave (largest, public), Lambda, Crusoe, Nebius (spun out of Yandex), Together AI, Voltage Park, Foundry, Applied Digital.</p>
+        <p>Why they exist: after ChatGPT broke through in 2023, AI companies wanted GPUs and AWS / Azure couldn't deliver fast enough. Two reasons: AWS itself was short on supply, and AWS datacenters are designed for general-purpose multi-tenant servers — network topology, rack density, cooling — none of which is optimized for large GPU clusters. Stitching together a 1000-card cluster on AWS gives you bad cross-node communication.</p>
+        <p>Neoclouds filled the gap: <strong>designed for GPU clusters from day one.</strong> Whole machine rooms wired to InfiniBand topology, liquid cooled, dense racks, no general-purpose multi-tenant isolation. Customers get near bare-metal performance.</p>
+        <p>Business model: borrow money from investors and banks (often using GPUs as collateral), drop large amounts on H100/B200 in one shot, build the datacenter, rent by the hour or sign 3–5 year contracts.</p>
+        <p>Interesting food chain: CoreWeave signed multi-tens-of-billions of dollars in long-term contracts with Microsoft, and a large slice of that capacity gets <strong>subleased</strong> to OpenAI. So the largest AI cloud customer in the world has a compute path that goes self → Microsoft → CoreWeave → NVIDIA. Microsoft has Azure but still buys neocloud capacity because neoclouds are scaling faster than Azure is.</p>
+        <p>The IRR figures on the chart (15.3%, 38%) describe the neocloud business case: you buy a GPU for ~$30,000, rent it at $X/hour, recoup over five years, plus a target IRR (e.g. 15%) as profit. The scarcer the GPU, the higher the IRR they can charge (early H100 era hit 38% or higher); the more abundant and competitive it gets, the more IRR compresses (chart assumes 15.3% on VR NVL72). The chart says two things: <strong>hardware itself is getting cheaper, and the neocloud abnormal-profit window is closing.</strong> CoreWeave caught the H100 scarcity wave; later entrants will have less margin to work with.</p>
+        <p>The biggest neocloud risk is <strong>depreciation</strong>. They borrowed against H100s and depreciate over 5–6 years. But if B200, B300, and Rubin each halve $/PFLOP, no one will rent old H100s at the previous price, and old GPUs become stranded assets on the books. That's the root cause of CoreWeave's wild post-IPO volatility — the market keeps re-betting whether AI demand grows faster than hardware depreciates.</p>
+        <p>One-line summary: <strong>Neoclouds are the middlemen who rack NVIDIA's cards and resell to AI companies, riding the GPU scarcity premium. The business is profitable now, but the asset base is depreciating fast.</strong></p>
+
+        <h2>Real vs accounting depreciation rates</h2>
+        <p>As of May 2026, two layers worth separating: <strong>book depreciation</strong> and <strong>real economic depreciation</strong> — the gap between them is the active debate.</p>
+        <p><strong>Book depreciation (how companies record it).</strong> All straight-line, the rate is just 1/years:</p>
+        <ul>
+          <li><strong>CoreWeave</strong>: 6 years (~16.7%/year), longest, most criticized.</li>
+          <li><strong>AWS / Azure / Google</strong>: 5–6 years (16.7%–20%/year). Amazon shortened server depreciation from 6 to 5 years in February 2025, citing "AI accelerating the pace of change."</li>
+          <li><strong>Lambda</strong>: 5 years.</li>
+          <li><strong>Nebius</strong>: 4 years (most aggressive at 25%/year).</li>
+        </ul>
+        <p>Trend: everyone is shortening, but CoreWeave hasn't moved. That's the core of Michael Burry's CoreWeave short thesis from last November — that the 6-year schedule props up earnings while real economic life is much shorter.</p>
+        <p><strong>Real economic depreciation.</strong> Industry consensus: under <strong>frontier-training use, real GPU economic life is 2–3 years</strong>. Not because the cards die — because once a new generation halves $/PFLOP, the electricity cost to keep training frontier models on old H100s exceeds the price difference of buying new cards within 18–36 months.</p>
+
+        <h2>Codex: dynamic UI for the task at hand</h2>
+        <p>Codex pitch line: dynamic UI for the task at hand, 20% faster computer and browser use, better slides and sheets, in-browser annotation, artifacts and code, easier onboarding, cleaner cross-app design, performance improvements, no clunky handoff or switching.</p>
+
+        <h2>Other notable releases of the day</h2>
+        <ul>
+          <li><strong>Qwen3.6 27B</strong> looks like the most important open-weight release of the day. Artificial Analysis ranked it the new open-weights leader under 150B parameters with an Intelligence Index of 46, ahead of Gemma 4 31B and prior Qwen variants. Apache 2.0, 262K context, native multimodal input, and BF16 weights small enough to fit on a single H100. The 35B A3B MoE companion scored 43, the strongest open model around 3B active parameters. Tradeoff: expensive inference per output token — AA estimates Qwen3.6 27B used ~144M output tokens on the suite, roughly 21x the run cost of Gemma 4 31B. Still a notable step on capability-per-size.</li>
+          <li><strong>Open-source supply-chain risk:</strong> Socket reported the popular PyPI package <code>lightning</code> was compromised in 2.6.2 and 2.6.3, with malicious code executing on import, downloading Bun, and running an 11MB obfuscated JavaScript payload aimed at credential theft. Theo connected this to the <code>intercom-client</code> npm compromise and a Linux zero day, arguing the tempo of supply-chain attacks is increasing.</li>
+          <li><strong>Security scanners as first-class AI products:</strong> Anthropic shipped Claude Security, a repo vulnerability scanner that validates findings and suggests fixes, powered by Opus 4.7. Cursor shipped a parallel Cursor Security Review with always-on PR review and scheduled scans. Model vendors moving directly into established devsecops categories.</li>
+          <li><strong>Qwen-Scope:</strong> Qwen released an open suite of sparse autoencoders for Qwen models, focused on feature steering, debugging, data synthesis, and evaluation — a rare interpretability release rather than just weights.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
