@@ -1,0 +1,137 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月1日";
+const date = "2026-05-01";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月1日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>nanochat：depth 翻倍与 FP8 训练的"骚操作"</h2>
+        <p>用 8 张 RTX Pro 6000 跑 nanochat。准备工作：配置 wandb、设置 wandb token、改 <code>pyproject.toml</code> 的版本号，在 screen 里跑。</p>
+        <p>depth 12 → 24：层数翻倍 → forward pass 多算一倍矩阵 → 时间 × 2。假设数据量、batch size 等其他都一样：</p>
+        <pre><code>total_time = steps × time_per_step = const × 2 = 2x</code></pre>
+
+        <h2>传统 BF16 训练 vs FP8 的"骚操作"</h2>
+        <p><strong>传统 BF16 训练（主流）：</strong></p>
+        <pre><code>forward:  W_bf16 × x_bf16 → y_bf16     (bf16 精度运算)
+backward: dW = dL/dy × x.T               (bf16)
+update:   W += -lr × dW                  (bf16)
+显存: W (16-bit) + grad (16-bit) + Adam m,v (16-bit each)
+    = 8 bytes/param</code></pre>
+        <p><strong>FP8 训练的"骚操作"。</strong>关键 insight：forward 里的<em>矩阵乘法</em>用 fp8，但其他地方还是 bf16/fp32。</p>
+        <pre><code>forward 流程：
+  1. 把 W (bf16) 量化到 fp8: scale = max(W) / fp8_max
+                            W_fp8 = round(W / scale)
+  2. 把 x (bf16) 量化到 fp8: 同上
+  3. 矩阵乘法 W_fp8 @ x_fp8 → y_fp32 (累加到 fp32!)
+  4. y_fp32 再 cast 回 bf16 给下一层
+
+backward 也类似量化，但 gradient 累加始终在 fp32
+Adam 优化器 m, v 状态：始终 fp32（这部分占大头）</code></pre>
+
+        <h2>编程 agent 横评：Claude Code、Claude Design、Cursor、Codex</h2>
+        <p>用同一个落地页 brief（一个虚构产品 "Token Waster" 的 SaaS 营销页）跑四个 agent，考察设计能力、自主能力、代码能力。</p>
+        <p>brief 要点：Next.js 15 + Tailwind + shadcn/ui，单文件可跑；要包含 navbar、hero（带"今日已浪费 X tokens"伪实时计数器）、3 个 feature section、social proof、3 档 pricing、FAQ、footer；品牌色不超过 2 个主色 + 灰阶；真实文案不要 lorem ipsum；考虑 dark mode 和移动端；30 分钟时间预算。</p>
+        <p>各家选最高档：</p>
+        <ul>
+          <li>Cursor：Composer 2</li>
+          <li>Codex：GPT-5.5（最高）</li>
+          <li>Claude Code：Opus 4.7（最高）</li>
+          <li>Claude Design：没看到模型选择入口</li>
+        </ul>
+        <p><strong>完成时间</strong>：Claude Code 13 分钟，Cursor 9 分钟，Codex 12 分钟。Claude Design 感觉更快，但因为切换面板比较麻烦没去关注。</p>
+        <p><strong>中途打断次数</strong>：Cursor 允许 3 次中途发消息；Codex 允许 3 次但不会真正暂停——它继续跑之前的任务，同时回复新消息，并且不能中途修改权限。</p>
+        <p><strong>Claude Code 出现 hydration bug</strong>：计数器组件里 <code>useState</code> 的初始化函数在 server 上返回一个数、client 上返回 <code>Math.random() + Date.now()</code>，React 一对就出错。修复办法是 server / client 用同一个静态种子，挂载后再切到实时值。指出问题后，Claude Code 修好了。</p>
+        <p><strong>GPT-5.5 给出的页面有点拥挤。</strong>看了它的 system prompt，倾向 "dense but organized info"——但落地页这种场景里，呼吸感和层次比信息密度更重要，所以视觉效果不太理想。</p>
+
+        <h2>Cursor SDK 拿下 WolfBench</h2>
+        <p>Cursor Agent + GPT-5.5 的组合在 Terminal-Bench 2.0 上是当前第一。Cursor 把同一套 runtime 和 harness 通过 Cursor SDK 开放给第三方嵌入。</p>
+
+        <h2>Claude Code 一个小 UX bug</h2>
+        <p>在 auto mode 这个功能上线之前的对话，事后是无法切换到 auto mode 的。</p>
+
+        <h2>GPT-5.5 与漏洞发现</h2>
+        <p>根据 AI 安全研究所的说法，公开可访问的 GPT-5.5（不是宣布的 GPT-5.5-Cyber 版本）在发现漏洞方面与 Claude Mythic 不相上下。此前有报道 Anthropic 认为 Claude Mythic "太危险而不能公开发布"，可能的解读是当时的描述偏强，或者这个大模型在大规模服务上比 Opus 难度更高。</p>
+
+        <h2>Apache 2.0 是个值得注意的细节</h2>
+        <p>所以邮件里说"IBM Granite 4.1 是 Apache 2.0"、"SenseNova U1 是 Apache 2.0"，潜台词是：<strong>这模型你可以下载下来，塞进自己产品里卖钱，IBM / 商汤不会找你麻烦，也不会要你分钱。</strong>对企业用户来说这是非常重要的信息——如果是 Llama 那种带条件的许可证，法务部就得先开会研究一下能不能用。</p>
+        <p>它还有个小细节叫<strong>专利授权条款</strong>：用 Apache 2.0 的代码时，作者顺带把相关专利也免费授权给你了——这是它比 MIT 多出来的一层保护，让企业用得更安心，不怕日后被作者反过来告专利。</p>
+        <p>一句话记忆：<strong>Apache 2.0 = "拿去用吧，商用也行，记得写一下我名字就行"。</strong></p>
+
+        <h2>2023–2025：AI 价值都被基础设施层捕获</h2>
+        <p>从 2023 年到 2025 年，人工智能的所有价值都被基础设施层所捕获。NVIDIA 在 2023 年 5 月的首次重磅财报电话会议上，财报发布后股价跳涨 25%，正式标志着 AI 交易的开始。2024 年，Vistra 和 GE Vernova 是标普 500 指数中表现最好的股票之一（分别上涨 265% 和 146%），因为人们意识到电力正成为关键瓶颈。2025 年，内存成为焦点，SanDisk、西部数据、希捷和美光的年增长率都超过了 200%。还有许多其他基础设施公司因为 AI 资本支出增加而大幅跑赢。</p>
+        <p>下面拆两块——VR NVL72 和 neoclouds——其实是同一个故事的两面。</p>
+
+        <h2>VR NVL72：从卖芯片到卖系统</h2>
+        <p>VR 是 <strong>Vera Rubin</strong> 的缩写，NVIDIA 用天文学家命名 GPU 代号的传统：从 Pascal、Volta、Turing、Ampere（A100）、Hopper（H100）、Blackwell（B200/B300）一路排过来，下一代就是 Rubin。VR 是 Hopper 之后两代的产品，预计 2026 年开始交付。</p>
+        <p>NVL72 是<strong>销售形态</strong>——以前 NVIDIA 卖你单卡（一张 H100），现在卖你<strong>整个机柜</strong>：72 张 GPU 用 NVLink 全互联塞进一个柜子，水冷，拉来直接接电就能跑。NVIDIA 这两年在做的转型是从"卖芯片"变成"卖系统"，因为大模型训练/推理的瓶颈早就不在单卡了，而在卡和卡之间的通信带宽。整柜出货能保证柜内 72 张卡的互联是 NVLink 满血，柜与柜之间再用 InfiniBand 连起来组超级集群。</p>
+        <p>为什么 VR NVL72 在那张图上那么便宜（每 PFLOP 只要 $0.29）：一是 Rubin 单卡 FLOPs 比 Blackwell 又翻了一倍多，二是 HBM4 显存带宽更高，三是整柜方案省掉了大量散热和组网成本。这就是 AI 算力成本曲线持续腰斩的物理原因。</p>
+
+        <h2>Neoclouds：GPU 云的中间商</h2>
+        <p><strong>Neocloud</strong> 翻译过来就是"新型云"，专门指这一波 AI 浪潮里冒出来的 GPU 云服务商——区别于 AWS、Azure、GCP 这些传统超大规模云。代表公司：CoreWeave（已经上市，规模最大）、Lambda、Crusoe、Nebius（Yandex 拆出来的）、Together AI、Voltage Park、Foundry、Applied Digital。</p>
+        <p>他们存在的逻辑：2023 年 ChatGPT 爆火之后，AI 公司想训模型，发现 AWS / Azure 给不了足够的 GPU——一是 AWS 自己也缺货，二是 AWS 的数据中心是按"通用服务器多租户"设计的，网络架构、机房密度、冷却系统都不是为大规模 GPU 集群优化的。在 AWS 上拼一个 1000 卡集群，跨节点通信会非常拉。</p>
+        <p>Neoclouds 就是冲这个空白进来的：<strong>从第一天就为 GPU 集群设计</strong>。整个机房按 InfiniBand 拓扑布线、液冷、高密度机柜、不做通用云的多租户隔离。客户租进来直接拿到接近裸金属的性能。</p>
+        <p>商业模式：找投资人 / 银行借钱（很多是把 GPU 本身作抵押），一次性砸钱采购上万张 H100/B200，建机房，按小时出租或者签 3–5 年长约。</p>
+        <p>有意思的食物链：CoreWeave 跟微软签了几百亿美金长约，微软买的这部分容量很大一块<strong>转租</strong>给了 OpenAI。也就是说世界上最大的 AI 云客户（OpenAI），它的算力链路是：自己→微软→CoreWeave→NVIDIA。微软自己有 Azure 还要去找 neocloud 买产能，因为 neocloud 的扩张速度比它快。</p>
+        <p>图右下角那些 IRR 数字（15.3%、38%）讲的就是 neocloud 的生意经：买一张 GPU 假设 $30,000，按 $X/小时 租出去，5 年回本，再加目标 IRR（如 15%）作为利润。GPU 越稀缺，能收的 IRR 越高（早期 H100 时期能干到 38% 甚至更高）；GPU 越普及、竞争对手越多，IRR 被压得越低（图上 VR NVL72 假设 15.3% IRR）。所以图在讲两件事：<strong>硬件本身在变便宜，neocloud 行业的暴利期在结束</strong>。早期进场的 CoreWeave 吃到了 H100 稀缺的红利，后面进场的玩家利润空间会持续压缩。</p>
+        <p>Neocloud 最大的风险是<strong>折旧</strong>。借钱买的是 H100，按 5–6 年折旧。但如果 B200、B300、Rubin 真的每代都把每 PFLOP 价格腰斩，那市场上没人愿意再按高价租 H100，老 GPU 就会变成账面上的"搁浅资产"。这就是 CoreWeave 上市以后股价波动巨大的根本原因——市场一直在赌"AI 需求会不会涨得比硬件折旧还快"。</p>
+        <p>一句话总结：<strong>Neocloud 是给 NVIDIA 的卡建机柜、转手租给 AI 公司的中间商，吃的是 GPU 稀缺红利。这一行眼下还在赚钱，但赚的是会随时间快速贬值的钱。</strong></p>
+
+        <h2>账面折旧 vs 真实经济折旧</h2>
+        <p>2026 年 5 月最新的情况，分两个层面看：<strong>账面上的折旧</strong>和<strong>真实的经济折旧</strong>——这俩差距很大，正好是争议焦点。</p>
+        <p><strong>账面折旧率（公司怎么记账）。</strong>各家用直线折旧，年率就是 1/年限：</p>
+        <ul>
+          <li><strong>CoreWeave</strong>：6 年（每年约 16.7%），最长，也最被诟病。</li>
+          <li><strong>AWS / Azure / Google</strong>：5–6 年（每年 16.7%–20%）。Amazon 在 2025 年 2 月把服务器折旧年限从 6 年缩短到 5 年，理由是"AI 发展速度变快了"。</li>
+          <li><strong>Lambda</strong>：5 年。</li>
+          <li><strong>Nebius</strong>：4 年（最激进，每年 25%）。</li>
+        </ul>
+        <p>整体趋势是<strong>所有人都在缩短折旧年限</strong>，但 CoreWeave 没动。这就是 Michael Burry 去年 11 月做空 CoreWeave 的核心论点之一——他认为 CoreWeave 用 6 年折旧把利润做得好看，实际经济寿命远没这么长。</p>
+        <p><strong>真实的经济折旧。</strong>行业研究的共识是：<strong>前沿训练用途下，GPU 的真实经济寿命只有 2–3 年</strong>。原因不是卡坏了，是新一代卡每 PFLOP 成本砍半之后，老卡在电费这个最大成本项上算不过账——18 到 36 个月之后，继续拿 H100 训前沿模型，电费比新卡多花的部分超过买新卡的差价。</p>
+
+        <h2>Codex：dynamic UI for the task at hand</h2>
+        <p>Codex 这次的卖点：dynamic UI for the task at hand、电脑和浏览器使用快 20%、更好的幻灯片和表格、在浏览器里 / artifacts / 代码里直接标注、上手更容易、整个 app 视觉更统一、性能改进，没有切换的卡顿。</p>
+
+        <h2>当日其他值得记的发布</h2>
+        <ul>
+          <li><strong>Qwen3.6 27B</strong> 看起来是当天最重要的开源权重发布。Artificial Analysis 把它评为 150B 参数以下新的开源权重领导者，Intelligence Index 46，领先 Gemma 4 31B 和此前的 Qwen 变体。Apache 2.0、262K 上下文、原生多模态输入，BF16 权重小到能塞进单张 H100。配套的 35B A3B MoE 得分 43，是约 30 亿活跃参数附近最强的开源模型。代价是按输出 token 算的推理成本——AA 估计 Qwen3.6 27B 在套件上用了约 1.44 亿 output tokens，运行成本大约是 Gemma 4 31B 的 21 倍。但按"能力 / 大小"看，仍是显著的一步。</li>
+          <li><strong>开源软件包供应链风险</strong>：Socket 报道流行的 PyPI 包 <code>lightning</code> 在 2.6.2 和 2.6.3 版本被入侵，恶意代码在 import 时执行，下载 Bun 并运行一个 11MB 的混淆 JavaScript 有效载荷以窃取凭证。Theo 把这与 npm 上 <code>intercom-client</code> 被入侵以及一个 Linux 零日漏洞联系起来，认为软件供应链攻击的节奏在加快。</li>
+          <li><strong>安全扫描器正成为一流的 AI 产品</strong>：Anthropic 推出 Claude Security，由 Opus 4.7 驱动，验证发现并提出修复建议；Cursor 同步推出 Cursor Security Review，包括常驻 PR 审查和定期代码库扫描。模型供应商在直接进入成熟的 DevSecOps 类别。</li>
+          <li><strong>Qwen-Scope</strong>：Qwen 发布了一套针对 Qwen 模型的开放稀疏自编码器，专注于特征引导、调试、数据合成与评估——一次罕见的可解释性发布，而不是仅有原始权重。</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
