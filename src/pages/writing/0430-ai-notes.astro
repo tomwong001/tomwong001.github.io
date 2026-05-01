@@ -1,0 +1,136 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — April 30";
+const date = "2026-04-30";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>April 30, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Intel and the CPU narrative for the agent era</h2>
+        <p>LLM inference itself — matrix multiplies, KV cache, attention — is firmly a GPU job. Running it on CPUs would be orders of magnitude slower. So the chain "inference inflection point → buy more CPUs" doesn't hold up directly. But what the article is actually pointing at is the <strong>peripheral workloads around inference</strong>, and those genuinely are CPU-heavy and tightly coupled to the agentic AI wave.</p>
+        <p>First, <strong>agent and tool-use execution environments</strong>. Coding agents — Claude Code, Devin, and the rest — generate code that has to actually run in sandboxes: compile, test, container start, file I/O. All CPU. A single agent task can spin up dozens of sandboxes, each backed by CPU cores. OpenAI, Anthropic, and the coding companies are scaling out this sandbox infrastructure at huge volume.</p>
+        <p>Second, <strong>RL training environments and rollouts</strong>. RL gyms and SWE-bench-style environments parallelize thousands of episodes; the model inference runs on GPU but each environment step runs on CPU. The more central RL becomes, the more the CPU/GPU ratio bends back toward CPU.</p>
+        <p>Third, <strong>serving infrastructure itself</strong>: tokenization, request routing, batching, KV cache management, retrieval (vector DB, BM25), safety filters, logging. Every GPU server needs a stack of CPUs in front and behind it just to be kept fed.</p>
+        <p>Fourth, the <strong>refresh cycle</strong> argument: the COVID-era 2020–2021 CPU buildout is hitting natural end-of-life, and for the past two years budgets have all gone to GPUs with CPUs on bare-minimum maintenance. Even with mild demand growth, a backlog refresh can produce a real CPU crunch window. That part is fairly solid.</p>
+        <p>So the more accurate framing: <strong>LLM inference itself doesn't eat CPU, but the AI <em>system</em> as a whole — especially once it goes agentic — does, and the past two years severely underinvested in that layer.</strong> The "compute demand up a million times in two years" line has froth, but "agent era CPU demand curve is bending up" is directionally correct, just nowhere near as steep as GPUs.</p>
+
+        <h2>Who the major CPU players actually are</h2>
+        <p>Datacenter CPU is more crowded than the GPU side. Three tiers.</p>
+        <p><strong>Tier 1: x86 duopoly.</strong> Intel (Xeon) and AMD (EPYC) still ship most servers outside hyperscalers. AMD has gone from under 5% datacenter share to roughly half of datacenter CPU revenue in five or six years, riding EPYC's lead in core count, efficiency, and price/performance. Intel is one of the biggest losers of this AI cycle — process trailing TSMC, Xeon losing share on cloud — and is restructuring under Lip-Bu Tan, splitting off foundry, refocusing on products.</p>
+        <p><strong>Tier 2: ARM, the real disruption variable.</strong> Hyperscaler in-house ARM CPUs are the most important silicon trend of the past five years.</p>
+        <ul>
+          <li><strong>AWS Graviton</strong>: earliest and most aggressive. New AWS capacity is now majority Graviton; Lambda, ECS, RDS default to it.</li>
+          <li><strong>Google Axion</strong>: announced 2024, GCP migrating internal workloads onto it.</li>
+          <li><strong>Microsoft Cobalt</strong>: Azure's own design, paired with Maia (AI accelerator).</li>
+          <li><strong>NVIDIA Grace</strong>: paired tightly with GPUs (Grace Hopper, Grace Blackwell). NVIDIA wants to ship GPU + tightly-coupled CPU as one box.</li>
+          <li><strong>Ampere Computing</strong>: the main independent commercial ARM server CPU vendor. Oracle Cloud uses them heavily, but they're getting squeezed by hyperscaler in-house silicon.</li>
+        </ul>
+        <p>The ARM camp eats directly from Intel and AMD's plate. When hyperscalers can design their own, fab at TSMC, and skip x86 licensing and channel margins — and get better efficiency — there's no reason not to.</p>
+        <p><strong>Tier 3: China and specialty.</strong> Alibaba T-Head (Yitian 710) — internal cloud, ARM. Huawei Kunpeng — domestic enterprise/government. Marvell and Broadcom — don't sell general-purpose CPUs but help hyperscalers with custom ARM silicon (Marvell reportedly involved in parts of Google and Amazon's programs).</p>
+        <p><strong>Back to AI inference-adjacent CPU demand:</strong> if you're OpenAI or Anthropic and you don't fab your own, the fastest way to scale sandbox and RL environment capacity is renting from AWS / GCP / Azure — which means the demand actually flows through Graviton / Cobalt / Axion, not necessarily Intel's P&amp;L. Enterprise on-prem and the cloud's "non-self-designed" regions are where Intel and AMD directly benefit. So Lip-Bu Tan's number deserves a discount.</p>
+        <p>Rough probability ranking of the real winners: <strong>AMD ≈ hyperscaler in-house ARM &gt; Intel &gt; Ampere</strong>. Intel is "base intact, share keeps getting nibbled" — not "rocketing on the AI tailwind."</p>
+
+        <h2>How much GPU/CPU does one humanoid robot actually need</h2>
+        <p>Two completely different stories: onboard, and cloud.</p>
+        <h2>Onboard compute</h2>
+        <p>What's actually packed into the chest cavity of a humanoid robot is <strong>far less than you'd think</strong>. Current mainstream:</p>
+        <ul>
+          <li><strong>NVIDIA Jetson</strong>: 80%+ of humanoid robots use this. Jetson <strong>Orin</strong> (last gen, 275 TOPS) is the most common today; <strong>Jetson Thor</strong> (mass production 2025, 2070 FP4 TOPS, designed specifically for humanoids) is becoming the new standard. Figure, Boston Dynamics, Agility, 1X, Apptronik all on this line.</li>
+          <li><strong>Tesla Optimus</strong>: in-house silicon derived from FSD/Dojo lineage.</li>
+          <li><strong>Domestic Chinese line</strong>: Unitree, AgiBot mix Jetson Orin with Horizon and Cambricon NPUs, scattered supply due to export controls.</li>
+        </ul>
+        <p>A typical configuration: <strong>one main SoC</strong> (Jetson Thor class) for VLA model inference and visual perception — GPU + CPU integrated, basically half a workstation. Plus <strong>several microcontrollers / real-time control CPUs</strong> (ARM Cortex-R / x86) for joint servo, force feedback, safety logic — these need millisecond latency, can't host an LLM. <strong>No standalone CPU server.</strong></p>
+        <p>So "how many GPUs and CPUs per robot" — the main compute is one Jetson Thor with GPU + CPU + NPU all in one package, not the discrete-stack pattern of a datacenter. Power budget is around 100W because the battery only holds so much.</p>
+        <h2>Cloud training</h2>
+        <p>This is the heavy compute:</p>
+        <ul>
+          <li><strong>Training VLA foundation models</strong> (Figure's Helix, Physical Intelligence's π0, Google's RT-2 line): industry norm is hundreds to a few thousand H100/H200. Figure hasn't published numbers, but its Microsoft and NVIDIA relationship suggests it's running on Azure H100/B200 clusters.</li>
+          <li><strong>Training simulation/RL policy</strong>: another GPU layer for massively parallel rollouts.</li>
+          <li><strong>Tesla</strong>: Dojo + H100 hybrid, in-house supply.</li>
+        </ul>
+        <h2>Simulation — this is the CPU hog</h2>
+        <p>Back to the CPU thread, this is where robotics companies actually burn CPU cores:</p>
+        <ul>
+          <li><strong>Isaac Sim / MuJoCo / Genesis</strong>-style simulators run thousands of parallel episodes for RL policy training. Physics simulation is <strong>primarily CPU-bound</strong> (NVIDIA is pushing GPU-accelerated Isaac, but the physics engine bottleneck still skews CPU).</li>
+          <li>A real RL cluster is typically <strong>thousands to tens of thousands of CPU cores plus a few hundred GPUs</strong> for the visual rollout part.</li>
+        </ul>
+        <h2>Vendor map</h2>
+        <ul>
+          <li><strong>Onboard main compute</strong>: NVIDIA (Jetson Orin / Thor) dominates; Tesla in-house; domestic uses Horizon / Cambricon as fillers.</li>
+          <li><strong>Joint real-time control</strong>: NXP, TI, ST, Infineon microcontrollers.</li>
+          <li><strong>Training GPU</strong>: NVIDIA (H100/H200/B200/GB200), small share for AMD MI300 and in-house ASICs.</li>
+          <li><strong>Simulation CPU</strong>: AMD EPYC dominant, Intel Xeon and ARM (Graviton) following.</li>
+          <li><strong>Storage and network</strong>: Pure Storage, VAST, NetApp; NVIDIA Spectrum/Mellanox for networking.</li>
+        </ul>
+        <p>So one Figure unit means: <strong>one Jetson Thor-class SoC</strong> (~$3,000–5,000) onboard. Behind it, Figure is burning <strong>thousands of H100s</strong> continuously on training (amortized per unit is the real cost). Plus <strong>tens of thousands of CPU cores</strong> for sim/RL, likely AWS/Azure rented.</p>
+        <p>The genuinely scarce resource isn't GPU or CPU — it's <strong>"an edge SoC small enough to live in a robot but powerful enough to run a VLA model."</strong> Jetson Thor is the de facto monopoly there for 2025–2026. That's also why Mobileye's acquisition of Mentee is interesting: it's a bet that the autonomous-driving SoC supply chain can move sideways into humanoid and challenge NVIDIA on onboard.</p>
+
+        <h2>Mayo Clinic's REDMOD: pancreatic cancer detection up to three years early</h2>
+        <p>At Mayo Clinic, a model called REDMOD was tested on nearly 2,000 historical CT scans previously reviewed and marked normal. It still identified early signs of pancreatic cancer in 73% of cases, sometimes up to three years before diagnosis. Around the two-year mark it detected roughly three times more cases than the radiologists had.</p>
+        <p>The compare on the same set of scans: AI sensitivity 73% vs senior radiologists at 39%. On scans more than two years before diagnosis, AI catches roughly three times as many cases. Pancreatic cancer's five-year survival is under 15% precisely because 85% of cases are caught after spread. If this clears clinical (Mayo's AI-PACED prospective study is underway), it's a life-saving level of progress.</p>
+
+        <h2>Stripe's agent-payment stack: four protocols and a chain</h2>
+        <p>Stripe's release isn't a single product; it's <strong>four protocols and one chain</strong>, an infrastructure bet on the AI agent economy.</p>
+        <p><strong>1. Machine Payments Protocol (MPP).</strong> Open standard co-drafted with Tempo, first published March 18. Core idea:</p>
+        <ul>
+          <li>Let agents and services <strong>negotiate payment directly over HTTP</strong>, no traditional card-network intermediary.</li>
+          <li><strong>Revives HTTP 402.</strong> The "Payment Required" status code has been in the HTTP spec since 1989 and unused for 30 years. MPP turns it on: your API request comes in, the service returns 402 plus a challenge ("you need to pay $0.01 to continue"), the agent wallet returns a signed token, payment goes through, data returns.</li>
+          <li>Supports microtransactions — fractions of a cent per API call. Card rails fundamentally can't do this (minimum fee is around 30 cents).</li>
+        </ul>
+        <p><strong>2. Universal Commerce Protocol (UCP).</strong> A multi-party standard Stripe joined as a Tech Council member, broader scope: cross-platform checkout interop, identity linking, order tracking, secure payment-token exchange. Direct competitor to OpenAI's ACP (Agentic Commerce Protocol). Google sided with UCP (Stripe also partnered with Google so you can buy from inside Gemini); OpenAI sides with ACP. This is the protocol war being fought right now in 2026.</p>
+        <p><strong>3. Tempo — a payment-purpose Layer 1 chain.</strong> Incubated by Stripe and Paradigm, launched in March, claims $5B in on-chain volume:</p>
+        <ul>
+          <li>Designed for high-frequency payments. <strong>No native gas token</strong> — unusual, since most L1s have one.</li>
+          <li>Designed for large-scale agent-to-agent settlement with stablecoins as the base settlement unit.</li>
+          <li>Think "Ethereum alternative redesigned for payments."</li>
+        </ul>
+        <p><strong>4. Shared Payment Tokens.</strong> The mechanism closest to what the agent product page is showing:</p>
+        <ul>
+          <li>You (human) authorize a token to your agent — e.g. "under $10, hotel bookings only, valid 24 hours."</li>
+          <li>Agent uses the token at any Stripe-connected merchant.</li>
+          <li><strong>Agent never sees your real card number or bank account.</strong></li>
+          <li>Revocable at any time.</li>
+        </ul>
+        <p>Same idea as Apple Pay / Google Pay's virtual card numbers, but made programmable along limit, purpose, and time dimensions for the agent case.</p>
+        <p><strong>5. Plus stablecoins and "agentic tokens."</strong> The docs mention upcoming stablecoin and "agentic token" support. Latter is vague — looks like co-issued products with Mastercard and Visa for AI agent contexts.</p>
+        <p>Stack the five layers and the picture is clear: if you're a developer building an agent that buys things on a user's behalf, you used to integrate Stripe, then Alipay/WeChat/PayPal, then write your own fraud check, your own user authorization/revocation, then handle cross-border settlement. Now Stripe gives you a packaged stack: Link Wallet for user authorization, MPP for the agent↔service handshake, UCP for cross-platform interop, Tempo for large-scale settlement, Shared Tokens for credential safety.</p>
+        <p><strong>Stripe's 2026 thesis: a large fraction of future economic transactions will be agent-initiated, and agent-initiated payments aren't a 1990s "credit card + checkout form" pattern — they need a new protocol layer. Stripe wants to be the de facto standard at that layer, the way it became the de facto developer payment integration in the 2010s.</strong></p>
+
+        <h2>Pangram's AI text detection</h2>
+        <p>Per Max, Pangram claims a false-positive rate of 1/10,000. When Pangram says something is AI-generated, you can be highly confident it is. Not infallible — short text, heavily humanized content, or very new models can slip through. But when they flag, they claim 98.99% accuracy that the text is AI-written. Max noted the previous wave of "AI detectors" like GPTZero became a punchline because of constant false positives (e.g. flagging the Declaration of Independence as AI), and says that era is over.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
