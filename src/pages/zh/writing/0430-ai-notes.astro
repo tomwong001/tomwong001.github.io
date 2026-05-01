@@ -1,0 +1,133 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 4月30日";
+const date = "2026-04-30";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年4月30日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Intel 与 agent 时代的 CPU 叙事</h2>
+        <p>LLM 本身的推理（forward pass）依然是 GPU 的活——矩阵乘法、KV cache、attention 这些核心计算放在 CPU 上跑会慢几个数量级。所以"推理拐点到了 → 要买更多 CPU"这个直接因果链是不成立的。但文章真正在讲的，其实是<strong>推理周边的工作负载</strong>，这部分确实是 CPU 密集型的，而且和 agentic AI 的爆发强相关。</p>
+        <p>一是 <strong>agent / tool use 的执行环境</strong>。Claude Code、Devin、各种 coding agent 跑起来，模型生成的代码要在沙箱里执行——编译、跑测试、起容器、文件 I/O，这些全是 CPU 工作。一个 agent 任务可能要起几十个沙箱，每个沙箱后面都是 CPU 核。OpenAI、Anthropic、各家 coding 公司都在大规模铺这种沙箱基础设施。</p>
+        <p>二是 <strong>RL 训练里的 environment / rollout</strong>。RL gym、SWE-bench 这类环境要并行模拟成千上万个 episode，模型推理在 GPU 上，但环境 step 在 CPU 上。RL 越重要，CPU/GPU 的配比就越往 CPU 偏。</p>
+        <p>三是 <strong>serving 基础设施本身</strong>：tokenization、请求路由、batching、KV cache 管理、检索（向量库、BM25）、安全过滤、日志……每一台 GPU 服务器前后都要配相当数量的 CPU 才能喂饱它。</p>
+        <p>四是 Doug 提到的<strong>刷新周期</strong>论点——2020-2021 那波 COVID 大采购的 CPU 已经到自然报废节点，过去两年大家把预算全砸 GPU 了，CPU 只做最低限度维护。所以即使需求只是温和增长，叠加积压的 refresh，也可能出现一个 CPU 紧张窗口。</p>
+        <p>更准确的表述是：<strong>LLM 推理本身不吃 CPU，但 "AI 系统" 整体——尤其是 agent 化之后——是吃 CPU 的，而且过去两年这部分被严重欠投资。</strong> "算力需求两年涨百万倍"那种话有水分，但 "agent 时代 CPU 需求曲线在抬头" 这件事方向上是对的，只是斜率远没有 GPU 那么夸张。</p>
+
+        <h2>CPU 主要 players 是谁</h2>
+        <p>数据中心 CPU 这块比 GPU 那边热闹得多，可以分成三层来看。</p>
+        <p><strong>第一梯队：x86 双寡头。</strong>Intel（Xeon）和 AMD（EPYC）还是绝对主力，几乎所有非超大规模云厂的服务器 CPU 都从这两家买。AMD 过去五六年从市场份额 5% 不到打到现在数据中心 CPU 营收接近一半，靠的是 EPYC（Zen 架构）在核数、能效、性价比上全面压制 Xeon。Intel 是这一轮 AI 周期最大的输家之一，制程被台积电拉开，Xeon 在云上节节败退，Lip-Bu Tan 上任后在做大刀阔斧的重组（剥离代工、聚焦产品）。</p>
+        <p><strong>第二梯队：ARM 阵营，真正的颠覆变量。</strong>超大规模云厂自研 ARM CPU 是过去五年最重要的趋势：</p>
+        <ul>
+          <li><strong>AWS Graviton</strong>：跑得最早最猛，AWS 内部新增容量里 Graviton 占比已经过半，Lambda、ECS、RDS 大量默认跑在上面。</li>
+          <li><strong>Google Axion</strong>：2024 年发布，正在把 GCP 内部 workload 往这边迁。</li>
+          <li><strong>Microsoft Cobalt</strong>：Azure 自研，和 Maia（AI 加速器）一起出。</li>
+          <li><strong>NVIDIA Grace</strong>：专门和 GPU 配对（Grace Hopper、Grace Blackwell），做"GPU + 紧耦合 CPU"的整套方案。</li>
+          <li><strong>Ampere Computing</strong>：商用 ARM 服务器 CPU 主要的独立玩家，Oracle Cloud 大量用，但被 hyperscaler 自研挤压得不轻。</li>
+        </ul>
+        <p>ARM 阵营吃的就是 Intel/AMD 的份额。Hyperscaler 自己设计、台积电代工、去掉 x86 授权和经销利润，能效还更好，没理由不做。</p>
+        <p><strong>第三梯队：中国和 specialty。</strong>阿里平头哥（倚天 710）——阿里云内部用，ARM 路线。华为鲲鹏——制裁后还在迭代，国内政企市场。Marvell、Broadcom——不直接卖通用 CPU，但帮云厂做定制 ARM 芯片。</p>
+        <p><strong>回到 AI 推理周边的 CPU 需求</strong>：如果你是 OpenAI / Anthropic 这种自己不造芯片的，要扩 sandbox 和 RL 环境容量，最快的途径是从 AWS / GCP / Azure 租，那本质上吃的是 Graviton / Cobalt / Axion 的产能，不一定流到 Intel 财报上。但如果是企业自建数据中心，或者云厂的"非自研区域"，Intel 和 AMD 才是直接受益方——所以 Lip-Bu Tan 喊的那个数字要打个折看。</p>
+        <p>真正的赢家概率排序大致是：<strong>AMD ≈ hyperscaler 自研 ARM &gt; Intel &gt; Ampere</strong>。Intel 是"基本盘还在、但份额持续被啃"的姿态，不是"乘 AI 东风起飞"的姿态。</p>
+
+        <h2>一台人形机器人要多少 GPU / CPU</h2>
+        <p>这要分<strong>机器人身上</strong>和<strong>云端</strong>两块讲，因为完全不一样。</p>
+        <h2>机器人本体（onboard compute）</h2>
+        <p>一台人形机器人头里 / 胸腔里塞的算力，<strong>远比想象的小</strong>。当前主流配置：</p>
+        <ul>
+          <li><strong>NVIDIA Jetson 系列</strong>：业内 80% 以上的人形机器人都用这个。Jetson <strong>Orin</strong>（上一代，275 TOPS）现在最普遍，<strong>Jetson Thor</strong>（2025 年量产，2070 FP4 TOPS、专为 humanoid 设计）正在成为新一代标准。Figure、Boston Dynamics、Agility、1X、Apptronik 都在用 NVIDIA 这条线。</li>
+          <li><strong>Tesla Optimus 自研</strong>：用的是 FSD 那套 Dojo 衍生的自研芯片，自己一条线。</li>
+          <li><strong>国产路线</strong>：宇树、智元用 NVIDIA Orin + 部分国产 NPU（地平线、寒武纪）混搭，受出口管制影响在分散供应。</li>
+        </ul>
+        <p>典型配置：<strong>1 颗主 SoC</strong>（Jetson Thor 这种级别）跑 VLA 模型推理 + 视觉感知，里面 GPU + CPU 集成；<strong>若干微控制器 / 实时控制 CPU</strong>（ARM Cortex-R / x86）跑关节伺服、力反馈、安全逻辑——毫秒级延迟，跑不了 LLM；<strong>不需要独立 CPU 服务器</strong>。所以问"一台多少 GPU 多少 CPU"——主算力其实是一颗 Jetson Thor，把 GPU + CPU + NPU 全包了，不是数据中心那种分立堆法。功耗预算大概 100W，因为电池就那么大。</p>
+        <h2>云端训练</h2>
+        <ul>
+          <li><strong>训 VLA 基础模型</strong>（Figure 的 Helix、Physical Intelligence 的 π0、Google 的 RT-2 这一类）：业内规模一般是数百到几千张 H100/H200。</li>
+          <li><strong>训仿真策略 / RL policy</strong>：再加一层 GPU，做大规模并行 rollout。</li>
+          <li><strong>Tesla</strong>：Dojo + H100 混合，自家供应。</li>
+        </ul>
+        <h2>仿真环境 —— CPU 大户</h2>
+        <ul>
+          <li><strong>Isaac Sim / MuJoCo / Genesis</strong> 这种仿真器，并行跑成千上万个 episode 训 RL policy，物理仿真<strong>主要在 CPU 上</strong>（虽然 NVIDIA 在推 GPU 加速的 Isaac，但物理引擎瓶颈仍然偏 CPU）。</li>
+          <li>一个像样的 RL 集群通常是<strong>几千到几万核 CPU + 几百张 GPU</strong> 做 rollout 的视觉部分。</li>
+        </ul>
+        <h2>主要厂商一览</h2>
+        <ul>
+          <li><strong>本体主算力</strong>：NVIDIA（Jetson Orin / Thor）一家独大，Tesla 自研，国产用地平线/寒武纪补。</li>
+          <li><strong>关节实时控制</strong>：NXP、TI、ST、Infineon 的微控制器。</li>
+          <li><strong>训练 GPU</strong>：NVIDIA（H100/H200/B200/GB200），少数用 AMD MI300、自研 ASIC。</li>
+          <li><strong>仿真 CPU</strong>：AMD EPYC 占主导，Intel Xeon、ARM（Graviton 等）跟进。</li>
+          <li><strong>数据存储 / 网络</strong>：Pure Storage、VAST、NetApp，NVIDIA Spectrum/Mellanox 网络。</li>
+        </ul>
+        <p>一台 Figure 03 意味着多少算力：机器人本身一颗 Jetson Thor 级别 SoC（约值 $3000–5000）；Figure 自己背后烧的训练算力是几千张 H100 持续跑（这部分均摊到每台机器人才是真实成本）；仿真 / RL 是几万核 CPU 集群，可能是 AWS/Azure 租的。</p>
+        <p><strong>真正稀缺的不是 GPU 也不是 CPU，是"既能装进机器人又够跑 VLA 模型的 edge SoC"</strong>——这块 Jetson Thor 是 2025–2026 的事实垄断。这也是为什么 Mobileye 收 Mentee 这种动作有意思——它在赌"自动驾驶 SoC 那条产业链可以横向打到 humanoid"，挑战 NVIDIA 在 onboard 的位置。</p>
+
+        <h2>Mayo Clinic 的 REDMOD：胰腺癌提前三年</h2>
+        <p>在梅奥诊所，一种名为 REDMOD 的模型在近 2000 例已由放射科医生审核并标记为正常的 CT 扫描中进行了测试。它仍然在 73% 的病例中识别出胰腺癌的早期迹象，有时甚至在诊断前长达三年。在两年的时间点，它检测到的病例大约是放射科医生的三倍。</p>
+        <p>对照同一批片子的资深放射科医生只有 39% 的敏感度。胰腺癌之所以五年生存率不到 15%，就是因为 85% 都是扩散后才发现的——这个东西如果跑通临床（Mayo 已经在做 AI-PACED 前瞻研究），是真能救命级别的进展。</p>
+
+        <h2>Stripe 的 agent 支付栈：四层协议 + 一条链</h2>
+        <p>Stripe 这次发的不是单一产品，是<strong>四层协议 + 一条链</strong>，可以理解成"为 AI agent 经济铺基础设施"。</p>
+        <p><strong>1. Machine Payments Protocol（MPP，机器支付协议）。</strong>由 Stripe 和 Tempo 联合起草的开放标准，3 月 18 日先发布过。核心思路：</p>
+        <ul>
+          <li>让 agent 和服务之间<strong>通过 HTTP 直接谈支付</strong>，不需要走传统的卡组织通道。</li>
+          <li><strong>复活了 HTTP 402 状态码</strong>——这个码 1989 年就在 HTTP spec 里了，叫 "Payment Required"，30 年没人用过。MPP 把它启用了：API 请求来了，服务返回 402 + 一段 challenge，说"你要付 0.01 美金才能继续"，agent 钱包响应一个签名 token，付款，服务返回数据。</li>
+          <li>支持微支付——一次 API 调用可以是几分之一美分。这是现有信用卡通道完全做不到的（每笔交易至少 30 美分手续费）。</li>
+        </ul>
+        <p><strong>2. Universal Commerce Protocol（UCP，通用商务协议）。</strong>Stripe 进的一个多家共同参与的标准（Tech Council 成员），目标更广：跨平台 checkout 互通、身份链接、订单跟踪、支付 token 安全交换。跟 OpenAI 推的 ACP（Agentic Commerce Protocol）是直接竞争关系。Google 站队 UCP（Stripe 也和 Google 做了合作，让你能直接在 Gemini 里买东西），OpenAI 站 ACP，这是 2026 年正在打的协议战争。</p>
+        <p><strong>3. Tempo —— 一条专门给支付用的 Layer 1 区块链。</strong>由 Stripe + Paradigm 孵化，3 月上线，宣称做了 50 亿美元的链上规模：</p>
+        <ul>
+          <li>专为高频支付设计，<strong>无原生 gas token</strong>（这点很反常——大多数 L1 都有自己的代币）。</li>
+          <li>设计目标：大规模 agent 之间结算，stablecoin 做基础结算单位。</li>
+          <li>可以理解成"为支付重新设计的以太坊替代品"。</li>
+        </ul>
+        <p><strong>4. Shared Payment Tokens（共享支付代币）。</strong>最贴近 agent 页面核心机制：</p>
+        <ul>
+          <li>你（人类）授权一个 token 给 agent，比如"10 美金以下、限酒店预订、有效期 24 小时"。</li>
+          <li>agent 拿这个 token 去任何接 Stripe 的商户结账。</li>
+          <li><strong>agent 永远看不到你的真实卡号或银行账户。</strong></li>
+          <li>出问题随时撤销。</li>
+        </ul>
+        <p>类似 Apple Pay / Google Pay 的"虚拟卡号"思路，但是面向 agent 场景做了限额、用途、时间维度的可编程化。</p>
+        <p><strong>5. 加 stablecoin 和 "agentic tokens"。</strong>文档里说"很快会支持 stablecoins 和 agentic tokens"。后者比较模糊，目前看是和 Mastercard / Visa 这些卡组织合作发的、专门给 AI agent 场景的代币产品。</p>
+        <p>把这五层叠起来：如果你是开发者要做一个"会替用户买东西"的 agent，过去你要集成 Stripe（卡）、集成支付宝 / 微信 / PayPal、自己写 fraud 检测、自己处理用户授权 / 撤销、处理跨境结算。现在 Stripe 给你一套打包：Link Wallet 替用户管授权，MPP 处理 agent ↔ 服务的支付握手，UCP 处理跨平台互操作，Tempo 处理大规模结算，Shared Tokens 处理凭证安全。</p>
+        <p><strong>这就是 Stripe 在 2026 年下的 thesis：未来大量经济交易是 agent 发起的，而 agent 发起的支付不是"信用卡 + checkout 表单"那种 1990 年代的范式，需要全新的协议层。Stripe 想成为这一层的事实标准，就像它在 2010 年代成为开发者支付集成的事实标准一样。</strong></p>
+
+        <h2>Pangram 的 AI 文本检测</h2>
+        <p>根据 Max 的说法，Pangram 的误报率为 1/10,000。如果 Pangram 说某物是 AI 生成的，可以非常有信心它是由 AI 生成的。并不是万无一失——短文本、高度人性化的内容或非常新的模型可能会漏网。但当他们标记某物时，他们声称有 98.99% 的准确率。Max 提到之前 GPTZero 这种"AI 检测"工具经常被嘲笑，因为它们经常给出大量误报，例如说独立宣言是由 AI 编写的，并表示这种情况不再发生了。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
