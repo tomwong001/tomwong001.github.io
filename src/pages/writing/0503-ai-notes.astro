@@ -1,0 +1,153 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 3";
+const date = "2026-05-03";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 3, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>AI-native organizations: when execution cost falls, the org has to be rewritten</h2>
+        <p>Individuals get 15–40% faster with AI; superusers see 10x or more. Companies, however, see <strong>zero measurable gain</strong> (NBER, Goldman Sachs studies). The bottleneck isn't the tooling — it's the organization. Two root causes:</p>
+        <ul>
+          <li><strong>Incentive misalignment</strong> — people are paid by time, not output.</li>
+          <li><strong>Organizational friction</strong> — meetings, approvals, alignment processes were never designed for AI speed.</li>
+        </ul>
+        <p>Three real-world rebuild patterns we've observed:</p>
+        <ul>
+          <li>One company spun all engineering into a subsidiary, keeping only a "GenTech landing" team in-house.</li>
+          <li>Another runs 3–5 person Pods that hit 10x the speed of traditional teams.</li>
+          <li>A third laid off everyone whose primary job was writing code, keeping only AI Architects.</li>
+        </ul>
+        <p>An AI-native org needs end-to-end product ownership, teams formed by trait rather than job title, and context infrastructure as the moat. Flattening alone fails (see Spotify, Zappos, Amazon). You need new incentives, new evaluation, new systems. The real competition isn't Claude Code vs Cursor — it's who builds the AI-native organization first.</p>
+
+        <h2>Bottleneck 1: full-time employees' incentives don't match productivity gains</h2>
+        <p>Full-time employees are paid by time, not output. If AI lets an engineer finish in three days what used to take two weeks, what do they get? Same salary — and probably more work piled on. If they spend the saved time slacking, they're materially better off. Under that incentive structure, no one will push AI to its limits.</p>
+        <p>Faros AI's study of 10,000 developers confirmed this: <strong>developers wrote more code and finished tasks faster with AI, but team delivery speed and business outcomes showed no measurable improvement.</strong> EY found that 88% of employees use AI at work, but only 5% are actually using it to transform how they work. The vast majority just use it for search and summarization.</p>
+        <p>Charlie Munger said he always remembered incentives were the most important factor, and every year he discovered he had still underestimated their impact. For AI productivity, incentive misalignment is the decisive bottleneck.</p>
+
+        <h2>Bottleneck 2: organizational friction eats individual gains</h2>
+        <p>Traditional large companies were designed for information coordination. Meetings, status updates, cross-team alignment, approvals — these aren't bugs, they're features. They exist because, when execution was expensive, you had to make sure every execution was correct, which required heavy upfront alignment.</p>
+        <p>But AI has crushed execution cost to a critical threshold. If you can ship a prototype in hours, the logic of three days of alignment meetings collapses — just build it and let user feedback speak.</p>
+        <p>The catch: when you make one stage faster, the rest of the pipeline doesn't. Code is done, code review queues for two days. Product is ready, legal review takes a week. The bottleneck node erases the individual gain. And when AI lets you skip "necessary" work — like cross-team alignment meetings — the people whose value depended on those meetings will resist. The old production relations push back.</p>
+        <p>An interesting data point: <strong>METR's 2025 study found that experienced developers actually took 19% longer to complete tasks with AI tools — even though they believed they were 20% faster.</strong> Why? Because they spent so much time integrating and verifying AI-generated code into existing systems. Not an AI problem — a workflow-not-redesigned-for-AI problem.</p>
+        <p><strong>AI is a sports car, but you're driving it down an alleyway. The car is fine. Fix the road.</strong></p>
+
+        <h2>Three rebuild case studies</h2>
+        <p><strong>Case 1: a major Chinese tech company spinning execution off into a subsidiary.</strong> A friend who's a GM at a large Chinese tech firm is doing something radical: moving all engineering roles into a subsidiary, keeping only a small core "GenTech landing" team in the parent department. That team's job isn't to write code — it's to bridge tech and business: managing requirements, the AI toolchain, core architecture, ops, and people coordination. The logic: if AI drives the marginal cost of code production toward zero, "writing code" is no longer the core competency. The new core is judgment about technical direction, ability to orchestrate AI tools, and grasp of business context.</p>
+        <p><strong>Case 2: an internal Pod model.</strong> A large company we're training with chose a softer but equally ambitious path: spin up 3–5 person teams outside the existing reporting structure, similar to Meta's Pod model. No traditional reporting lines, no legacy dev process — just a clear product goal and rapid iteration. The target isn't 100% of a big team's output; it's 10% of the headcount delivering 80% of the value at 5–10x the speed. Meta's Reality Labs has gone further still, dissolving the engineer/designer/PM titles in a ~1,000-person developer-tools team and replacing them with three roles: AI Builder (executor), AI Pod Lead (small team lead), AI Org Lead (org manager). Pod Leads run day-to-day; Org Leads manage performance and promotion — explicitly with AI assistance for evaluations.</p>
+        <p><strong>Case 3: a Silicon Valley startup laying off everyone who codes.</strong> Another company we're training with is going the furthest: planning to lay off everyone whose primary job is writing code, keeping only what they call <strong>Conductors</strong> (we call the equivalent role <strong>AI Architect</strong>). Their core work isn't code — it's:</p>
+        <ul>
+          <li><strong>Orchestration:</strong> coordinating AI agents to collaborate efficiently.</li>
+          <li><strong>Boundary setting:</strong> defining success criteria and finish lines for the agents.</li>
+          <li><strong>Measurement:</strong> building evaluation systems for AI output quality.</li>
+          <li><strong>Context management:</strong> organizing and maintaining the context the AI needs.</li>
+        </ul>
+        <p>Their stance: if an engineer is still hand-writing code, they haven't yet learned to use AI properly. (This applies most cleanly to new products, new code, new companies.)</p>
+
+        <h2>End-to-end product ownership</h2>
+        <p>The core problem in traditional orgs: <strong>too many people accountable for process, too few accountable for outcome.</strong> Frontend owns frontend code, backend owns backend, PM owns the PRD, design owns the mocks. Everyone does their part well — and the product is still bad. Because no one owns end-to-end user experience and business outcome.</p>
+        <p>The first principle of an AI-native org: the core team owns the product end-to-end. Not the code, not the mocks — the question of whether the product creates user value and survives in the market.</p>
+
+        <h2>Form teams by trait, not job family</h2>
+        <p>Traditional teams are built by job family: you're frontend, he's backend, she's design. In an AI-native world, AI is blurring these boundaries. A good engineer with AI can produce decent design. A technically-minded PM can prototype directly. A more sensible model is to compose teams by <strong>trait</strong> rather than job title:</p>
+        <ul>
+          <li><strong>Builder / Pirate</strong> — turns ideas into reality. Core skills: execution and speed. One company calls this role "Pirate" — get to the goal by any means, leave the rest to the Architect.</li>
+          <li><strong>Architect</strong> — makes systems scalable and maintainable. Builder makes it work; Architect makes it keep working at scale. Owns system design, technical choices, and long-term tech debt.</li>
+          <li><strong>Taste Maker</strong> — has aesthetic judgment. In an era of mass AI generation, "what is good?" becomes the central question. Owns quality, experience, and the difference between usable and delightful.</li>
+          <li><strong>Signal Reader</strong> — understands user needs and reads market signals. Constantly running quant/qual research, always answering: are we building what the market actually wants?</li>
+          <li><strong>Decision Maker</strong> — can decide under uncertainty and generate effective initiatives. In small teams, no layered approvals reduce risk for you. Someone has to call it with incomplete information and own the outcome.</li>
+        </ul>
+        <p>The ideal AI-native team is 3–5 people, each with some combination of these traits and a clear primary one. They define their work by what the team needs now, not by job title.</p>
+
+        <h2>Context is competitive advantage</h2>
+        <p>One thing is severely underrated in AI-native orgs: <strong>context</strong>. The same model produces dramatically different output quality depending on the input context. Which means: <strong>your value in the org increasingly depends on how high-quality the context you provide to AI (and colleagues) is, not on how many lines of code you can output.</strong></p>
+        <p>A three-layer methodology for <strong>Context Architecture</strong>:</p>
+        <ul>
+          <li><strong>Context Org Chart (concept layer):</strong> defines what context a project needs, where it lives, who maintains it, and how it should be progressively exposed to AI.</li>
+          <li><strong>Context Architecture (technical layer):</strong> three-tier memory (working, project, organizational); progressive loading so AI gets exactly the context needed, no more no less; continuous distillation from raw notes/discussions into high-quality insight; rule injection so your team's most important standards are enforced automatically.</li>
+          <li><strong>Context Toolchain (execution layer):</strong> Git for context versioning; integrations with Slack/Lark for auto-capture; doc systems and PM tools for automated collection; AGENTS.md / MEMORY.md so every AI entry-point auto-loads org-level context.</li>
+        </ul>
+        <p>Core idea: <strong>the moat of an AI-native org isn't who has the better AI tools — it's who has the stronger context infrastructure.</strong></p>
+
+        <h2>What decision-makers should do today</h2>
+        <ol>
+          <li><strong>Find a small enough product line and stand up an AI-native team to experiment.</strong> 3–5 people, end-to-end ownership. Outcome metrics, not process metrics. Full tools and authority. Don't make them follow legacy process.</li>
+          <li><strong>Invest in context infrastructure.</strong> Not more AI tools — structure the team's knowledge, processes, and decision history so AI can consume it. A great context infrastructure usually beats a stronger model.</li>
+          <li><strong>Redesign incentives.</strong> If people are paid by time and evaluated on process, they have no reason to fundamentally change how they work. Move toward outcome-based pay, or at least let AI-driven efficiency translate into something the employee can feel — autonomy, bonuses, faster promotion.</li>
+          <li><strong>Cultivate Architects / Conductors.</strong> The scarcest future role isn't "person who writes code" — it's "person who orchestrates AI, manages context, and decides under uncertainty." That capability has to be built deliberately.</li>
+        </ol>
+
+        <h2>Why companies will lay off</h2>
+        <p><strong>Harmony + universal coverage = inefficiency.</strong> The team is competent and gets along, but to protect everyone's role and dignity, the productivity surplus AI brings is diluted by redundant process and meetings. Plainly: people who use AI well are forced to operate at the pace of people who don't.</p>
+        <p>We routinely observe AI-native individuals completing in days what traditional teams take months for. But these people, inside the org, rarely get matching incentives — and may even face danger. Going too fast makes others uncomfortable, and they push back unconsciously.</p>
+        <p>The PM role probably has to evolve too: from "increase connections between people" to "increase coordination between people and AI." Pursuing effectiveness is, fundamentally, a kind of anti-collaboration — fewer human-human links, more human-AI links.</p>
+
+        <h2>Cursor UI/UX lead: software is a stack of concepts</h2>
+        <p>Ryo's framing: software's essence is not code or pixels but <strong>concepts and the relationships between them</strong>. "My understanding of software is that it's a concept, then relationships between concepts. Every layer is connected to the same blob of concepts. If you know what you're trying to do, there's an optimal solution."</p>
+        <p>The implication: designers shouldn't start from the page — start from the atomic concept. TikTok's essence is "list of videos," Notion's is "blocks and pages," Cursor's is "agents and models." When the underlying concept is clear, the UI is its natural extension. When the concepts are messy, no amount of pretty animation saves you from "AI Slop."</p>
+
+        <h2>Talking to AI: imagine it has amnesia. Prompts matter — don't get lazy.</h2>
+
+        <h2>What PMs do in the AI era</h2>
+        <p>For PMs and designers: your most important job is no longer writing PRDs. It's defining <strong>"what is good"</strong> — not by listing a hundred requirements, but by pointing at five examples and saying "like this." Your intuition for quality is the source of the product's soul; AI does the technical work under that soul's direction.</p>
+        <p><strong>"Care"</strong> is the door to quality. You have to care to feel the difference between good and bad. A person with no feeling for food can't tell good from bad; a person with no feeling for writing can't see high from low; a person with no feeling for product can't direct AI toward something good.</p>
+        <p>This is why Pirsig invented "gumption" — and the "gumption trap." Quality requires you to care. Caring requires energy and enthusiasm. If you're consumed by trivia, ground down by process, drained by meaningless repetition, you lose the capacity to feel quality at all. <strong>AI in this sense should be an amplifier of human quality-judgment</strong>: it absorbs the static labor that consumes your gumption, freeing you to do what you're best at — feel, judge, care.</p>
+
+        <h2>Why "fine-tune" became "customization / continued pretraining"</h2>
+        <p>Why don't people say fine-tune anymore? "Traditional fine-tuning is the supervised-learning playbook. It doesn't work on big models. After you do it, post-training and alignment are basically broken."</p>
+        <p>Why this matters: it directly punctures a misconception many people "know intellectually but still do in practice." The traditional fine-tune intuition comes from the small-model era — you supervise on a downstream dataset, metrics go up, everyone's happy. But in the big-model era, the capability you actually depend on lives in the post-training stack (alignment, preference learning, verifiable rewards, tool use, reasoning style). Once you crudely overwrite weights with traditional supervised fine-tune, common results: instruction-following degrades, alignment warps, output distribution narrows, even safety boundaries break.</p>
+        <p>The popularity of "customization / continued pretraining / domain adaptation" reflects an industry recognition: <strong>we want to add capability, domain, or context length without breaking the alignment structure — not swing a supervised hammer everywhere.</strong></p>
+
+        <h2>The new training pipeline: pre / mid / post</h2>
+        <p>The old binary was simple: capability is fully grown in pretraining; everything after is just teaching it how to behave. The new mental model cuts the middle out:</p>
+        <ul>
+          <li><strong>Pre-training:</strong> still large-scale compression, learning general representations.</li>
+          <li><strong>Mid-training:</strong> targeted addition of <strong>structural capability</strong> — extending context window from 8K to 200K, injecting deep domain knowledge (code, math, medicine), teaching a specific reasoning paradigm. Not behavior preferences — capability extensions. Not appropriate to bury in the original pretraining (data volume insufficient, or it would pollute general capability).</li>
+          <li><strong>Post-training:</strong> tuning the now-existing capabilities into usable behavioral policies — alignment to human preference, verifiable rewards (RLVR, e.g. math problems where correct is correct), tool-call style, chain-of-thought format.</li>
+        </ul>
+
+        <h2>What "bad data" means, and how to scale taste</h2>
+        <p>A great example of bad data, courtesy of AI2: a Reddit subreddit where every comment is mimicking microwave sounds — and then suddenly a "ding" with a totally different text distribution appears, and loss explodes. SEO spam, dead/parked websites, all need filtering.</p>
+        <p>How can humans possibly review all of this? Taste isn't scalable. The engineering answer: "Look how much text Google can index. The search stack already does this well. Tools are scalable — the key is asking the right question and using tools well." A practical addition: "You can also use a language model to clean it — let it look at this corpus and judge whether the quality is fine."</p>
+        <p><strong>Does using a model to clean data for a model add information?</strong> The key asymmetry: "Generating good text is harder than judging whether text is good. The model can't generate it well, but it can recognize bad text and filter it out. Finding is easier than generating — that's the asymmetry."</p>
+        <p>This is worth chewing on: in many spaces, <strong>discrimination/filtering complexity &lt; generation/construction complexity</strong>. So "model as filter / reviewer / QC" can work in engineering even if it doesn't create new information. On synthetic data: distillation can push in this direction "for one or two steps, but where the boundary is, we still have to explore."</p>
+
+        <h2>The benchmark leakage problem</h2>
+        <p>A real industry scenario worth understanding: data vendors selling "score-boosting datasets." "They might guess which benchmarks you'll test on, then paraphrase data into your training set. No exact match, but leakage. Testing only on public benchmarks is dangerous." The conclusion: <strong>every company needs its own secret evaluation benchmark, and never disclose it.</strong></p>
+        <p>The practical takeaway on data ordering: <strong>if you want the model to be good at something, save that data for the very end of training, don't spread it evenly across the run.</strong> High-quality data (curated code, textbooks, professional writing) goes late. Junk data (raw web crawls) goes early. This is why "annealing" / "cooldown" phases exist now — a final pass on a batch of ultra-high-quality data near the end of training.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
