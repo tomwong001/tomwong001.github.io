@@ -1,0 +1,160 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月3日";
+const date = "2026-05-03";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月3日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>AI Native 的组织形态：当执行成本下降，组织必须重写</h2>
+        <p>AI 让个人快了 15-40%（超级个体有 10x+），但公司却看到<strong>零可衡量提升</strong>（NBER、Goldman Sachs）。瓶颈不在工具，在组织。两个根因：</p>
+        <ul>
+          <li><strong>激励错配：</strong>按时间付薪，不按产出付薪。</li>
+          <li><strong>组织摩擦：</strong>会议、审批、对齐流程不是为 AI 速度设计的。</li>
+        </ul>
+        <p>三个组织重建的样本：一个把所有开发扔进子公司；一个跑 3-5 人的 Pod 做到 10 倍速；一个裁掉所有写代码的人只留 AI Architect。</p>
+        <p>AI Native 组织需要：端到端的产品负责制、按特质而非岗位头衔组队、以 Context 基础设施为护城河。光扁平化会失败（参见 Spotify、Zappos、Amazon）。你需要新的激励、新的评估、新的系统。真正的竞争不是 Claude Code vs Cursor，而是谁先建成 AI Native 的组织。</p>
+
+        <h2>瓶颈一：全职员工的激励结构和生产力提升不对齐</h2>
+        <p>全职员工按时间付薪，而不是按实际产出付薪。如果你是工程师，AI 让你三天做完了以前两周的工作，你得到的好处是什么？薪水不变。接下来大概率会被塞更多的活。而如果你把省下来的时间用来「摸鱼」，你反而可能日子更好过。在这种激励结构下，全职员工没有动力把 AI 用到极致。</p>
+        <p>Faros AI 对 10,000 名开发者的研究已经证实了这一点：<strong>开发者用了 AI 之后代码写得更多、任务完成更快，但团队的交付速度和业务结果没有可衡量的提升。</strong>EY 的调查也指出，88% 的员工在工作中使用 AI，但只有 5% 真正在用 AI 来转变工作方式——绝大部分人只是用它做搜索和摘要这种基础任务。</p>
+        <p>芒格说过，他一直记得 incentive 是最重要的因素，但每年都会发现自己低估了 incentive 的影响。在 AI 提升生产力上，incentive 的错配，一定是最决定性的瓶颈。</p>
+
+        <h2>瓶颈二：组织摩擦会吞噬个人效率的提升</h2>
+        <p>传统的大公司组织是为信息的协作和协同而设计的。会议、汇报、跨团队对齐、审批流程——这些不是 bug，而是 feature。它们存在的原因是：在执行成本昂贵的年代，你需要确保每一次执行都是正确的，所以需要大量的前置对齐。</p>
+        <p>但 AI 已经把执行成本压到了一个临界点。如果你可以在几个小时内完成一个原型，那花三天开会对齐需求的逻辑就崩塌了——你不如先做出来，让用户反馈说话。</p>
+        <p>问题是，当你把事情做快了，流程中的其他环节并没有变快。代码写完了，code review 排队两天。产品做好了，等待法务审批一周。一个人的效率提升被整个流水线的瓶颈节点抹平。更麻烦的是，当你因为 AI 而减少了某些「必要的」工作——比如不再需要那么多跨团队对齐会议——那些以前靠这些会议来证明自身价值的人会感到不安。旧的生产关系会反扑。</p>
+        <p>一个有意思的现象是：<strong>METR 2025 年的研究发现，经验丰富的开发者使用 AI 工具后，完成任务实际上多花了 19% 的时间——尽管他们自己相信快了 20%。</strong>为什么？因为他们花了太多时间在 AI 生成的代码和已有系统的整合、验证上。这不是 AI 的问题，而是工作流没有为 AI 重新设计。</p>
+        <p><strong>AI 是一辆跑车，但你把它开在了胡同里。问题不在车，在路。</strong></p>
+
+        <h2>三个重建样本</h2>
+        <p><strong>案例一：大厂剥离执行层——「开发全部放到子公司」。</strong>某国内头部大厂的 GM 正在做一件激进的事：把所有开发岗位全部转移到子公司，部门在技术上只保留一个核心的 GenTech 落地团队。这个团队的职责不是写代码，而是做技术和业务之间的桥梁——对接需求、管理 AI 工具链、维护核心架构、负责运营和人员协调。逻辑是：如果 AI 让代码生产的边际成本趋近于零，那「写代码」这件事就不再是核心竞争力。核心竞争力变成了对技术方向的判断、对 AI 工具的编排能力、以及对业务 context 的理解。</p>
+        <p><strong>案例二：大厂内部孵化小团队——「Pod 模式」。</strong>某大厂团队选择了一种更温和但同样有企图心的路径：在现有组织架构之外，新创一些 3-5 人的小团队——类似 Meta 的 Pod 模式。这些团队不走传统的汇报线，不遵循老的开发流程，而是以一个明确的产品目标为导向，快速迭代。目标不是做到大团队的 100%，而是用 10% 的人力，达成 80% 的效果，但速度快 5-10 倍。Meta 在 Reality Labs 走得更远：在一个约 1,000 人的开发者工具团队中，取消了传统的工程师、设计师、PM 等职能头衔，统一使用三个角色：AI Builder（执行者）、AI Pod Lead（小团队负责人）、AI Org Lead（组织管理者）。Pod Lead 管日常执行，Org Lead 管绩效和晋升——而且后者明确引入了 AI 辅助来做绩效评估。</p>
+        <p><strong>案例三：硅谷初创公司——「裁掉所有写代码的人」。</strong>另一家硅谷初创公司走得更远：他们准备裁掉所有以写代码为主要工作的人，只保留他们称为 <strong>Conductor</strong> 的角色（在我们的课程中叫 <strong>AI Architect</strong>）。这些角色的核心工作不是写代码，而是：</p>
+        <ul>
+          <li><strong>Orchestration：</strong>编排和管理 AI Agents，让它们高效协作。</li>
+          <li><strong>边界设定：</strong>为 AI Agents 设立成功的标准和终点线。</li>
+          <li><strong>Measurement：</strong>建立有效的度量体系来评估 AI 输出质量。</li>
+          <li><strong>Context 管理：</strong>组织和维护 AI 需要的上下文信息。</li>
+        </ul>
+        <p>他们的观点很直接：<strong>如果一个工程师还在亲手写代码，说明这个人还没学会怎么真正用好 AI。</strong>（当然，这句话更适用于新产品、新代码、新公司。）</p>
+
+        <h2>原则一：End-to-End 对产品负责</h2>
+        <p>传统组织的核心问题是：<strong>太多人对流程负责，太少人对结果负责。</strong>前端工程师对前端代码质量负责，后端对后端负责，PM 对 PRD 负责，设计对设计稿负责。每个人都做好了自己的环节，但最终产品可能很差。因为没有人端到端地对整个产品的用户体验和商业结果负责。</p>
+        <p>AI Native 组织的第一原则是：<strong>核心团队必须端到端地对产品负责。</strong>不是对代码负责，不是对设计稿负责，而是对用户能不能从产品中获得价值、这个产品能不能在市场上跑通负责。</p>
+
+        <h2>原则二：按 Trait 组队，而不是按 Job Family</h2>
+        <p>传统的团队构成是按 Job Family 来的：你是前端工程师、他是后端工程师、她是设计师。但在 AI Native 的世界里，AI 正在模糊这些职能边界。一个好的工程师借助 AI 可以做出不错的设计，一个有技术感的 PM 可以直接用 AI 搭出原型。更合理的组队方式是按 <strong>Trait</strong>（特质）而非 Job Title 来组织：</p>
+        <ul>
+          <li><strong>Builder / Pirate</strong>——负责把想法变成现实的人。核心能力是执行力和速度。有公司把这个角色叫做 Pirate（海盗）：不择手段，尽快达成目的，剩下的事交给 Architect。</li>
+          <li><strong>Architect</strong>——负责让系统可扩展、可维护的人。Builder 做出来的东西能跑，Architect 确保它能持续地跑、大规模地跑。关注系统设计、技术选型、长期技术债务管理。</li>
+          <li><strong>Taste Maker</strong>——有审美、有品味的人。在 AI 生成大量内容的时代，「什么是好的」变成了越来越关键的判断。负责把控质量、提升体验、确保产品不只是能用，而是好用、想用。</li>
+          <li><strong>Signal Reader</strong>——理解用户需求、能从市场中捕捉信号的人。不断做用户调研（定量或定性），不断回答：我们做的东西，是不是市场真正需要的？</li>
+          <li><strong>Decision Maker</strong>——能在不确定性中做决策、不断产生有效 initiative 的人。在小团队中，没有层层审批来帮你降低决策风险，需要有人能在信息不完整的情况下做出判断，并承担后果。</li>
+        </ul>
+        <p>一个 AI Native 的小团队，理想状态是 3-5 个人，每个人身上都有上述 Trait 的某种组合，但有明确的主导 Trait。他们不按 Job Title 来定义工作范围，而是按团队当前最需要什么来灵活调整。</p>
+
+        <h2>原则三：Context 就是竞争力</h2>
+        <p>在 AI Native 的组织中，有一个东西的重要性被严重低估了：<strong>Context</strong>。AI 工具的效果高度依赖输入 context 的质量。同样的模型，给它一句模糊的指令和给它一整套清晰的规格说明、历史数据、用户反馈，产出的质量天差地别。这意味着：<strong>你在组织中的价值，越来越取决于你能为 AI（和同事）提供多高质量的 context，而不是你自己能产出多少行代码。</strong></p>
+        <p><strong>Context Architecture（上下文架构）方法论的三个层面：</strong></p>
+        <ul>
+          <li><strong>Context Org Chart（概念层）：</strong>定义一个任务或项目需要哪些 context，谁负责产生和维护，散落在哪里，应该如何组织起来，并渐进式暴露给 AI。</li>
+          <li><strong>Context Architecture（技术架构层）：</strong>分层管理（工作记忆/项目记忆/组织记忆三层）；渐进式加载，让 AI 在执行任务时自动找到并加载它需要的那部分 context，不多不少；持续提炼，把会议纪要、Slack 讨论、设计文档等 raw context 加工成高质量 insight；规范注入，把团队的设计规范、平衡标准、代码质量要求写成 AI 能理解的规则注入到工作流。</li>
+          <li><strong>Context Toolchain（工具链）：</strong>用 Git 做 context 的版本管理和持久化存储；接飞书/Slack 让日常沟通中的关键信息自动沉淀；接文档系统和项目管理工具让 context 采集更自动化；配置 AGENTS.md、MEMORY.md 让每个 AI 入口都能自动加载组织级 context。</li>
+        </ul>
+        <p>核心思想：<strong>AI Native 组织的护城河不在于谁用的 AI 工具更好，而在于谁的 context 基础设施更强。</strong></p>
+
+        <h2>如果你是决策者，现在应该做什么</h2>
+        <ol>
+          <li><strong>找一个足够小的产品线，组建一个 AI Native 的小团队做试验。</strong>3-5 个人，端到端负责一个产品或产品的一个模块。给他们明确的结果指标（而非过程指标），给他们充分的工具和权限。不要让他们走传统流程。</li>
+          <li><strong>投资 Context 基础设施。</strong>不是买更多 AI 工具，而是把团队的知识、流程、决策历史结构化，让 AI 能够消费这些 context。好的 context 基础设施的效果，往往比换一个更强的模型更显著。</li>
+          <li><strong>重新设计激励机制。</strong>如果你的员工按时间付薪、按过程考核，那他们没有动力用 AI 彻底改变工作方式。考虑按结果付薪的模式，或者至少让 AI 带来的效率提升可以转化为员工可感知的收益——无论是更多的自主时间、更高的奖金、还是更快的晋升。</li>
+          <li><strong>培养 Architect / Conductor 型人才。</strong>未来最稀缺的不是能写代码的人，而是能编排 AI、管理 context、在不确定性中做判断的人。这种能力需要刻意培养。</li>
+        </ol>
+
+        <h2>为什么会裁员</h2>
+        <p><strong>和谐 + 普适 = 低效。</strong>团队水平正常，大家相处融洽，但因为要顾及每个人的岗位和面子，AI 带来的生产力溢出被冗余的流程和会议稀释了。说白了，那些能用好 AI 的人，被迫要去适配用不好 AI 的人。</p>
+        <p>我们已经能经常观测到，AI native 个体一个人几天能完成传统团队几个月的工作。但这种人在组织里，非但很难得到对应的激励，甚至会有危险——你太快了，会让别人难受，下意识地抵触。</p>
+        <p>所以 PM 的职位其实有时候也需要变一下，之前是增加人与人之间的链接，现在可能也要增加人与 AI 的协同。追求有效，本质上是在进行一场反协作——减少人与人的连接，增加人与 AI 的连接。</p>
+
+        <h2>Cursor UI/UX lead：软件是「概念的堆叠」</h2>
+        <p>Ryo 提出了一个很有哲学高度的观点：软件的本质并非代码或像素，而是<strong>概念（Concepts）及其相互关系</strong>。</p>
+        <p>「我对软件的理解，它就是一个概念，然后概念和概念之间的关系。每一层都连着同一坨概念，如果你知道你想做什么，它是有最优解的。」</p>
+        <p>深层解读：设计师不应从「页面」出发，而应从「原子概念」出发。例如，TikTok 的本质是「List of videos」，Notion 是「Blocks & Pages」，Cursor 是「Agents & Models」。当底层的概念逻辑清晰时，上层的 UI 只是这个概念的自然延伸。如果概念混乱，加再多漂亮动效也是「AI Slop」。</p>
+
+        <h2>和 AI 对话可以想象他有健忘症</h2>
+        <p>prompt 很重要，还是不能偷懒。</p>
+
+        <h2>PM 在 AI 时代需要干嘛</h2>
+        <p>对产品经理/设计师：你最重要的工作不再是写 PRD，而是定义<strong>「什么是好的」</strong>。不是通过列出一百条需求，而是通过指着五个例子说「像这样」。你对良质的直觉是产品灵魂的来源，AI 只能在这个灵魂的指引下做技术层面的事。</p>
+        <p><strong>「Care」</strong>——关切、在乎——是通向良质的门。你得在乎，才能感受到好与不好。一个对食物无感的人分不出好坏，一个对文字无感的人看不出高下，一个对产品无感的人也无法指导 AI 做出好东西。</p>
+        <p>这就是为什么 Pirsig 发明了「gumption」（干劲）这个概念，以及「gumption trap」（干劲陷阱）。良质的前提是你在乎，在乎的前提是你有精力和热情去在乎。如果你被琐事消耗、被流程磨灭、被无意义的重复劳动抽干——你就失去了感受良质的能力。</p>
+        <p><strong>AI 在这个意义上，恰恰应该是人类良质能力的放大器：</strong>它接管那些消耗你 gumption 的静态劳动，把你解放出来去做你最擅长的事——感受、判断、关切。</p>
+
+        <h2>为什么大家不说 fine-tune，而说「customization / continue pre-training」</h2>
+        <p>「为什么不叫 fine-tune？」回答非常直白：「传统意义上的 Fine Tuning 就是 supervised learning 的那一套……在大模型上不 work。做了之后 post training、alignment 那些基本上都 break 了。」</p>
+        <p>这句话为什么重要？因为它把一个很多人「嘴上知道、手上还在做」的误区直接点破：</p>
+        <ul>
+          <li><strong>传统 fine-tune 的直觉</strong>来自小模型时代：你在一个下游数据集上做监督学习，指标上升，皆大欢喜。</li>
+          <li><strong>但大模型时代</strong>，你真正依赖的能力往往来自后训练体系（对齐、偏好学习、可验证奖励、工具使用、推理风格等）。你一旦用「传统 supervised fine-tune」粗暴改权重，常见后果是：指令遵循变差、对齐变形、输出分布变窄（更单一）、甚至安全与拒答边界乱掉。</li>
+        </ul>
+        <p>所以「customization / continue pre-training / domain adaptation」这些词的流行，本质是行业在承认：<strong>我们要的是「在不破坏对齐结构的前提下，补能力/补领域/补上下文长度」，不是「用一把 supervised 的锤子到处敲」。</strong></p>
+
+        <h2>新的训练流水线：pre / mid / post</h2>
+        <p>旧的二分法的潜台词是：能力在预训练里全长好了，后面只是「管教」它怎么表现。新的心智模型把中间切了一刀：</p>
+        <ul>
+          <li><strong>Pre-training：</strong>还是大规模压缩，学通用表征。</li>
+          <li><strong>Mid-training：</strong>专门补<strong>结构性能力</strong>——比如把上下文窗口从 8k 拉到 200k、注入某个领域的深度知识（代码、数学、医学）、教会模型某种推理范式。这些不是「行为偏好」，是<strong>能力本身的扩展</strong>，但又不适合塞在最初的预训练里（数据量不够大、或者会污染通用能力）。</li>
+          <li><strong>Post-training：</strong>把已经具备的能力<strong>调成可用的行为策略</strong>——对齐人类偏好、可验证奖励（RLVR，比如数学题对就是对）、工具调用风格、思维链格式等。</li>
+        </ul>
+
+        <h2>什么叫「坏数据」，以及如何把 taste 规模化</h2>
+        <p>一个非常经典的「坏数据」例子（来自 AI2 的分享）：「Reddit 上有个 subreddit，所有 comment 都在模拟微波炉声音……突然来个『叮』，文本域完全不一样，会导致 loss 爆炸。」此外 SEO 垃圾文本、无用网站等都要过滤。</p>
+        <p>「人怎么可能看过来？taste 不 scalable。」工程派的答案：「Google 能 index 多少文本？搜索那套技术现存已经能做得很好……工具是 scalable 的，关键是要问这个问题、知道用工具把它做好。」以及一个现实做法：「也可以用 language model 去洗……让模型看这套文本有没有质量问题。」</p>
+        <p><strong>「用模型洗模型数据」有没有信息增量？</strong>关键的不对称：「生成文本比理解文本好不好更难……模型生成得不好，但它知道不好，就能过滤掉。找比生成更简单，有这个 asymmetry。」</p>
+        <p>这句话非常值得反复咀嚼：<strong>在许多空间里，判别/筛选的复杂度 &lt; 生成/构造的复杂度。</strong>因此，「用模型做过滤器/评审员/质检员」在工程上可能成立，即使它不创造新信息。对合成数据，他相对克制：「distillation 往这个方向推……可以做一两步，但边界在哪里还要探索。」</p>
+
+        <h2>Benchmark 数据泄露的问题</h2>
+        <p>一个产业现实场景（数据供应商卖「提分数据」）：「他可能在猜测你会测的 benchmark 上 paraphrase 数据进去……没有 exact match 但有 leakage。只测 public benchmark 是很危险的。」结论是：<strong>每家公司得有自己 secret 的 evaluation benchmark，而且永远不能 disclose。</strong></p>
+        <p>实践推论（这才是真正值钱的地方）：</p>
+        <ul>
+          <li>如果你想让模型擅长某种东西，把那种数据<strong>留到训练最后期</strong>喂，而不是均匀分布在整个训练里。</li>
+          <li>高质量数据（精挑细选的代码、教科书、专业写作）放后期，垃圾数据（原始网页爬取）放前期。</li>
+          <li>这就是为什么现在大家会做 「annealing」 / 「cooldown」 阶段——训练快结束时切到一批超高质量数据集中喂。</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
