@@ -1,0 +1,110 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月2日";
+const date = "2026-05-02";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月2日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Agent 调用协调：本质是 while loop 里的工具调用</h2>
+        <p>Agent 的本质就是 while loop 内的工具调用。搭一个 agent 的五步流程：</p>
+        <ul>
+          <li><strong>Step 1：定义 tool。</strong>这个 agent 实际上能做什么？</li>
+          <li><strong>Step 2：权限模式。</strong>plan / read only / ask permission / auto / bypass permission，按风险等级选。</li>
+          <li><strong>Step 3：multi agent orchestration。</strong>多个 agent 协作，context engineer 主要解决「每个 agent 的上下文里到底放什么」的问题。</li>
+          <li><strong>Step 4：protocol first。</strong>协议层与 UI 解耦，协议是契约。</li>
+          <li><strong>Step 5：MCP server。</strong>处理工程现实——server 崩溃、超时、流式反馈。</li>
+        </ul>
+
+        <h2>LLM 时代的蒸馏</h2>
+        <p>LLM 时代的蒸馏有些变化，因为大模型往往是黑盒 API，拿不到 logits 和中间特征。实际操作中更常见的做法是：用大模型生成大量高质量的 instruction-response 数据，然后直接拿这些数据去 SFT 小模型。这其实是一种「数据蒸馏」——Alpaca 用 GPT-3.5 生成 52K 条数据来训练 7B 模型就是典型例子，Vicuna、WizardLM 也类似。虽然不是严格意义上的蒸馏（没有用到 soft labels），但思路一脉相承：用强模型的知识来指导弱模型。</p>
+        <p>另一种方式是 <strong>chain-of-thought 蒸馏</strong>，让大模型不只给答案，还给出推理过程，小模型同时学「怎么想」和「怎么答」，对推理能力的迁移效果更好。</p>
+        <p>实际效果上，蒸馏出来的小模型通常能达到 teacher 性能的 80-95%，但参数量可能只有十分之一甚至更小，推理成本大幅降低。不过蒸馏有天花板——student 的容量有限，太复杂的知识压不进去。</p>
+
+        <h2>Claude Code for PM：只写路线图，其他都不写</h2>
+        <p>一个 PM 的工作方法很值得借鉴：<strong>在新职位上，我写的唯一产品文档是路线图。其他所有内容——每个 PRD 和每个工单——都由 Claude 编写。</strong></p>
+        <p>写作就是思考，所以作为新任 GM，路线图要花时间亲自打磨——理解产品、使用趋势、用户反馈、市场，找参与过早期版本的人聊。但这层思考一旦落到文档上，下游的所有产物都可以生成。</p>
+        <p>需要一个带 MCP 集成的 issue tracker。Agent 来写工单、在看板上移动、保持状态更新。PM 不再阅读或编写工单，只是和 agent 讨论它们。状态用 <strong>now / next / later</strong>，加上「进行中」和「已完成」就够了。</p>
+
+        <h2>AI 产品的六个层次</h2>
+        <ol>
+          <li><strong>Prompt Wrapper：</strong>用户输入 → prompt → LLM → 输出。标题生成器、邮件润色器、简历优化器。</li>
+          <li><strong>Grounded AI / RAG：</strong>AI 能检索文档、知识库、数据库，再基于资料回答。公司知识库助手、课程助教、客服 FAQ。</li>
+          <li><strong>Tool-using AI：</strong>不只回答，还能调用 API、查日历、读邮件、更新 CRM、生成文件。</li>
+          <li><strong>LLM Workflow：</strong>AI 被放进一个可控业务流程中，按步骤完成分类、检索、判断、生成、审批、执行。</li>
+          <li><strong>Agentic Core：</strong>真正的智能体核心，AI 能 plan → act → observe → update state → continue/stop，自己决定下一步并循环执行。</li>
+          <li><strong>AI-native Product / System：</strong>低摩擦交互、上下文智能、记忆、权限、主动触发、评估、guardrails 和 runtime，AI 成为产品或组织的智能层。</li>
+        </ol>
+
+        <h2>GPT-5.5、Grok 4.3、DeepSeek V4 Pro</h2>
+        <p><strong>OpenAI/Codex 动量。</strong>OpenAI 称 GPT-5.5 是其迄今最强发布，API 收入增长是之前发布的两倍，Codex 不到七天收入翻番。</p>
+        <p><strong>Grok 4.3 发布。</strong>Intelligence Index 53 分（比 4.20 高 4 分），输入价格降 40%、输出价格降 60%。GDPval-AA 大幅提升 321 Elo 到 1500，τ²-Bench Telecom 拿到 98%。代价是非幻觉指标掉了 8 个点——能力变强但可靠性下降。社区评价两极：有人认为 Grok 进步很快，但 @scaling01 说它「依然落后中国开源模型」，Andon Labs 称它在 Vending-Bench 2 上「宁愿睡觉也不行动」。</p>
+        <p><strong>DeepSeek V4 Pro 是这周最值得关注的开源权重模型。</strong>1.6T 总参数 / 49B 激活，1M 上下文，hybrid CSA/HCA 注意力，KV cache 压到 10%，长上下文推理 FLOPs 降到 1/4。@omarsar0 实测后说这是第一个「真正能和 Codex/Claude Code 在多轮 agentic coding 上掰手腕」的开源模型。</p>
+        <p><strong>开源 vs 闭源差距正在收窄。</strong>上周三大开源模型（Kimi K2.6、MiMo V2.5 Pro、DeepSeek V4 Pro）的 Intelligence Index 分数在 52–54 之间，Gemini 3.1 Pro Preview 和 Claude Opus 4.7 是 57，GPT-5.5 是 60。差距主要集中在 HLE、CritPt、TerminalBench Hard 和幻觉相关测评。</p>
+
+        <h2>Agent 生态：竞争重心从模型 IQ 转向 harness 设计</h2>
+        <p><strong>Codex vs Claude Code。</strong>OpenAI 的 Codex 产品迭代速度惊人，加了响应式测试工具栏、CI 状态、迁移工具，连「虚拟宠物」都成了爆款功能。@theo 总结：「GPT-5.5 更聪明能解你的卡点，Opus 4.7 品味更好但容易跑偏；Claude Code 在 TTFT/TPS 上明显更慢、工具调用更多，Codex 更直接经济。」但 @scaling01 指出在 PostTrainBench 上 GPT-5.5 并没有打过 Opus 4.7——结果高度依赖 harness。</p>
+        <p><strong>其他 agent 框架。</strong>Devin 加了 shell 内热键调用，Hermes 推出 /goal 循环（监督模型强制 agent 跑到完成），Flue 把自己定位成「可编程版 Claude Code」的 TypeScript 框架。</p>
+        <p><strong>Durable execution 成为标配。</strong>Cloudflare 推 Dynamic Workflows，LangChain 把 create_agent 作为 Deep Agents 底层原语；多用户部署的数据隔离、凭据委托、HITL（人工介入直接作为工具结果返回）都在向生产级靠拢。</p>
+
+        <h2>值得收藏的研究论文</h2>
+        <ul>
+          <li><strong>ReaLM-Retrieve：</strong>让 reasoning 模型在推理过程中检索（而非只在前面 RAG），F1 +10.1%，检索调用减少 47%。</li>
+          <li><strong>OCR-Memory：</strong>把长程轨迹存为图像 + 索引锚点，避免文本摘要丢信息；Mind2Web、AppWorld 在严格上下文限制下达到 SOTA。</li>
+          <li><strong>Recursive Multi-Agent Systems：</strong>agent 间通过共享 latent 计算而非自然语言通信，准确率 +8.3%，token 减少 34.6%–75.6%。</li>
+          <li><strong>Meta FAIR 自改进预训练：</strong>用强 post-trained 模型重写预训练 suffix 并在 RL 式预训练中当 judge——事实性 +36.2%，安全性 +18.5%，生成质量胜率高达 86.3%。</li>
+          <li><strong>Microsoft 合成长程 computer-use 世界：</strong>生成 1000 台带真实文件的合成电脑，跑 8 小时、平均 2000+ 轮 agent 模拟——「computer-use agent 的瓶颈不是模型能力，是真实经验数据」。</li>
+        </ul>
+
+        <h2>本地 LLM 与硬件</h2>
+        <ul>
+          <li>Qwen 3.6 27B、Gemma 4 31B 在本地编程任务上表现拉锯（Gemma 在简洁正确性上更强，Qwen 风格更花哨）。</li>
+          <li>Qwen 团队开源了 Qwen-Scope（针对 Qwen 3.5 全系列的 Sparse Autoencoders），是目前最大规模的开源可解释性工具。</li>
+          <li>PFlash 用小 drafter 模型挑选重要 token、配 BSA 稀疏注意力做 speculative prefill，在 RTX 3090 上 128K 长度比 llama.cpp 快 10 倍（但有人质疑过于「lossy」）。</li>
+          <li>16x DGX Spark 集群（QSFP56 + 200Gbps）、AMD Halo Box（Ryzen 395 + 128GB）等硬件 build 集中亮相。Google 公布 <strong>TPU 8t/8i</strong>：训练性价比提升 170–180%，推理性价比 +80%，数据中心带宽 +300%——为 Gemini 3.1 Pro 和未来万亿参数多模态模型铺路。</li>
+        </ul>
+
+        <h2>为什么合成数据替代不了人工标注</h2>
+        <p>合成数据和人工标注的关系不是「前者会取代后者」，而是<strong>两者擅长的事根本不重叠</strong>。六个合成数据真的搞不定、必须靠人标的场景：</p>
+        <p><strong>1. 任务本身没法自动验证。</strong>合成环境只对「答案可编程判定」的任务有效——找文件、填表、跑命令、改代码。但现实里大量 agent 任务的成功标准是模糊的：「帮我给客户回这封投诉邮件」、「把这份 PPT 改得更有说服力」、「做一份竞品分析」、「帮我筛选一下这堆简历」——「正确」是连续光谱不是 0/1。<strong>只有人能给出 preference 标注</strong>（A 和 B 你更喜欢哪个），这正是 RLHF / DPO 训练的命脉。</p>
+        <p><strong>2. 真实分布的长尾，合成环境造不出来。</strong>合成的 1000 台电脑都是按设计者想象的「标准白领电脑」造的。真实用户的电脑是：桌面 47 个图标一半叫「新建文件夹 (3)」、浏览器装了奇怪插件时不时弹错误、中英日韩文件名混杂路径里有空格和 emoji、上一个员工留下的半成品 Excel 公式引用了已经被删掉的工作表、公司用的某个国产小众 OA 合成环境根本没有。Anthropic、OpenAI 现在还在大量招 contractor 在真实电脑上录屏标轨迹，原因就在这。</p>
+        <p><strong>3. 抓副作用和「歪着完成」的问题。</strong>自动验证器通常只检查最终目标，但 agent 在过程中会干各种你想不到的破坏：「在桌面建汇总表」顺手把无关文件夹删了、「修复这个 bug」把测试都注释掉让它「通过」、「发邮件确认会议时间」邮件真的发了但同时把整个收件箱标成已读。<strong>这种 reward hacking / 歪门邪道完成，自动判定器经常抓不到，人一看就觉得不对。</strong></p>
+        <p><strong>4. 合成生成器自己就是天花板。</strong>合成数据通常是大模型自己造的（自动生成任务、自动判答案）。这有个根本问题：<strong>生成器搞不定的事，它也教不会学生</strong>。想训练 agent 做「前沿数学研究」——但生成器自己就不会出这种题；想训练 agent 做「复杂律所尽调」——生成器没法判断哪份尽调报告做得好；想训练 agent 突破 SWE-bench 最难的那 5%——这些任务连最强模型都过不了，怎么自动验证？到了能力前沿，必须有领域专家手动出题、手动判分。所以 Scale AI、Surge、Mercor 这些公司还在疯狂招 PhD 物理学家、资深律师、senior 工程师做「高质量标注员」，单价已经到 100–200 美金/小时。</p>
+        <p><strong>5. 安全 / 红队 / 价值观对齐。</strong>「这个 agent 是不是偷偷读了我不该读的文件？」「它有没有泄露用户隐私的倾向？」「面对不合理要求该怎么拒绝？」<strong>这些判断本质是价值观题，没有客观答案，只能靠人标。</strong>不同文化、不同公司、不同场景下的「正确」都不一样，合成数据没法编码这些。</p>
+        <p><strong>6. 微调小模型时的「行为示范」。</strong>很多企业部署 agent 时不用最强模型，而是用小模型 + 微调。微调需要的不是海量数据，而是几百上千条<strong>高质量、领域特定、风格一致</strong>的轨迹示范——比如「我们公司做客服回复就是这个口吻」。这种数据合成不出来，必须真实工作流里捞或者请专家写。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
