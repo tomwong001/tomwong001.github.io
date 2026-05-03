@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 2";
+const date = "2026-05-02";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 2, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Agent orchestration: a while-loop of tool calls</h2>
+        <p>At its core, an agent is a while-loop wrapping tool calls. Building one is a five-step pipeline:</p>
+        <ul>
+          <li><strong>Step 1: Define the tools.</strong> What can the agent actually do?</li>
+          <li><strong>Step 2: Permission modes.</strong> Plan / read-only / ask permission / auto / bypass permission. Pick the one that matches the risk profile.</li>
+          <li><strong>Step 3: Multi-agent orchestration.</strong> Multiple agents collaborate, and context engineering is mostly about controlling what each agent sees in its context window.</li>
+          <li><strong>Step 4: Protocol-first design.</strong> Decouple the agent layer from the UI. The protocol is the contract.</li>
+          <li><strong>Step 5: MCP servers.</strong> Handle the messy realities — server crashes, timeouts, streaming feedback.</li>
+        </ul>
+
+        <h2>Distillation in the LLM era</h2>
+        <p>Distillation looks different now because frontier models are mostly black-box APIs — you cannot get logits or intermediate features. The dominant pattern has become <strong>data distillation</strong>: use a strong model to generate a large, high-quality instruction-response dataset, then SFT a smaller model on it. Alpaca generating 52K samples from GPT-3.5 to train a 7B model is the canonical example. Vicuna and WizardLM follow the same playbook. Strictly speaking it is not classical distillation (no soft labels) but the spirit is the same: transfer the strong model's knowledge into a weak one.</p>
+        <p>The other variant is <strong>chain-of-thought distillation</strong>, where the teacher emits not just the answer but the reasoning trace. The student learns "how to think" alongside "what to answer," which transfers reasoning ability much better.</p>
+        <p>In practice, distilled small models hit 80–95% of the teacher's performance with maybe a tenth of the parameters and dramatically lower inference cost. There is a ceiling though — student capacity is bounded, and very complex knowledge will not compress.</p>
+
+        <h2>Claude Code for PMs: write the roadmap and nothing else</h2>
+        <p>One PM's heuristic that resonated: <strong>the only product document I write is the roadmap. Every PRD and every ticket is written by Claude.</strong></p>
+        <p>Writing is thinking, so a new GM should take time drafting the roadmap personally — understand the product, usage trends, user feedback, the market, talk to people who built earlier versions. But once that thinking is on paper, every downstream artifact can be generated.</p>
+        <p>The setup needs an issue tracker with MCP integration. The agent writes tickets, moves them across the board, keeps statuses fresh. The PM no longer reads or writes tickets — they talk about them with the agent. Status columns collapse to <strong>now / next / later</strong>, plus "in progress" and "done." That is all you need.</p>
+
+        <h2>The six layers of AI products</h2>
+        <ol>
+          <li><strong>Prompt Wrapper:</strong> input → prompt → LLM → output. Title generators, email polishers, resume optimizers.</li>
+          <li><strong>Grounded AI / RAG:</strong> the AI retrieves from documents, knowledge bases, or databases before answering. Company knowledge assistants, course TAs, support FAQs.</li>
+          <li><strong>Tool-using AI:</strong> not just answers — calls APIs, reads calendars, updates CRMs, generates files.</li>
+          <li><strong>LLM Workflow:</strong> the AI sits inside a controlled business flow with explicit steps for classification, retrieval, judgment, generation, approval, execution.</li>
+          <li><strong>Agentic Core:</strong> a true agent that plans → acts → observes → updates state → continues or stops. It decides the next step itself and loops.</li>
+          <li><strong>AI-native Product / System:</strong> low-friction interaction, contextual intelligence, memory, permissions, proactive triggers, evals, guardrails, runtime — the AI becomes the intelligent layer of the product or organization.</li>
+        </ol>
+
+        <h2>GPT-5.5, Grok 4.3, DeepSeek V4 Pro</h2>
+        <p><strong>OpenAI/Codex momentum.</strong> OpenAI calls GPT-5.5 its strongest launch yet — API revenue growing 2x faster than prior releases, Codex doubling revenue in under seven days.</p>
+        <p><strong>Grok 4.3.</strong> Intelligence Index 53 (up 4 from 4.20). Input prices down 40%, output down 60%. GDPval-AA jumped 321 Elo to 1500, τ²-Bench Telecom hit 98%. The cost: non-hallucination metrics dropped 8 points — stronger but less reliable. Community is split. @scaling01 says it "still trails Chinese open-source models," and Andon Labs reports it "would rather sleep than act" on Vending-Bench 2.</p>
+        <p><strong>DeepSeek V4 Pro</strong> is the open-weight model worth watching this week. 1.6T total / 49B active, 1M context, hybrid CSA/HCA attention, KV cache squeezed to 10%, long-context inference FLOPs cut to a quarter. @omarsar0's read after testing: this is the first open-source model that can "genuinely arm-wrestle Codex / Claude Code on multi-turn agentic coding."</p>
+        <p><strong>Open vs closed gap is closing.</strong> Last week's three big open-source models (Kimi K2.6, MiMo V2.5 Pro, DeepSeek V4 Pro) sit at Intelligence Index 52–54. Gemini 3.1 Pro Preview and Claude Opus 4.7 are at 57. GPT-5.5 is 60. The remaining gap clusters in HLE, CritPt, TerminalBench Hard, and hallucination evals.</p>
+
+        <h2>Agent ecosystem: the contest moves from model IQ to harness design</h2>
+        <p><strong>Codex vs Claude Code.</strong> Codex is iterating fast — responsive testing toolbar, CI status, migration tools, even a "virtual pet" became a hit feature. @theo's summary: "GPT-5.5 is smarter and unblocks you faster; Opus 4.7 has better taste but wanders. Claude Code is noticeably slower on TTFT/TPS with more tool calls; Codex is more direct and economical." But @scaling01 points out GPT-5.5 doesn't actually beat Opus 4.7 on PostTrainBench — results depend heavily on the harness.</p>
+        <p><strong>Other frameworks.</strong> Devin added shell hotkey invocations. Hermes shipped /goal loops where a supervisor model forces the agent to run to completion. Flue positions itself as "Claude Code, but programmable" in TypeScript.</p>
+        <p><strong>Durable execution is becoming standard.</strong> Cloudflare launched Dynamic Workflows. LangChain made create_agent the primitive underneath Deep Agents. Multi-tenant deploys are converging on data isolation, credential delegation, and HITL (human-in-the-loop responses returned as tool results) — all production-grade concerns now.</p>
+
+        <h2>Research worth bookmarking</h2>
+        <ul>
+          <li><strong>ReaLM-Retrieve:</strong> retrieval during reasoning (not just upfront RAG). F1 +10.1%, retrieval calls down 47%.</li>
+          <li><strong>OCR-Memory:</strong> store long-horizon trajectories as images plus index anchors to avoid information loss in text summaries. SOTA on Mind2Web and AppWorld under strict context budgets.</li>
+          <li><strong>Recursive Multi-Agent Systems:</strong> agents communicate via shared latent computation rather than natural language. Accuracy +8.3%, tokens cut 34.6–75.6%.</li>
+          <li><strong>Meta FAIR self-improving pretraining:</strong> a strong post-trained model rewrites pretraining suffixes and acts as a judge in RL-style pretraining. Factuality +36.2%, safety +18.5%, generation quality wins 86.3% of head-to-heads.</li>
+          <li><strong>Microsoft synthetic long-horizon computer-use worlds:</strong> 1000 synthetic computers populated with real files, 8-hour runs averaging 2000+ agent turns. The takeaway: "the bottleneck for computer-use agents isn't model capability, it's real experiential data."</li>
+        </ul>
+
+        <h2>Local LLMs and hardware</h2>
+        <ul>
+          <li>Qwen 3.6 27B and Gemma 4 31B trade blows on local coding tasks (Gemma cleaner, Qwen flashier).</li>
+          <li>Qwen open-sourced Qwen-Scope — Sparse Autoencoders for the entire Qwen 3.5 lineup, the largest open interpretability toolkit to date.</li>
+          <li>PFlash uses a small drafter to pick important tokens plus BSA sparse attention for speculative prefill. 10x faster than llama.cpp on RTX 3090 at 128K — though some flag it as too lossy.</li>
+          <li>Hardware builds proliferating: 16x DGX Spark cluster (QSFP56 + 200Gbps), AMD Halo Box (Ryzen 395 + 128GB). Google announced <strong>TPU 8t/8i</strong>: training cost-efficiency +170–180%, inference +80%, datacenter bandwidth +300% — the foundation for Gemini 3.1 Pro and future trillion-parameter multimodal models.</li>
+        </ul>
+
+        <h2>Why synthetic data won't kill human annotation</h2>
+        <p>The relationship between synthetic data and human annotation isn't replacement — it's that they're <strong>good at fundamentally different things</strong>. Six places where synthetic data can't reach:</p>
+        <p><strong>1. Tasks that can't be auto-verified.</strong> Synthetic environments only work when the answer is programmatically checkable: find a file, fill a form, run a command, modify code. But many real agent tasks have fuzzy success criteria — "reply to this customer complaint," "make this slide deck more persuasive," "do a competitive analysis," "screen these resumes." "Correct" is a continuous spectrum. Only humans can give preference labels (do you prefer A or B), which is the lifeblood of RLHF / DPO.</p>
+        <p><strong>2. The long tail of real distributions.</strong> 1000 synthetic computers are still built to a designer's idea of a "standard office computer." Real users have 47 desktop icons (half named "New Folder (3)"), browsers loaded with weird plugins, mixed Chinese/Japanese/Korean filenames with spaces and emoji in paths, half-finished spreadsheets from a former employee referencing deleted sheets, niche enterprise software the synthetic environment never imagined. Anthropic and OpenAI are still hiring contractors to record screen-trace data on real machines for exactly this reason.</p>
+        <p><strong>3. Side effects and "completing the wrong way."</strong> Auto-verifiers usually only check the final goal, but agents do unexpected damage along the way: deleting unrelated folders, commenting out tests so they "pass," sending the meeting confirmation but also marking the entire inbox as read. This kind of <strong>reward hacking</strong> is hard for automated judges to catch but humans spot it instantly.</p>
+        <p><strong>4. The synthetic generator is its own ceiling.</strong> Synthetic data is generated by big models (auto-create tasks, auto-judge answers). The fundamental problem: <strong>the generator can't teach what it can't do</strong>. Want to train an agent for frontier math research? The generator can't write the problems. Want it to do complex legal due diligence? The generator can't judge which report is good. At the capability frontier, you need domain experts to write and grade. That's why Scale AI, Surge, Mercor are paying PhD physicists, senior lawyers, and senior engineers $100–200/hour.</p>
+        <p><strong>5. Safety, red-teaming, value alignment.</strong> "Did the agent secretly read files it shouldn't?" "Does it leak user privacy?" "How should it refuse unreasonable requests?" These are values judgments with no objective answer. They depend on culture, company, and context, and synthetic data can't encode that.</p>
+        <p><strong>6. Behavioral demonstrations for fine-tuning small models.</strong> Many enterprise deployments use a small model plus fine-tuning. The need isn't massive data — it's a few hundred to a few thousand <strong>high-quality, domain-specific, style-consistent</strong> trajectory demonstrations: "this is how our company writes customer support replies." That data has to be pulled from real workflows or written by experts. It can't be synthesized.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
