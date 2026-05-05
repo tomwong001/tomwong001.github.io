@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据行业研究报告 — Tom</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --meta: #888;
+    --rule: #d8d4ca;
+    --accent: #1a1a1a;
+    --table-row: #f0ede5;
+    --code-bg: #f3f0e8;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Songti SC", "PingFang SC", "Hiragino Sans GB", serif;
+    font-size: 18px;
+    line-height: 1.75;
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 28px 140px;
+  }
+  header.hd {
+    margin-bottom: 64px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+  header.hd h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+  header.hd .sub {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-weight: 400;
+    font-size: 19px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 22px;
+  }
+  header.hd .meta {
+    font-size: 13px;
+    color: var(--meta);
+    font-style: italic;
+    font-family: Georgia, serif;
+  }
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.4;
+    margin: 56px 0 20px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 36px 0 14px;
+    color: var(--ink);
+  }
+  h4 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 20px 0 8px;
+    color: var(--ink);
+  }
+  p { margin: 0 0 18px; }
+  strong { font-weight: 700; color: var(--ink); }
+  em { font-style: italic; }
+  blockquote {
+    margin: 22px 0;
+    padding: 6px 22px;
+    border-left: 3px solid var(--ink);
+    color: var(--ink-soft);
+    font-style: italic;
+    font-size: 17px;
+  }
+  blockquote p { margin: 6px 0; }
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--rule);
+    margin: 56px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 22px 0 30px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rule);
+  }
+  th {
+    font-weight: 600;
+    background: var(--table-row);
+    color: var(--ink);
+    font-size: 13.5px;
+  }
+  tr:hover td { background: rgba(0,0,0,0.015); }
+  ul, ol { margin: 14px 0 22px; padding-left: 28px; }
+  li { margin-bottom: 8px; }
+  .bigfooter {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    font-size: 13.5px;
+    color: var(--meta);
+    font-style: italic;
+    line-height: 1.7;
+  }
+  .appendix-intro {
+    background: var(--code-bg);
+    padding: 18px 22px;
+    border-left: 3px solid var(--ink-soft);
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    margin: 24px 0 38px;
+  }
+  details {
+    margin: 14px 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    overflow: hidden;
+  }
+  details[open] {
+    background: #fdfcf8;
+  }
+  summary {
+    cursor: pointer;
+    padding: 12px 18px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    user-select: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+";
+    font-size: 18px;
+    color: var(--meta);
+    font-weight: 400;
+  }
+  details[open] summary::after { content: "−"; }
+  summary .status {
+    font-size: 12px;
+    color: var(--meta);
+    font-weight: 400;
+    margin-left: 12px;
+  }
+  details > .body {
+    padding: 4px 18px 14px;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  details > .body p { margin: 8px 0 12px; }
+  details > .body strong { color: var(--ink); font-size: 13.5px; display: block; margin-top: 10px; margin-bottom: 2px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-weight: 600; }
+  .src {
+    font-size: 12.5px;
+    color: var(--meta);
+    font-style: italic;
+    margin-top: 8px;
+    border-top: 1px dotted var(--rule);
+    padding-top: 6px;
+  }
+  .toc {
+    background: var(--code-bg);
+    padding: 18px 22px 14px;
+    margin: 0 0 56px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14.5px;
+    border-radius: 4px;
+  }
+  .toc-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--meta);
+    margin-bottom: 10px;
+  }
+  .toc ol { margin: 0; padding-left: 22px; }
+  .toc li { margin-bottom: 4px; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .pull {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 19px;
+    line-height: 1.55;
+    font-weight: 500;
+    margin: 28px 0;
+    padding: 4px 0 4px 22px;
+    border-left: 3px solid var(--ink);
+    color: var(--ink);
+  }
+  @media (max-width: 600px) {
+    body { font-size: 17px; }
+    .wrap { padding: 50px 18px 100px; }
+    header.hd h1 { font-size: 25px; }
+    header.hd .sub { font-size: 17px; }
+    h2 { font-size: 20px; }
+    table { font-size: 13.5px; }
+    th, td { padding: 8px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hd">
+  <h1>数据行业研究报告</h1>
+  <p class="sub">从交付数据到对模型负责 — 一个行业的第一性原理迁移</p>
+  <p class="meta">by Tom · 2026 年 5 月</p>
+</header>
+
+<nav class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">引子</a></li>
+    <li><a href="#s2">第一性原理：从工具，到数据，到合伙人</a></li>
+    <li><a href="#s3">关于合成数据的几点观察</a></li>
+    <li><a href="#s4">数据公司的三种战略出路</a></li>
+    <li><a href="#s5">未来 10 年最贵的数据</a></li>
+    <li><a href="#s6">收尾</a></li>
+    <li><a href="#appendix">附录 · 数据标注行业 50 家公司痛点横切面</a></li>
+  </ol>
+</nav>
+
+<h2 id="s1">§ 1 · 引子</h2>
+
+<p>三年前，一家前沿模型公司给数据供应商的 brief 大致是这样的：</p>
+
+<blockquote><p>"请按照这份 spec，标好这 50 万张图。两个月内交付，准确率 98%。"</p></blockquote>
+
+<p>今天的 brief 更像这样：</p>
+
+<blockquote><p>"我们模型在 instruction following 这条 eval 上掉了 4 个点。你帮我们想办法，下个版本上来。"</p></blockquote>
+
+<p>这不是甲方刁难乙方，是行业重心整体在搬家。"标注工 / 标注公司"这两个词，正在被静悄悄地替换成"AI 数据合作伙伴 / 模型协同方"。这一替换背后的事实是：数据公司提供的不再只是数据本身，而是 <strong>专家网络背后的 expertise</strong>。前沿模型公司要的也不只是一次性数据交付 — 尤其在垂直领域（医疗、法律、机器人、科研），从模型训练到落地，他们需要 ongoing 的专业判断 — 懂行的人持续参与 spec 设计、eval 设计、edge case 复审。</p>
+
+<p>这种关系下，模型公司和数据公司的边界会比过去更模糊一些（小幅度，不是消失）— 双方在 spec、eval、迭代上的协作会更频繁、更紧密。类似工程行业里 <strong>驻场工程师</strong> 的概念：不是把货送到门口就走，而是带着 expertise 走进客户的研发节奏。</p>
+
+<p class="pull">整篇报告的主线只有一条：AI 数据行业正在从"卖数据 (data provider)"演化到"做合伙人 (data partner)"。</p>
+
+<p>后面所有看似不相关的现象 — 合成数据爆发、Scale 客户出走、Mercor 崛起又脆弱、机器人抢第一视角视频 — 都是这一条迁移在不同侧面的投影。</p>
+
+<hr>
+
+<h2 id="s2">§ 2 · 第一性原理：从工具，到数据，到合伙人</h2>
+
+<p>把 AI 数据行业的演进切成三段，比按"年份"切更清楚。</p>
+
+<p><strong>阶段 1（约 2014–2018）· 卖工具时代。</strong> 代表公司：Labelbox、CVAT、Supervisely。商业模式是 software license — 标注本身是甲方组织自己做（in-house 团队 + BPO 外包），数据公司只卖一个好用的标注界面。这个阶段的护城河是 UX 和插件生态，定价 logic 是 SaaS。</p>
+
+<p><strong>阶段 2（约 2018–2024）· 卖数据时代。</strong> 代表公司：Scale AI、Surge AI、海天瑞声、澳鹏、整数智能等。商业模式从卖软件变成卖人头小时数 — 客户给一份 spec，数据公司组织标注员产出符合 spec 的数据。这个阶段定价 logic 是 BPO（按任务/小时），优秀玩家用 ML 预标注 + 自研工具把毛利做到 50%–60%（Scale），普通玩家停在 20%–25%（Appen 约 24%、TELUS Digital 约 21%）。</p>
+
+<p><strong>阶段 3（约 2024 至今）· 做合伙人时代。</strong> 商业模式 = 用专家网络与 AI 工具持续参与客户研发，按"深度参与"卖。已经看得到的迹象有四类：</p>
+
+<p>(a) 数据公司把"专家市场"本身做成核心产品 — Mercor 30K 活跃专家、35% take rate；Surge ~50K 审核过的 PhD / 律师 / 医师 / 资深工程师；</p>
+
+<p>(b) 评测能力被产品化 — Mercor 开源 APEX / APEX-Agents / APEX-SWE 系列；</p>
+
+<p>(c) 一些深度合作已经接近"驻场"形态 — 数据公司持续参与客户的 eval 节奏、spec 设计、edge case 复审，而不是交付完即结束；</p>
+
+<p>(d) 客户用大额合同给这种关系定价 — Mercor 17 个月 $1M → $500M ARR；Surge 凭 1.5–10× 溢价拿到 Meta 据报 &gt;$150M/yr、Google &gt;$100M/yr 的合同。</p>
+
+<p>阶段 3 的关键不在合同形式上的革命，而在 <strong>能力捆绑</strong> — 客户的能力 KPI 越深绑给数据公司，数据公司的 expertise 就越无法被替代。本质是：数据公司从供应链的下游，被拉到客户研发的并肩位置，模型公司和数据公司的边界开始（小幅度）模糊。</p>
+
+<p class="pull">未来 5 年，能把"专家网络 + 深度参与 + 评测话语权"三件事捆在一起做的公司能持续吃溢价；只能"按 spec 交付数据"的公司，定价权会持续向客户侧迁移，最终回到劳动力套利。</p>
+
+<hr>
+
+<h2 id="s3">§ 3 · 关于合成数据的几点观察</h2>
+
+<p>合成数据近两年扩张明显，行业里对它"会替代标注"的判断也很常见。从公开数据能看到的实际现象，需要做一些区分。</p>
+
+<p><strong>最直观的一个事实</strong>：在合成数据扩张的同时，<strong>高端专家的标注需求和时薪反而在涨</strong>。Surge AI 的 PhD / 律师 / 医师 / 资深工程师标注员被公开报道收 $20–40+/小时，特殊岗位破百；Mercor 的中位数时薪 $85–95/小时，专才上探到 $200–500/小时。这种定价 5 年前不存在。</p>
+
+<p>合成数据真正吃掉的是<strong>简单标注</strong>（识图、分类、转写、初级语料）。它没有 — 短期内也不太可能 — 吃掉<strong>高端的"出题与阅卷"工作</strong>：设计任务、写 rubric、审 edge case、做 verifier、做 judge、做 red-team。这部分的需求反而在被向上挤压。</p>
+
+<p>接回主线：客户最终要的能力 KPI，单靠合成数据拿不到，仍然需要人类专家在 loop 里 — 做 spec 设计者、做 edge case 复审者、做合成数据本身的 verifier。<strong>这正是"合伙人"模式价值的硬核位置</strong>。只能交付简单标注的公司，在合成数据冲击下最先被切走；能持续在高端 loop 里贡献 expertise 的公司，反而吃到更多溢价。</p>
+
+<hr>
+
+<h2 id="s4">§ 4 · 数据公司的三种战略出路</h2>
+
+<p>数据公司做到一定规模之后，长期看大致有三条战略出路可走。每条都有结构性的好处和代价。</p>
+
+<p><strong>路径一：被大公司战略收编</strong>（Scale × Meta 模式）。资本和创始人退出窗口最大，但代价两层：(a) 公司本身被资本结构污染 — Meta 2025 年 6 月以 $14.3B 换 Scale 49% 非投票权之后，OpenAI / Google / Microsoft / xAI 几周内集体离开，理由都是"中立性破坏"；(b) 创始人 / 团队进入大公司后，整合摩擦不小 — 大公司内部往往有自己的平行团队和竞争部门。Wang 进入 Meta 之后领导 Meta Superintelligence Labs，但 Meta 内部的 TBD Labs 据报更倾向使用 Surge 和 Mercor 的数据 — 即使 Meta 自己持有 Scale 49% — 这就是路径一里"团队整合"环节最典型的尴尬。</p>
+
+<p><strong>路径二：自给自足，现金流正向</strong>（Surge 模式）。收入持续正向、不依赖外部融资。Surge 用 $300K 个人储蓄起步，2021 年开始盈利、5 年没融过外部钱，每员工年化 $9M+ 收入，2025 年才做第一轮。这条路径最稳 — 没有资本结构带来的中立性风险，利润撑长期投资。<strong>代价</strong>：规模化窗口期容易错过；天花板取决于创始团队的判断力。</p>
+
+<p><strong>路径三：公开上市</strong>（美国端代表 Innodata 等）。透明度和合规性最强，二级市场流动性好。<strong>代价</strong>：(a) 必须披露大量经营信息（客户结构、单价、毛利、合同期限），客户和竞争对手都看得见；(b) 股价波动会反向影响业务 — 一个客户损失或一次安全事件立刻反映在股价上，又反过来影响新客户决策。</p>
+
+<p>三条路径不是绝对单选 — Surge 已经在融第一轮但仍保持盈利。但 <strong>结构性约束是真实的</strong>：收编路径失中立，自给路径失规模窗口，上市路径失隐私。任何做到 $1B ARR 之后的公司都要在这三个轴上做选择。</p>
+
+<hr>
+
+<h2 id="s5">§ 5 · 未来 10 年最贵的数据</h2>
+
+<p>如果"卖能力 / 做合伙人"是阶段 3 的命题，那"哪些能力 10 年内还会持续值钱"反过来锚定了"哪些数据 10 年内值得下注"。把训练数据按两个维度切：<strong>合成 / 不合成</strong> × <strong>客户 KPI 还在涨 / 已经饱和</strong>。值得花 10 年精力的赛道，落在右上角 — 合成不出来 + KPI 还在涨。</p>
+
+<p><strong>机器人 / 具身智能。</strong> 这条线的需求结构正在切换 — 早期数据主要来自<strong>遥操作 (teleoperation)</strong>：人远程操控机器人采集示范轨迹（ALOHA、RT-X 等代表性数据集）。最近一两年快速崛起的是<strong>第一视角 (egocentric) 视频</strong>：人戴摄像头记录手部动作、家居场景、双手协调，再做姿态映射，给机械臂的训练数据用。Tesla Optimus、Figure、1X、Physical Intelligence、Skild AI、Apptronik 这一批公司过去 18 个月共拿到数十亿美元融资，第一视角是其中关键数据来源之一。这块的产业特征是 <strong>单价相对较低，但量大</strong> — 适合有标注员组织能力 + 设备协调能力的数据公司去吃。</p>
+
+<p><strong>世界模型 / AR &amp; VR。</strong> Sora、Veo、Genie、Pika、Runway 这一批模型都需要带物理 grounding 的视频数据；Meta Project Aria、Apple Vision Pro、Snap Spectacles 把第一视角视频从科研走向规模化获取。这条线和机器人共享一半底层数据，但 KPI 不同 — 机器人要"能做"，世界模型要"能预测"。AR / VR 应用大规模落地还在路上，但底层数据的卡位战已经在前瞻性玩家之间打响。</p>
+
+<p><strong>专业 / 强监管的传统行业</strong>（医疗、法律、金融、保险、科研）。这块合成数据短期替代不掉，主要是两个原因：</p>
+
+<p><strong>(a) 强监管，AI 出错代价大。</strong> 美国 FDA、欧盟 EU AI Act、中国《生成式人工智能服务管理暂行办法》都对高风险领域要求 human-in-the-loop。一次错误诊断、一次错误判例、一次错误风控，代价远高于一次错标的成本 — 客户必须为人类专家的签字付钱。</p>
+
+<p><strong>(b) 行业知识门槛高，付费能力也高。</strong> 能做的人少，肯付的客户多。保险、银行、医院、药企、律所这些传统行业有真实预算和合规需求，标注小时单价可以是普通领域的 5–20 倍。</p>
+
+<p>这三块的共同点：<strong>合成数据替代不掉，监管或物理世界都要求人在回路，客户能力 KPI 还在涨</strong>。下一个十年最贵的数据，最可能就在这里。</p>
+
+<hr>
+
+<h2 id="s6">§ 6 · 收尾</h2>
+
+<p>把整篇报告的判断浓缩成三句。</p>
+
+<p><strong>第一句</strong>：阶段 2 卖数据模式正在结构性老化 — 行业里反复出现的薪酬、支付、治理、法律问题，是 BPO 模式的系统性副产品，不是个别公司的管理水平问题（详细资料见附录）。"标注公司"这个词 5 年后会越来越少听到，留下来的会被叫做"AI 数据合作伙伴"。</p>
+
+<p><strong>第二句</strong>：未来 5 年还能拿到溢价的玩家，必须有"三件套" — 专家网络（不是众包工人）、AI 原生工具链（不是 web UI 的 BPO 工作台）、评测话语权（开源 benchmark + 私有 eval-as-a-service）。少做任一件，会在 18–24 个月内被吃掉。</p>
+
+<p><strong>第三句</strong>：未来 10 年最值得下注的赛道是机器人 + 世界模型 + 专业 / 强监管的传统行业。三类的共同点 — 合成数据替代不掉，监管或物理世界都要求人在回路，客户能力 KPI 还在涨。</p>
+
+<p class="pull">阶段 1 卖工具，阶段 2 卖数据，阶段 3 做合伙人。这个行业最有意思的地方在于，阶段 3 才刚刚开始。</p>
+
+<div class="bigfooter">
+主要事实来源：TechCrunch、Bloomberg、Reuters、CNBC、Forbes、Time、Sacra、Contrary Research、Fortune、Lenny's Newsletter，Mercor / Surge / Scale 官方博客与公开材料。
+</div>
+
+<hr>
+<hr>
+
+<h2 id="appendix">附录 · 数据标注行业公司劣势与问题分析</h2>
+
+<div class="appendix-intro">
+本附录基于对数据标注行业 50 家主要公司的横向梳理。信息源主要来自公开评价平台（Glassdoor、Trustpilot、Reddit、Indeed）、新闻媒体报道与法律诉讼公告。报告主体 §3–§6 的判断建立在这份资料之上。
+</div>
+
+<h3>行业核心问题汇总</h3>
+
+<h4>一、标注员相关问题（最普遍）</h4>
+<table>
+  <thead><tr><th>问题类别</th><th>具体表现</th><th>涉及公司举例</th></tr></thead>
+  <tbody>
+    <tr><td>薪酬问题</td><td>工资过低、与工作量不匹配、低于市场水平</td><td>Appen, Clickworker, Telus Digital, Welocalize, CloudFactory, Toloka, Centific, Macgence</td></tr>
+    <tr><td>支付问题</td><td>支付延迟、不支付已完成工作、账户余额消失</td><td>Scale AI, Appen, LXT, DefinedCrowd, Alignerr, Lionbridge AI, Oneforma</td></tr>
+    <tr><td>账户封禁</td><td>无故封禁账户、达到提现门槛时被封、无解释</td><td>Clickworker, Toloka, Welocalize, Alignerr, Labelbox, DefinedCrowd</td></tr>
+    <tr><td>工作不稳定</td><td>任务量不足、项目突然结束、收入不可靠</td><td>Appen, Clickworker, Joinstellar, Welocalize, Toloka, Welodata</td></tr>
+    <tr><td>沟通不畅</td><td>缺乏反馈、支持团队无响应、问题无法解决</td><td>Appen, dataannotation.tech, Welocalize, Oneforma, DefinedCrowd, Mercor</td></tr>
+    <tr><td>平台体验差</td><td>技术故障、界面不友好、工具难用</td><td>Clickworker, Welocalize, Oneforma, Invisible Tech</td></tr>
+    <tr><td>培训问题</td><td>培训时间长且无薪、考试难度大、不告知失败原因</td><td>Welocalize, Figure Eight, Welodata</td></tr>
+    <tr><td>监控过度</td><td>侵入性软件监控、截屏追踪、强制开摄像头</td><td>Invisible Tech, Turing, Hive AI</td></tr>
+    <tr><td>心理健康</td><td>接触令人不适的内容、缺乏心理健康支持</td><td>Scale AI, Sama, Hive AI</td></tr>
+  </tbody>
+</table>
+
+<h4>二、客户相关问题</h4>
+<table>
+  <thead><tr><th>问题类别</th><th>具体表现</th><th>涉及公司举例</th></tr></thead>
+  <tbody>
+    <tr><td>数据质量不稳定</td><td>标注质量不符合预期、需要额外质检</td><td>iMerit, DefinedCrowd, Defined AI, Welodata</td></tr>
+    <tr><td>沟通困难</td><td>响应缓慢、项目管理不善、缺乏透明度</td><td>Revelo, Welodata, Aligned AI</td></tr>
+    <tr><td>价格问题</td><td>收费过高、隐性费用、性价比低</td><td>Revelo, Lionbridge AI, iMerit, Defined AI</td></tr>
+    <tr><td>交付延迟</td><td>项目进度滞后、无法按时交付</td><td>SuperAnnotate, Welodata</td></tr>
+    <tr><td>服务不灵活</td><td>无法适应敏捷方法、流程僵化</td><td>Telus Digital</td></tr>
+  </tbody>
+</table>
+
+<h4>三、公司管理与文化问题</h4>
+<table>
+  <thead><tr><th>问题类别</th><th>具体表现</th><th>涉及公司举例</th></tr></thead>
+  <tbody>
+    <tr><td>管理混乱</td><td>组织性差、战略频繁变动、缺乏方向</td><td>Scale AI, CloudFactory, Toloka, Welocalize, Invisible Tech</td></tr>
+    <tr><td>有毒文化</td><td>职场霸凌、政治斗争、不尊重员工</td><td>Sama, DefinedCrowd, Defined AI, Macgence, Hive AI</td></tr>
+    <tr><td>领导力不足</td><td>领导层不成熟、缺乏经验、决策混乱</td><td>Snorkel AI, CloudFactory, Human Signal</td></tr>
+    <tr><td>高离职率</td><td>员工流失严重、频繁裁员</td><td>Scale AI, CloudFactory, DefinedCrowd, Hive AI</td></tr>
+    <tr><td>任人唯亲</td><td>晋升基于关系而非能力</td><td>Scale AI, Sama, CloudFactory</td></tr>
+  </tbody>
+</table>
+
+<h4>四、商业道德与法律问题</h4>
+<table>
+  <thead><tr><th>问题类别</th><th>具体表现</th><th>涉及公司举例</th></tr></thead>
+  <tbody>
+    <tr><td>劳工分类问题</td><td>错误分类为独立承包商、规避员工福利</td><td>Scale AI, Surge AI</td></tr>
+    <tr><td>欺诈指控</td><td>被指控为骗局、不支付报酬、虚假招聘</td><td>Alignerr, LXT, Oneforma, Mercor, Turing</td></tr>
+    <tr><td>法律诉讼</td><td>面临集体诉讼、证券诉讼、劳动争议</td><td>Scale AI, Surge AI, Innodata, Sama</td></tr>
+    <tr><td>数据收集争议</td><td>过度收集个人数据、隐私问题</td><td>Welocalize, Alignerr, Clickworker</td></tr>
+  </tbody>
+</table>
+
+<h3>按公司分类的详细分析</h3>
+<p style="font-size:14px;color:var(--meta);margin-top:-6px;font-style:italic;">点击展开查看每家公司的客户/标注员投诉与一般性劣势</p>
+
+<details><summary>Scale AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>关于客户投诉的具体信息较少，大部分负面反馈主要来自标注员和前雇员。一些报道提到，由于贡献者资质不足，公司在为谷歌训练 Gemini 模型时难以控制"垃圾行为"，可能间接影响数据质量。</p>
+<strong>标注员投诉和不满</strong><p>工资低，存在拖欠或扣发工资；工作不稳定，会被无故解雇或踢出平台；平台体验差，缺乏沟通和反馈渠道；被错误地归类为独立承包商，无法享受正式员工福利；工作时间长，容易产生职业倦怠；被迫观看令人不适的内容；管理层存在任人唯亲；有用户指控公司通过子公司进行税务欺诈。</p>
+<strong>一般性劣势和缺点</strong><p>公司被指控存在掠夺性的劳工实践和专制的职场文化；领导层被评价为混乱和有毒；公司内部频繁进行重组和裁员；缺乏透明度和有效的沟通机制；正面临美国劳工部的调查和关于错误分类工人的集体诉讼；存在安全漏洞和由不合格贡献者导致的垃圾信息问题。</p>
+<div class="src">来源：Glassdoor; Reddit; Medium; Silicon Angle; Clarkson Law Firm; Inc.com; Better Business Bureau; Business Insider</div>
+</div></details>
+
+<details><summary>Appen <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>客户投诉信息较少，但根据标注员反馈推断，可能存在数据质量不稳定和沟通不畅。</p>
+<strong>标注员投诉和不满</strong><p>工资低，报酬与工作量不成正比；支付延迟或不支付，甚至账户余额消失；工作不稳定，项目突然结束，新项目申请困难；平台体验差，技术问题多，入职流程繁琐；沟通渠道极差，几乎没有有效支持；账户无故被封；缺乏有效培训；存在地域歧视，高薪任务仅限特定国家。</p>
+<strong>一般性劣势和缺点</strong><p>公司声誉下滑，被许多用户认为是"数字奴隶劳动"；沟通机制存在严重问题；平台在技术和流程上存在缺陷；在收购 Leapforce 后，公司管理和项目质量出现下降。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot</div>
+</div></details>
+
+<details><summary>Revelo <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>服务昂贵，时薪在 100–200 美元以上；客户支持不可靠；沟通不畅，候选人对公司情况不了解，浪费面试时间；服务仅限于美国和拉丁美洲；领导层不稳定，销售组织的愿景每隔几周就变动；销售配额不切实际；公司战略频繁变更但管理层无真正支持。</p>
+<strong>标注员投诉和不满</strong><p>有前端开发者报告，提交的设计因"边距、填充、颜色"等微小问题被反复拒绝，且不同审核员要求相互矛盾，最终在没有获得任何报酬的情况下超时；Glassdoor 上有多条评论提到工资低、福利有待改善；开发者感觉与公司脱节；Reddit 上有用户提到只有客户满意后才能获得报酬，被认为是骗局。</p>
+<strong>一般性劣势和缺点</strong><p>销售组织管理不善，被评价为"管理混乱的销售组织"；由于公司无法有效扩大销售组织，导致职业发展机会有限。</p>
+<div class="src">来源：G2; Glassdoor; reactsquad.io; Reddit; Trustpilot</div>
+</div></details>
+
+<details><summary>Telus Digital <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>项目管理缺乏灵活性，尤其是在采用敏捷方法方面，可能导致项目流程僵化。</p>
+<strong>标注员投诉和不满</strong><p>薪水低，与工作量不符；工作不稳定，任务量无法保证；管理层糟糕且缺乏支持；领导力差，有外包劳动力的趋势；KPI 不切实际；带薪休假难以享受；沟通混乱，入职过程不清晰；存在诈骗指控，有用户反映完成工作后未收到付款。</p>
+<strong>一般性劣势和缺点</strong><p>公司内部管理和沟通存在问题；薪酬和支付流程，特别是针对自由职业者的部分广受诟病；从 TELUS International 到 Telus Digital 的品牌重塑造成了市场混乱，并被诈骗实体利用。</p>
+<div class="src">来源：Reddit; Trustpilot; Glassdoor; Clutch.co</div>
+</div></details>
+
+<details><summary>Clickworker <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>未发现明确的客户投诉。</p>
+<strong>标注员投诉和不满</strong><p>工资低，任务耗时与报酬不成正比；平台无故封禁账号；支付延迟，UHRS 平台任务有长达 39 天延迟；任务不稳定，工作量不足，尤其是欧美以外地区；平台运行缓慢，应用程序存在技术问题；账户无故被封；培训和资格认证过程令人沮丧；客服支持差，回复自动化且不解决问题；存在诈骗性质的任务；隐私问题，要求上传政府身份证件。</p>
+<strong>一般性劣势和缺点</strong><p>培训材料不足；存在冒充 Clickworker 进行诈骗的网站；商业行为可疑，有用户指控公司利用各种借口克扣或拒绝支付；工作机会不稳定，难以作为稳定的收入来源；收入较高的任务集中在 UHRS 平台。</p>
+<div class="src">来源：Trustpilot; Reddit; Indeed; Glassdoor</div>
+</div></details>
+
+<details><summary>dataannotation.tech <span class="status">活跃</span></summary><div class="body">
+<strong>标注员投诉和不满</strong><p>缺乏反馈，员工在任务上得不到反馈，项目被移除也没有解释；工作不稳定，项目时有时无，收入不可靠；沟通不畅，公司与员工之间的沟通极少；指示不清，项目指引有时不明确或缺少关键点；账户被封，有用户报告短时间工作后账户被永久封禁；任务精神压力大，工作需要高度集中和遵循复杂且频繁更新的指示。</p>
+<strong>一般性劣势和缺点</strong><p>商业模式被认为是"骗局"，公司利用人们进行免费测试以降低运营成本；员工流失率高。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot; Better Business Bureau</div>
+</div></details>
+
+<details><summary>Joinstellar <span class="status">活跃</span></summary><div class="body">
+<strong>标注员投诉和不满</strong><p>任务量不稳定，完成少量任务后可能没有新任务；公司较新，项目较少；薪资较低；缺乏职业发展和晋升机会；管理混乱，部分管理者缺乏经验，不提供培训；公司对员工有不切实际的期望；内部软件存在问题；绩效评估体系不公平；工作时间安排频繁变动；奖金形式为零食、T 恤等非现金；公司涉嫌不道德甚至非法的用工行为，如不遵守 ADA、为逃避失业保险而修改离职日期；公司内部存在小圈子文化。</p>
+<strong>一般性劣势和缺点</strong><p>公司相对较新，业务和项目量有限；管理层评价两极分化，存在不透明、重数据轻员工的问题；员工离职率较高。</p>
+<div class="src">来源：Reddit; Glassdoor</div>
+</div></details>
+
+<details><summary>Welocalize <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>研究中未发现大量直接来自客户的负面投诉，但从标注员反馈推断：由于指导方针混乱和有经验的标注员流失率高，可能导致数据质量不稳定；由于劳动力供应不稳和任务分配问题，可能导致项目交付延迟。</p>
+<strong>标注员投诉和不满</strong><p>工资低，通常为最低工资标准；培训时间长且无薪，考试难度大且不告知失败原因；工作量极不稳定（NTA），收入不可靠；公司沟通不畅，支持团队响应缓慢；指导方针不明确且相互矛盾；账户在没有明确解释的情况下被暂停；平台和账户存在技术问题；部分评论指控存在欺诈行为；工作内容单调乏味；工作时间被故意限制在无法获得福利的范围内。</p>
+<strong>一般性劣势和缺点</strong><p>管理混乱，组织性差；员工流失率高，存在大规模解雇现象；部分评论者怀疑公司在招聘过程中过度收集个人数据；存在冒充 Welocalize 招聘人员进行诈骗的事件。</p>
+<div class="src">来源：Trustpilot; Reddit; Indeed; FeaturedCustomers</div>
+</div></details>
+
+<details><summary>Alignerr <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>未发现具体的客户投诉。</p>
+<strong>标注员投诉和不满</strong><p>项目完成并要求付款后，账户被停用且未收到付款；在没有解释的情况下被从项目中移除；入职后几个月没有任务；付款问题和延迟；在未提供工作的情况下收集个人数据（包括政府身份证件）；管理层沟通不畅；项目有时间限制；基于地理位置的项目拒绝；声称是"骗局"或"欺诈"；过度招聘自由职业者而没有足够的工作；缺乏透明度。</p>
+<strong>一般性劣势和缺点</strong><p>Glassdoor 总体评分较低（2.2/5），只有 26% 员工会向朋友推荐；高级管理层、职业机会、薪酬和福利评分较低；许多正面评论只针对 AI 面试过程，而非实际工作经验。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot</div>
+</div></details>
+
+<details><summary>LXT <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>有用户反映在一次研究中错误地将款项退还给 LXT 后，对方拒绝退还；完成项目后未收到付款，邮件被忽略；在完成大量任务后，账户被锁定且未获得任何奖励；视频收集研究指南被指冗长混乱，提交视频被拒并被要求重做。</p>
+<strong>标注员投诉和不满</strong><p>工资低且支付延迟；公司被指控为"骗局"，利用虚假项目窃取个人数据；项目经理被指缺乏诚信；项目完成后以 GPS 信息缺失等理由判定提交无效，拒绝支付；公司被评为"组织混乱"和"不专业"；存在虚假承诺，如晋升后迅速以"表现不佳"为由解雇员工；员工评价体系基于人际关系而非绩效；前员工反映公司无法提供税务文件（T4），邮件无人回复；薪资发放"总是延迟"且错误频出；被指剥削学生员工。</p>
+<strong>一般性劣势和缺点</strong><p>关于行业评价和媒体报道中的普遍劣势信息较少，负面反馈主要来自客户和标注员的个人经历。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot</div>
+</div></details>
+
+<details><summary>Oneforma <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>服务质量不稳定；缺乏同理心。</p>
+<strong>标注员投诉和不满</strong><p>付款问题，未收到付款、拖延付款；客户支持无回应；账户被无故禁用；工作机会误导，邮件发送不存在的项目；入职流程繁琐；薪水低；项目缺乏一致性；不通知申请状态。</p>
+<strong>一般性劣势和缺点</strong><p>商业行为可疑，存在欺诈嫌疑；平台体验差，网站充满空白页和无效链接；管理层沟通不畅，缺乏专业精神和透明度。</p>
+<div class="src">来源：Trustpilot; Reddit; Glassdoor</div>
+</div></details>
+
+<details><summary>OpenTrain AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>客户沟通存在一些延迟。</p>
+<strong>标注员投诉和不满</strong><p>工作量低于预期；AI 面试令人沮丧，要求过多信息；项目结束但仍有可用任务；完成任务后一个月以上没有新工作；项目期间响应不及时；通常针对低薪国家；编码项目薪酬较高但仍低于竞争对手；注册流程繁琐，每个项目申请都需做 AI 面试；总体项目不多。</p>
+<strong>一般性劣势和缺点</strong><p>网站信任评分中等（61%），所有者身份隐藏，存在一些负面评论。</p>
+<div class="src">来源：Trustpilot; Reddit</div>
+</div></details>
+
+<details><summary>Snorkel AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>由于对标记数据的需求并未完全消除，可能出现数据质量问题；与人工标记相比，在某些情况下性能可能较差。</p>
+<strong>标注员投诉和不满</strong><p>支付问题，包括不支付报酬、追溯性改变薪酬结构、拒绝奖金的比例很高，被称为"诱售诈骗"；工作不稳定，有报道员工因有问题的验证过程而被终止合同；平台体验差，工作者只有在问题难倒 AI 时才能获得报酬，但所有工作（包括成功的问题）都被用于免费培训。</p>
+<strong>一般性劣势和缺点</strong><p>领导层被形容为杂乱无章、不成熟，缺乏情商，决策反应迟钝；最近战略重心调整执行不力；技术创新速度减慢；员工士气低落，导致人才流失。</p>
+<div class="src">来源：Glassdoor; Reddit; Towards Data Science</div>
+</div></details>
+
+<details><summary>Lionbridge AI <span class="status">已被 TELUS International 收购</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>有报告指出存在多收费问题；公司自己的资料承认 AI 训练数据存在不准确、有偏见和过时的风险。</p>
+<strong>标注员投诉和不满</strong><p>工资低且被克扣，有用户反映公司会秘密降低小时工资，并以"质量低"为由拒绝工作；多名用户报告完成工作并看到付款记录后，账户被无故永久关闭且无法获得报酬；任务量不足且不稳定；存在技术故障，且申诉渠道不畅，联系客服或管理层几乎没有回应。</p>
+<strong>一般性劣势和缺点</strong><p>管理层存在过度干预和普遍的后台政治问题；公司在激烈竞争的行业中发展滞后；有评论认为公司重心已从传统翻译服务转向 AI 解决方案，可能影响其核心业务质量。</p>
+<div class="src">来源：Trustpilot; Glassdoor; Reddit; Indeed</div>
+</div></details>
+
+<details><summary>CloudFactory <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>NLP 支持有限，特别是非英语语言。</p>
+<strong>标注员投诉和不满</strong><p>低薪；按月合同导致无工作保障；管理层不重视云工人；竞争激烈；单调的数据录入工作；无有用技能积累；无长期成长空间；按需工作不稳定。</p>
+<strong>一般性劣势和缺点</strong><p>领导问题，包括公司经营不善、战略持续转变、沟通不畅；内部反馈和调查被忽视；晋升不基于绩效，存在任人唯亲；员工流动率高。</p>
+<div class="src">来源：Glassdoor; Reddit; labelyourdata.com</div>
+</div></details>
+
+<details><summary>iMerit <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>数据质量问题，一位客户提到完成的自然语言数据标注任务质量"与专业工作不符"，并猜测是因为使用了"没有经验的工人"；过度收费；不专业行为，iMerit 的一位副总裁在客户给出公正评价后，对客户进行了"强硬的"对待，并未能完成承诺的数据合规性审查。该客户还目睹了这位副总裁在电话中辱骂他人。</p>
+<strong>标注员投诉和不满</strong><p>诈骗指控，称 iMerit 是一个"彻头彻尾的骗局"；个人信息收集，公司在招聘过程中要求提供政府身份证件、社会安全号码等高度敏感信息，但收到信息后销声匿迹；支付问题，多位标注员投诉薪酬过低、支付延迟和克扣工资。一位标注员称在为 OpenAI 项目工作 3 个月后，iMerit 拖欠了大约 2000 美元的工资。另一位称公司故意将工作时间减少约 50%；工作条件差，一位标注员将工作描述为"纯粹的奴隶制"，薪酬在入职阶段从每小时 15 美元降至 5 美元；管理和支持问题，标注员抱怨公司"不关心工人"，IT 支持人员"连英语都不会说"，培训师"不知道任务是什么"。</p>
+<strong>一般性劣势和缺点</strong><p>管理层"极其混乱"，沟通不畅，向员工撒谎；公司是"自上而下驱动的"，CEO"说的比听的多"；薪酬过低，与业内其他公司相比无竞争力；职业发展机会有限。</p>
+<div class="src">来源：Reddit; Trustpilot; Glassdoor</div>
+</div></details>
+
+<details><summary>Samasource (Sama) <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>公开信息中很少有直接的客户投诉。然而，该公司作为 Facebook（Meta）的内容审核合作伙伴，因工作质量和员工待遇问题而面临重大审查和法律诉讼，最终导致该业务线终止。</p>
+<strong>标注员投诉和不满</strong><p>工资低，工作条件差，员工关怀差，公司只关注高收入而牺牲员工福祉；存在工作不安全感，大规模裁员和虚假的工作承诺；管理层能力不足且与员工脱节，晋升基于人脉关系而非能力；存在有毒工作环境；内容审核员因工作内容遭受精神创伤；公司被指控破坏工会。</p>
+<strong>一般性劣势和缺点</strong><p>因被指控为"非洲血汗工厂"而声誉受损；面临前内容审核员提起的诉讼，指控其违反肯尼亚宪法；在受到公众和法律压力后，停止了内容审核业务；被指控利用廉价劳动力和薄弱的劳动保护。</p>
+<div class="src">来源：TIME; Indeed; Reddit; The Guardian; Wired</div>
+</div></details>
+
+<details><summary>Playment <span class="status">已被 TELUS International 收购</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>关于客户投诉的具体信息较少，但从员工和标注员的反馈中可以推断，内部管理混乱、沟通不畅和高离职率可能导致项目交付延迟和质量不稳定。</p>
+<strong>标注员投诉和不满</strong><p>收购前 (Playment): 办公室政治、偏袒、基于恐惧的环境、缺乏明确的职业发展路径、工作与生活不平衡、工作时间长。<br>收购后 (TELUS International): 严重的薪酬问题（不支付、延迟支付）、极差的沟通和支持、大量无薪评估/测试、无预警地终止账户、低薪、工作时间长、感觉被骗或被剥削。</p>
+<strong>一般性劣势和缺点</strong><p>被一家在众包工作方面声誉不佳的大公司收购是其主要弱点。Glassdoor 上有员工直言"与 Telus 的合并非常糟糕"。</p>
+<div class="src">来源：Glassdoor; Trustpilot; Reddit; BusinessWire; Crunchbase</div>
+</div></details>
+
+<details><summary>Mighty AI <span class="status">已被 Uber 收购</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>公司难以实现其价值主张；竞争对手在产品功能上胜出；销售团队的人员流动正在损害增长；让客户满意是一场艰苦的战斗。</p>
+<strong>标注员投诉和不满</strong><p>工作本身令人非常沮丧；薪酬似乎低于市场价值；对于想通过在初创公司工作致富的人来说，可能不是理想的公司。</p>
+<strong>一般性劣势和缺点</strong><p>2019 年被 Uber 收购，表明可能缺乏独立持续运营的能力；产品功能和销售增长方面存在问题。</p>
+<div class="src">来源：Glassdoor; GeekWire; Built In Seattle; Silicon Angle</div>
+</div></details>
+
+<details><summary>Figure Eight <span class="status">已被 Appen 收购</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>数据质量问题是 Appen（收购方）面临的主要挑战之一；客户服务和支持渠道不畅，响应速度慢。</p>
+<strong>标注员投诉和不满</strong><p>工资低，尤其是入门级别（Level 0）几乎没有收益；工作不稳定，任务量和收入波动大；平台体验差，升级困难；培训内容繁重，耗时过长；存在账户被无故停用的风险。</p>
+<strong>一般性劣势和缺点</strong><p>公司经历过多次大规模裁员；部分员工认为领导层不够真诚，缺乏透明度；作为初创公司，内部流程和结构有时比较混乱。</p>
+<div class="src">来源：Reddit; Glassdoor; BBB; Trustpilot</div>
+</div></details>
+
+<details><summary>DefinedCrowd <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>客户经常抱怨数据质量，导致本应质量有保证的数据集需要额外质检；销售团队因数据集有限且质量低下而感到沮丧。</p>
+<strong>标注员投诉和不满</strong><p>大量标注员报告未收到已完成任务的报酬，等待数月仍未付款；账户在完成大量工作或询问付款后被无故封禁；工作成果被拒绝但没有任何解释或反馈；客户支持无响应且无效；任务报酬极低，通常每个任务只有几美元；许多用户报告项目稀缺，长时间没有工作；缺乏绩效反馈。</p>
+<strong>一般性劣势和缺点</strong><p>员工受到不公平待遇，公司人员流动频繁；新员工几乎得不到培训；公司文化被描述为有毒，同事之间相互轻视和批评；员工从不同部门和经理那里收到相互冲突的指令；CEO 被描述为傲慢；公司使用过时的工具和过于复杂的流程；严重依赖合作伙伴提供的数据，并被指控收取过高费用；员工因模糊原因被解雇。</p>
+<div class="src">来源：Trustpilot; Glassdoor; Reddit</div>
+</div></details>
+
+<details><summary>Reality AI <span class="status">信息较少</span></summary><div class="body">
+<strong>一般性劣势和缺点</strong><p>公司名称容易与广泛报道为骗局的"Reality AI Lab"混淆，造成显著的品牌混乱和潜在声誉损害。作为数据标注服务提供商，关于"Reality AI"缺乏可验证的信息，难以评估其合法性和服务质量。</p>
+<div class="src">来源：Reddit; Quora; Glassdoor</div>
+</div></details>
+
+<details><summary>Cogito Tech <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>AI 功能原始：Cogito 的 AI 软件功能非常初级，远未达到宣传的先进水平，许多功能尚在开发中；实时反馈无效：软件的实时反馈功能被指无效；投资回报率低：被认为是"巨大的金钱浪费"；存在歧视风险：如果将该软件的情感分析用作绩效指标，可能存在歧视性风险。</p>
+<strong>标注员投诉和不满</strong><p>承诺的薪水与实际发放不符，存在延迟支付；工作环境业余，甚至停止供水，洗手间和餐厅设施条件不佳；员工认为公司使用 Cogito 软件进行人工智能微观管理；HR 部门被指不作为；员工表示工作保障差，晋升困难；会议的质量参数要求非常高。</p>
+<strong>一般性劣势和缺点</strong><p>业余的工作环境；公司设施简陋；在 Glassdoor 等平台上多项评分偏低，包括薪酬福利、工作与生活平衡、职业机会、企业文化和高级管理层。</p>
+<div class="src">来源：Glassdoor; Reddit; Indeed</div>
+</div></details>
+
+<details><summary>Trilldata Technologies (Dataturks) <span class="status">已被 Walmart Labs 人才收购</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>被沃尔玛实验室收购后，Dataturks 的网站和在线服务变得无法访问；尝试自行部署开源版本的用户在 GitHub 上报告了大量技术问题，包括安装和构建失败、Docker 镜像问题以及软件本身存在的多个 Bug。</p>
+<strong>标注员投诉和不满</strong><p>关于 Dataturks 标注员的具体投诉信息非常有限。</p>
+<strong>一般性劣势和缺点</strong><p>核心产品 Dataturks 作为独立服务已停止运营；开源版本虽然可用，但存在大量未解决的技术问题，且自被收购后似乎已无人维护。</p>
+<div class="src">来源：Zaubacorp; TechCircle; GitHub; Reddit</div>
+</div></details>
+
+<details><summary>SuperAnnotate <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>数据质量问题；交付延迟；沟通困难；价格过高；服务不灵活。</p>
+<strong>标注员投诉和不满</strong><p>工资低；支付延迟；工作不稳定；平台体验差；账户被封；招聘流程不专业；沟通不畅；项目启动延迟；奖金不兑现；虚假招聘薪资。</p>
+<strong>一般性劣势和缺点</strong><p>公司被指存在欺骗性、不正当的商业行为；公司被评价为极不专业。</p>
+<div class="src">来源：Glassdoor; Trustpilot; Reddit</div>
+</div></details>
+
+<details><summary>Labelbox <span class="status">活跃</span></summary><div class="body">
+<strong>标注员投诉和不满</strong><p>账户被无故停用；完成工作未获报酬；被指控为"骗局"，存在未付评估；系统错误阻止工作进行，随后从项目中被移除；沟通不畅；完成培训后等待工作分配的时间过长。</p>
+<strong>一般性劣势和缺点</strong><p>工作环境严苛，有在周末和节假日工作的预期；存在向员工施压留下正面评价的指控；商业模式转型带来"成长的烦恼"；快节奏和具有挑战性的工作环境；Glassdoor 上工作/生活平衡和高级管理层评分较低。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot</div>
+</div></details>
+
+<details><summary>Toloka <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>研究未发现直接来自客户的投诉，但普遍反映的管理混乱、缺乏明确战略和组织性，可能间接影响数据质量和项目交付。</p>
+<strong>标注员投诉和不满</strong><p>账户无故被封，尤其是在达到提现门槛时，常以"欺诈"为名但无具体解释；用户协议允许平台随时终止账户并扣留资金；平台存在剥削行为，要求用户完成冗长的付费测试，然后以失败为由拒绝支付；任务不稳定，有时长达 40 多天没有新任务；薪酬与付出的劳动不成正比；评分系统不透明；客服支持在封锁账户后便不再回应；审核人员缺乏相关领域的专业知识。</p>
+<strong>一般性劣势和缺点</strong><p>公司被指存在不道德的商业行为；管理层缺乏清晰的战略和组织；作为初创公司，工作环境和项目稳定性较差；工作与生活难以平衡。</p>
+<div class="src">来源：Trustpilot; Reddit; Glassdoor</div>
+</div></details>
+
+<details><summary>Hive AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>信息不可用。</p>
+<strong>标注员投诉和不满</strong><p>入职后 90 天无假期，即使因病也不行；远程办公需 CTO 批准，很少获批；员工被期望在办公室待 8+ 小时，C-suite/HR 监控考勤；休假申请可能被以任意理由拒绝；员工在 1 年纪念日前被解雇以避免股票期权归属；无绩效改进计划，立即解雇；流失率高，尤其是新毕业生中；值班职责可能因不稳定的代码而残酷；无管理者，频繁随机解雇；不尊重工作时间或个人生活；几乎没有 PTO，没有 WFH 灵活性；不健康的午餐和零食；被期望承担角色之外的责任；接触令人不安的内容而无心理健康支持；管理层缺乏透明度。</p>
+<strong>一般性劣势和缺点</strong><p>缺乏高级领导，CTO 做出大部分技术决策；代码质量差，被描述为"拼凑的破玩意儿，每周不坏一次都算少的"；高压工作环境和有毒文化；对心理健康产生负面影响；公司多次重塑品牌，被视为危险信号；商业模式被描述为"可疑"；招聘过程中的高压销售策略。</p>
+<div class="src">来源：teamblind.com; glassdoor.com; reddit.com</div>
+</div></details>
+
+<details><summary>Blomega Lab <span class="status">活跃</span></summary><div class="body">
+<strong>标注员投诉和不满</strong><p>基于项目的工作导致工作不稳定；招聘流程令人困惑，需要预先提供个人数据；某些任务缺乏明确的指示或指南。</p>
+<strong>一般性劣势和缺点</strong><p>公司在独立评论方面在线存在度有限，难以评估其声誉；依赖短期、基于项目的合同可能导致其劳动力缺乏长期稳定性。</p>
+<div class="src">来源：Reddit; Glassdoor; blomegalab.com</div>
+</div></details>
+
+<details><summary>Turing <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>客户服务不可靠，通过电子邮件获得回复需要很长时间。</p>
+<strong>标注员投诉和不满</strong><p>低薪和高额佣金（据报道 Turing 会抽取 30–35% 的佣金）；严苛的追踪（监控击键和活动时间）；工作不稳定（合同工，可能随时被解雇，通知期仅 10 天）；过度的测试；诈骗指控（有用户称其为骗局，存在"幽灵"行为和盗窃工作成果的嫌疑）；可疑的做法（自动下载求职者资料并滥发邮件）；虚假评论；工作枯燥重复，评分方案严格；管理不善，缺乏同理心，裁员突然；有毒的文化、政治斗争和微观管理。</p>
+<strong>一般性劣势和缺点</strong><p>公司存在"雇佣然后解雇"的文化；对于新人来说，学习机会不多，不适合长期职业发展；人力资源部门响应缓慢。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot; Quora; LinkedIn; Medium; Indeed</div>
+</div></details>
+
+<details><summary>Innodata <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>数据质量和 AI 能力被质疑，公司被指控进行"AI 清洗"（AI-washing），夸大其 AI 技术能力，而实际上其 AI 平台被指为"初级软件"，并严重依赖低薪离岸劳动力；被提起证券集体诉讼，指控公司就其 AI 技术、财务状况和业务前景做出虚假和误导性陈述；客户集中度高。</p>
+<strong>标注员投诉和不满</strong><p>工资低，没有年度加薪、奖金或生活成本调整；支付延迟；工作不稳定，项目之间调动频繁且无事先通知；平台体验差，工作指导和流程被指"构思不周"；沟通不畅，HR 部门被评价为"粗鲁且无益"；职业发展机会少，晋升缓慢且依赖运气；工作内容单调乏味；招聘流程混乱，多轮测试和面试后可能被"幽灵化"。</p>
+<strong>一般性劣势和缺点</strong><p>面临证券集体诉讼，指控其在 AI 能力方面误导投资者；可扩展性问题，影响利润率；收入增长放缓；估值过高；公司文化方面，员工对团队的满意度普遍不高。</p>
+<div class="src">来源：Glassdoor; Reddit; Cohen Milstein; Seeking Alpha; Stanford Securities Class Action Clearinghouse; D&O Diary; Simply Wall St; Yahoo Finance; Comparably</div>
+</div></details>
+
+<details><summary>Mercor <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>没有发现具体的客户投诉。现有信息主要集中在工人和标注员的体验上。</p>
+<strong>标注员投诉和不满</strong><p>支付问题，包括延迟支付或不支付完成的工作；合同突然终止并降低工资；缺乏工作保障和工作量不稳定；AI 面试过程笨拙且令人沮丧；平台上的付费职位竞争激烈；数据采集指控，即利用面试来训练 AI 模型而不给应聘者补偿；沟通和支持不力。</p>
+<strong>一般性劣势和缺点</strong><p>商业改善局（BBB）评级低；商业模式受到质疑，被比作金字塔骗局；对初学者不友好，大多数项目需要数年经验或高等教育；关于其对待承包商的负面媒体报道，特别是突然取消项目和降薪的事件。</p>
+<div class="src">来源：Reddit; LinkedIn; jobright.ai; People.com; Trustpilot</div>
+</div></details>
+
+<details><summary>Surge AI <span class="status">活跃</span></summary><div class="body">
+<strong>标注员投诉和不满</strong><p>Surge AI 因将工人错误分类为独立承包商而面临集体诉讼，导致培训和工作的工资未付以及缺乏员工福利；工人还报告对工作缺乏控制、公司沟通和透明度差、误导性的工作描述、合同突然终止；还有关于无薪资格任务和审核员反馈不一致的投诉。</p>
+<strong>一般性劣势和缺点</strong><p>公司对承包商型劳动力的依赖造成潜在的不稳定性和工人缺乏长期承诺；公司的快速增长和高估值可能造成优先速度而非质量的压力，可能影响数据准确性和工人满意度。</p>
+<div class="src">来源：Clarkson Law Firm; Los Angeles Times; Glassdoor; Reddit; FeaturedCustomers</div>
+</div></details>
+
+<details><summary>Invisible Technologies <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>未发现明确的客户投诉。现有信息主要集中在标注员和求职者的负面体验上。</p>
+<strong>标注员投诉和不满</strong><p>工资低，时薪仅为 15 美元，部分项目时薪甚至低至 20 美分；通过 Wise 支付工资，导致非美国员工需要支付兑换费和其他费用；使用 Hubstaff 等侵入性软件监控员工桌面、截屏、追踪键盘和鼠标活动，并要求在 Zoom 会议中始终开启摄像头；管理混乱、不专业，缺乏透明度；招聘做法具有剥削性，例如在获得培训数据后解雇工人；招聘流程不透明，在提供录用通知后才告知需要使用侵入性追踪软件；无福利，无职业发展路径；大量无薪培训、入职和评估；技术平台复杂难用；存在性别歧视问题。</p>
+<strong>一般性劣势和缺点</strong><p>公司文化混乱、不专业；员工流失率高；商业行为存在欺骗性和剥削性；缺乏问责制。</p>
+<div class="src">来源：Reddit; Glassdoor; Trustpilot</div>
+</div></details>
+
+<details><summary>Aligned AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>在设置连接时遇到问题，多次发送邮件后仍未获得有效技术支持，最终导致项目被终止。</p>
+<strong>标注员投诉和不满</strong><p>工作强度大，节奏快，需要适应模糊和不断变化的需求；目前仅提供兼职工作机会。</p>
+<strong>一般性劣势和缺点</strong><p>信息较少，未发现其他明显的劣势或缺点。</p>
+<div class="src">来源：Trustpilot; Glassdoor</div>
+</div></details>
+
+<details><summary>Datacurve <span class="status">活跃</span></summary><div class="body">
+<strong>标注员投诉和不满</strong><p>前自由职业者提到"贪婪地控制薪酬费率"。</p>
+<strong>一般性劣势和缺点</strong><p>公司相对较新，独立来源信息有限；商业模式依赖"赏金猎人"系统，可能导致薪酬纠纷。</p>
+<div class="src">来源：Glassdoor; Reddit; TechCrunch</div>
+</div></details>
+
+<details><summary>Sepal AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>未找到明确的客户投诉。公开信息主要为正面评价。</p>
+<strong>标注员投诉和不满</strong><p>工资与宣传不符（网站宣传时薪 50–60 美元，但实际项目时薪仅为 30 美元）；项目不稳定，曾发生过项目在招聘流程后被客户取消；合同工时数不稳定；工作节奏快，信息更新频繁。</p>
+<strong>一般性劣势和缺点</strong><p>公司处于快速扩张阶段，可能存在流程不完善等"成长的烦恼"；业务依赖于项目合同，可能导致工作岗位和时数不稳定；薪酬信息存在不一致的情况。</p>
+<div class="src">来源：Reddit; Glassdoor</div>
+</div></details>
+
+<details><summary>Defined AI <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>客户频繁投诉数据质量问题，即使是声称"质量有保证"的数据集也需要客户自己进行质检；公司严重依赖合作方提供的数据，并对此收取过高费用。</p>
+<strong>标注员投诉和不满</strong><p>工资极低，福利待遇差；薪资标准和调整机制不透明；员工未受重视，离职率高；缺乏有效的培训和管理层支持；里斯本团队存在职场霸凌；CEO 态度傲慢、粗暴，随意指责员工；HR 部门不作为；无故解雇员工；工作量不稳定。</p>
+<strong>一般性劣势和缺点</strong><p>公司缺乏整体架构和职业道德；内部流程混乱，使用过时的工具；频繁进行组织重组；销售团队承诺无法兑现；高级管理层盲目服从 CEO，形成"一言堂"文化。</p>
+<div class="src">来源：Glassdoor</div>
+</div></details>
+
+<details><summary>Centific <span class="status">活跃 / 前身为 OneForma</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>产品和领导力不足；间接推断：由于标注员普遍反映薪酬低、管理混乱和缺乏支持，可能导致数据质量不稳定和交付延迟。</p>
+<strong>标注员投诉和不满</strong><p>工资低，支付延迟或不支付，工作不稳定，平台体验差，账户无故被封；支付系统混乱，特别是对于非美国地区的工作者；沟通渠道不畅；存在不合理的项目移除和拒绝支付工资的情况；工作时间追踪过于严苛；公司管理混乱，缺乏有效的培训和指导。</p>
+<strong>一般性劣势和缺点</strong><p>公司组织混乱，沟通效率低下；管理层能力不足；工作环境评价负面，员工普遍感到被过度剥削；员工流失率高；缺乏员工福利和晋升机会。</p>
+<div class="src">来源：Trustpilot; Glassdoor; Reddit</div>
+</div></details>
+
+<details><summary>Macgence <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>未发现具体客户投诉，Trustpilot 评论压倒性正面。</p>
+<strong>标注员投诉和不满</strong><p>不会得到指示，所以你做了工作，然后因为他们说有你没遵循的指示（事先未分享）而拿不到一半以上的工资；联系不到任何人寻求帮助或支持；非常不专业；有时不得不询问付款；有毒的工作文化，如果换工作会给新雇主留下坏评价；没有工作结构和工作生活平衡；HR 拥有所有权利；不加薪；欺诈自己的员工；不付自由职业者的工资，声称工作质量不达标用作抽样目的；被描述为"Lala"公司（一个对以传统、不专业方式经营的公司的贬义词）；存在 WFH 政策但员工无法享受；严格的周一至周六工作日；工作保障评分非常低（2.5/5）；总体工作满意度低（2.8/5）。</p>
+<strong>一般性劣势和缺点</strong><p>管理不善和不专业；有毒的工作文化；工作保障和工作满意度低。</p>
+<div class="src">来源：Glassdoor; AmbitionBox; Trustpilot</div>
+</div></details>
+
+<details><summary>Acgence / Macgence <span class="status">网站已暂停</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>未发现具体客户投诉。Trustpilot、Clutch 和 G2 上的评论压倒性正面。</p>
+<strong>标注员投诉和不满</strong><p>不会得到指示，所以你做了工作，然后因为他们说有你没遵循的指示而拿不到一半以上的工资；联系不到任何人寻求帮助；有毒的工作文化；没有工作结构和工作生活平衡；HR 拥有所有权利；不加薪；欺诈自己的员工；不付自由职业者工资；提供 WFH 但员工无法使用；工作日：周一至周六（严格时间）。</p>
+<strong>一般性劣势和缺点</strong><p>有毒的工作文化；高层管理存在政治斗争；员工满意度低于平均水平；对工作稳定性的担忧。</p>
+<div class="src">来源：Glassdoor; AmbitionBox; Trustpilot; Clutch; G2</div>
+</div></details>
+
+<details><summary>Deepchecks <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>需要编码知识：开源版本需要用户具备 Python 编码知识才能进行模型验证；功能局限：该工具在计算机视觉功能方面存在限制；缺少协作工具：该平台缺少跨团队协作、提供反馈和共享项目资源的功能。</p>
+<strong>标注员投诉和不满</strong><p>Deepchecks 是为机器学习模型和数据提供验证工具的软件公司，并非数据标注服务公司，因此没有标注员。</p>
+<strong>一般性劣势和缺点</strong><p>技术问题：其 GitHub Issues 页面列出了用户报告的多个技术问题和错误；安全合规性缺失：该解决方案没有任何官方安全合规认证。</p>
+<div class="src">来源：GitHub; Encord Blog</div>
+</div></details>
+
+<details><summary>Segments.ai <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>无法直接从 Web 版本导出注释，需要使用 Python SDA；对于不熟悉图像注释软件的用户来说，学习曲线陡峭；文档不够全面；自动分割工具效果不佳；存在一些开发问题。</p>
+<strong>一般性劣势和缺点</strong><p>对于新用户来说，软件最初可能会令人困惑；自动分割工具仍处于测试阶段，性能有待提高；存在一些功能开发问题和错误。</p>
+<div class="src">来源：softwarefinder.com; g2.com; github.com; slashdot.org; capterra.com; reddit.com; glassdoor.com; trustpilot.com</div>
+</div></details>
+
+<details><summary>Bright Data <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>Web unlocker 和代理产品声称可以解锁难以抓取的网站，但实际上失败率很高，并且对不成功的查询收费；产品性能随着时间的推移而下降；用户界面不够友好；产品价格偏高；住宅代理有时会出现错误；票证解决可以更主动；数据中心有时会宕机，支持人员响应时间过长。</p>
+<strong>标注员投诉和不满</strong><p>公司文化有毒，职位薪水很低；领导和管理能力不足；使用过时的工具；总部获得更多信息、薪酬和优先权；为 SDR 设定了雄心勃勃的目标；全球分布的团队在不同的时区；缺乏明确和有凝聚力的公司文化。</p>
+<strong>一般性劣势和缺点</strong><p>价格昂贵；技术问题和不稳定性；客户支持问题；公司文化和管理问题。</p>
+<div class="src">来源：Capterra; Glassdoor</div>
+</div></details>
+
+<details><summary>Human Signal <span class="status">活跃</span></summary><div class="body">
+<strong>一般性劣势和缺点</strong><p>一位前雇员认为创始人缺乏经验，建议董事会聘请有经验的高管领导层。</p>
+<div class="src">来源：Glassdoor; humansignal.com</div>
+</div></details>
+
+<details><summary>Humans in the Loop <span class="status">活跃</span></summary><div class="body">
+<div class="src">来源：Glassdoor; Reddit; Trustpilot</div>
+</div></details>
+
+<details><summary>Label Your Data <span class="status">活跃</span></summary><div class="body">
+<strong>客户投诉和不满</strong><p>需要澄清指令或输出格式。</p>
+<strong>标注员投诉和不满</strong><p>其平台 remoter.me 被指控为骗局，用户花费大量时间后未收到任何报酬；项目通常是短期的；设备折旧不予报销。</p>
+<strong>一般性劣势和缺点</strong><p>主要负面反馈集中在其标注平台 remoter.me，存在支付问题和用户体验不佳的指控；标注员反映项目多为短期性质。</p>
+<div class="src">来源：Glassdoor; G2; Clutch.co; Reddit; Trustpilot</div>
+</div></details>
+
+<details><summary>CVAT <span class="status">开源工具</span></summary><div class="body">
+<p>未能收集到关于开源工具 CVAT 的集中式客户或标注员投诉。作为一个人人可用的开源项目，其用户反馈通常分散在 GitHub Issues、社区论坛、专业博客和社交媒体中，与商业公司在聚合评论平台上的反馈形式截然不同。</p>
+</div></details>
+
+<h3>结论与产品优化建议</h3>
+
+<p>基于对数据标注行业 50 家公司的广泛研究，可以识别出行业普遍存在的痛点。以下是针对产品优化的具体建议。</p>
+
+<h4>针对标注员体验</h4>
+<ol>
+  <li><strong>建立透明、及时的支付系统</strong>：建立清晰的支付周期、实时的收入追踪功能，以及多种便捷的提现方式。</li>
+  <li><strong>提供有效的沟通渠道和反馈机制</strong>：建立专门的支持渠道，确保问题能够得到及时响应。</li>
+  <li><strong>确保工作量的稳定性</strong>：建立任务预约系统或提供工作量预测，帮助标注员规划工作时间。</li>
+  <li><strong>提供有薪培训和清晰的指导方针</strong>：为培训时间提供补偿，并确保项目指南清晰、一致。</li>
+  <li><strong>建立公平的账户管理政策</strong>：建立明确的违规标准、申诉机制和账户恢复流程。</li>
+  <li><strong>关注标注员心理健康</strong>：对于涉及敏感内容的项目，应提供心理健康支持和定期休息。</li>
+</ol>
+
+<h4>针对客户体验</h4>
+<ol>
+  <li><strong>建立严格的质量控制体系</strong>：实施多层质量审核、提供质量报告，并建立质量保证承诺。</li>
+  <li><strong>提高项目管理透明度</strong>：提供实时项目仪表板、定期进度报告和专属项目经理。</li>
+  <li><strong>提供灵活的定价模式</strong>：提供多种定价选项，包括按量计费、订阅制等。</li>
+  <li><strong>确保及时响应和沟通</strong>：建立专业的客户成功团队。</li>
+</ol>
+
+<h4>针对公司运营</h4>
+<ol>
+  <li><strong>建立健康的公司文化</strong>：避免有毒的工作环境，重视员工福祉，建立公平的晋升机制。</li>
+  <li><strong>确保合规运营</strong>：正确分类员工和承包商，遵守劳动法规，避免法律风险。</li>
+  <li><strong>保持战略稳定性</strong>：在做出重大变更前进行充分沟通。</li>
+  <li><strong>投资技术基础设施</strong>：平台稳定性和用户体验直接影响标注员效率和客户满意度。</li>
+</ol>
+
+<h3>研究方法说明</h3>
+
+<ol>
+  <li><strong>信息来源</strong>：Glassdoor 员工评价、Trustpilot 用户评论、Reddit 社区讨论、Indeed 职位评价、新闻媒体报道、法律诉讼公告等。</li>
+  <li><strong>搜索关键词</strong>：公司名称 + complaints / problems / reviews / negative / scam / issues 等。</li>
+  <li><strong>研究范围</strong>：50 家数据标注行业公司，包括大型企业、初创公司和已被收购的公司。</li>
+  <li><strong>局限</strong>：部分公司公开信息较少；已被收购的公司信息可能已过时；开源工具的反馈分散在技术社区中；正面评价可能存在公司操纵的情况。</li>
+</ol>
+
+<h3>公司状态汇总</h3>
+<table>
+  <thead><tr><th>公司名称</th><th>当前状态</th></tr></thead>
+  <tbody>
+    <tr><td>Scale AI</td><td>活跃</td></tr>
+    <tr><td>Appen</td><td>活跃</td></tr>
+    <tr><td>Telus Digital</td><td>活跃</td></tr>
+    <tr><td>Clickworker</td><td>活跃</td></tr>
+    <tr><td>Lionbridge AI</td><td>已被 TELUS International 收购</td></tr>
+    <tr><td>Figure Eight</td><td>已被 Appen 收购</td></tr>
+    <tr><td>Playment</td><td>已被 TELUS International 收购</td></tr>
+    <tr><td>Mighty AI</td><td>已被 Uber 收购</td></tr>
+    <tr><td>Trilldata (Dataturks)</td><td>已被 Walmart Labs 收购</td></tr>
+    <tr><td>Samasource (Sama)</td><td>活跃</td></tr>
+    <tr><td>iMerit</td><td>活跃</td></tr>
+    <tr><td>CloudFactory</td><td>活跃</td></tr>
+    <tr><td>Toloka</td><td>活跃</td></tr>
+    <tr><td>Labelbox</td><td>活跃</td></tr>
+    <tr><td>SuperAnnotate</td><td>活跃</td></tr>
+    <tr><td>Snorkel AI</td><td>活跃</td></tr>
+    <tr><td>Surge AI</td><td>活跃</td></tr>
+    <tr><td>Turing</td><td>活跃</td></tr>
+    <tr><td>Innodata</td><td>活跃</td></tr>
+    <tr><td>Mercor</td><td>活跃</td></tr>
+    <tr><td>Invisible Tech</td><td>活跃</td></tr>
+    <tr><td>Hive AI</td><td>活跃</td></tr>
+    <tr><td>DefinedCrowd</td><td>活跃</td></tr>
+    <tr><td>Defined AI</td><td>活跃</td></tr>
+    <tr><td>Centific</td><td>活跃</td></tr>
+    <tr><td>Macgence</td><td>活跃</td></tr>
+    <tr><td>Acgence</td><td>网站已暂停</td></tr>
+    <tr><td>Reality AI</td><td>信息较少</td></tr>
+    <tr><td>Anthromind</td><td>信息较少</td></tr>
+  </tbody>
+</table>
+
+<div class="bigfooter">
+本附录基于公开渠道信息整理，仅供参考。
+</div>
+
+</div>
+</body>
+</html>
