@@ -7,6 +7,15 @@ const lang = 'en';
 // Sample posts data - in a real setup these would come from markdown content collections
 const posts = [
   {
+    title: "Data Annotation Industry Report",
+    date: "2026-05-05",
+    type: "report",
+    slug: "data-industry-report",
+    url: "/reports/data-industry-report.html",
+    excerpt: "Market landscape, company profiles, pricing models, technical trends and pain points across the AI data annotation industry. Field research and analysis (Chinese).",
+    comingSoon: false
+  },
+  {
     title: "AI Notes — May 3",
     date: "2026-05-03",
     type: "learning-log",
@@ -282,7 +291,8 @@ function getTypeLabel(type: string): string {
     'product-thought': 'Product',
     'ai-commentary': 'AI',
     'learning-log': 'Learning Log',
-    'book': 'Book'
+    'book': 'Book',
+    'report': 'Report'
   };
   return labels[type] || type;
 }
@@ -311,7 +321,7 @@ function getTypeLabel(type: string): string {
             </div>
           </article>
         ) : (
-          <a href={`/writing/${post.slug}/`} class="post-link">
+          <a href={post.url || `/writing/${post.slug}/`} class="post-link">
             <article class="post-card fade-in">
               {post.image && (
                 <div class="post-image">
