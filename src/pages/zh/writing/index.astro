@@ -6,6 +6,15 @@ const lang = 'zh';
 
 const posts = [
   {
+    title: "数据行业研究报告",
+    date: "2026-05-05",
+    type: "report",
+    slug: "data-industry-report",
+    url: "/reports/data-industry-report.html",
+    excerpt: "AI 数据标注行业的市场全景、公司画像、定价模型、技术趋势与痛点机会的实地调研与分析。",
+    comingSoon: false
+  },
+  {
     title: "AI 学习笔记 — 5月3日",
     date: "2026-05-03",
     type: "learning-log",
@@ -281,7 +290,8 @@ function getTypeLabel(type: string): string {
     'product-thought': '产品',
     'ai-commentary': 'AI',
     'learning-log': '学习日志',
-    'book': '书'
+    'book': '书',
+    'report': '研究报告'
   };
   return labels[type] || type;
 }
