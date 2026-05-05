@@ -320,7 +320,7 @@ function getTypeLabel(type: string): string {
             </div>
           </article>
         ) : (
-          <a href={`/zh/writing/${post.slug}/`} class="post-link">
+          <a href={post.url || `/zh/writing/${post.slug}/`} class="post-link">
             <article class="post-card fade-in">
               {post.image && (
                 <div class="post-image">
