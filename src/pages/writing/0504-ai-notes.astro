@@ -1,0 +1,142 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 4";
+const date = "2026-05-04";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 4, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Cyber psychosis: when builders start questioning themselves</h2>
+
+        <p>Zhang Haoyang shared a conversation he had with Wang Huiwen, the Meituan co-founder. Wang said he feels closest to god during manic episodes — like "the third eye opens." Zhang admits he himself has entered a kind of hypomanic state — twenty-one days without feeling tired, adrenaline running constantly. Only after the product actually broke through did his body finally start to protest.</p>
+
+        <p>It's not an isolated phenomenon. He notices that almost every executive who has touched AI is grinding harder than their own employees — <strong>employees go home for the holidays while bosses are vibe-coding maniacally with AI.</strong></p>
+
+        <p>"It turns out, in this era, I can do this too — and probably more efficiently, because I have more concepts to connect across domains."</p>
+
+        <h2>163 commits in a single day</h2>
+
+        <p>Two days before the interview, Zhang made 163 commits in one day, shipping 18 major feature versions. The whole community was stunned. He said it's like the moment a typist first discovered the computer keyboard — <strong>we're entering a new era and most people haven't realized it yet.</strong></p>
+
+        <p>His workflow: pull himself into every user-facing channel; pull feedback from his core community (a high-net-worth group of "cyber psychosis" peers) within 10-20 minutes straight into the Vibe Coding window; ship to production immediately — <strong>coding directly in production.</strong></p>
+
+        <p>"This kind of iteration speed is impossible for traditional capital to imagine. Traditional capital plans first, calculates the business model step by step. We just burn tokens but amplify value massively."</p>
+
+        <h2>What AI cannot copy</h2>
+
+        <p>What can AI not copy? He gave a list — every item worth chewing on:</p>
+
+        <ul>
+          <li><strong>Premium subscription letters</strong> (Stratechery, The Information) — selling this specific person's judgment and taste. AI can copy the prose, not the identity.</li>
+          <li><strong>Boutique consulting</strong> (McKinsey, small boutiques) — selling a person across the table who bears the consequences. The AI doesn't get hauled in front of a board.</li>
+          <li><strong>Curated brands</strong> (A24, Aesop) — selling aesthetics and curation. AI can generate 1000 images; choosing the right one is human work.</li>
+          <li><strong>Industry associations</strong> (bar associations, medical boards) — selling licensing and legitimacy. AI doesn't issue you a license.</li>
+          <li><strong>Members clubs</strong> (Soho House) — selling who is in the room. AI can't enter physical spaces, can't gather this crowd.</li>
+          <li><strong>Companies that bear final responsibility in the physical world</strong> (doctors, lawyers, surgical hospitals, signing accountants) — selling a legally accountable entity. Nobody can sue an AI when it gets it wrong.</li>
+        </ul>
+
+        <p>The pattern: <strong>none of these look "tech."</strong> What they sell is not "capability" but identity, relationship, responsibility, taste, access — things that <strong>cannot be copied by code.</strong></p>
+
+        <h2>The unsettling implication</h2>
+
+        <p>It tells founders and investors something uncomfortable:</p>
+
+        <p><strong>Many "AI companies" valued at $10B today may be running on a business model that is quietly expiring.</strong></p>
+
+        <p>Their moat is "we tune the best" — but once skills are open-sourced, the tuning is shared. Their moat is "we have the strongest model" — but open-source is catching up. Their moat is "our agent pipeline is smoothest" — but the frameworks are on GitHub.</p>
+
+        <p><strong>Anything that can be copied trends to zero (or to the price of electricity).</strong> That's the most basic law of economics, and AI won't be an exception.</p>
+
+        <h2>Cursor's post-training as a case study</h2>
+
+        <p>Cursor didn't pretrain a model from scratch. They took an open-source MoE base and ran large-scale RL post-training inside an agent harness that simulates Cursor's production environment, training the model's tool-call decisions and response efficiency.</p>
+
+        <p>A common skeptical question: isn't this just fine-tuning?</p>
+
+        <p>The five-month evolution from Composer 1 to Composer 2 answers it. Cursor's training pipeline went through three iterations, each one a methodology upgrade rather than a tuning tweak. Composer 1 and 1.5 were pure RL on an open-source base. By 1.5 they had scaled RL compute 20x — post-training compute exceeded base pretraining itself — and added thinking tokens (adaptive reasoning depth) and self-summarization (long-context auto-compression). But they hit diminishing returns: CursorBench rose only 6.2 points from 1 to 1.5 despite 20x more compute.</p>
+
+        <p>Composer 2 made a key methodological pivot: insert continued pretraining before RL, changing the quality of the starting point that RL explores from. The base became Kimi K2.5 (Moonshot has confirmed it officially). Continued pretraining first, then RL — and CursorBench jumped 17.1 points. The Composer 2 technical report is explicit: it hits Pareto-optimal at significantly lower inference cost than peer models. In other words, Cursor's post-training pipeline doesn't slap a fine-tune on top and accept a quality penalty — it compresses cost and latency while keeping comparable coding ability.</p>
+
+        <h2>Metric design: north-star vs diagnostic</h2>
+
+        <p>Cursor splits metrics into two classes, and the classification is more valuable than the metrics themselves.</p>
+
+        <p>The first class is north-star metrics close to user quality. The most interesting one is <strong>Keep Rate</strong> — what fraction of code generated by the agent is still in the user's codebase after a fixed window. If users repeatedly ask the agent to redo the same chunk, manually revert, or rewrite themselves, the agent's work wasn't really adopted. Keep Rate doesn't ask whether the model can write code — it measures user behavior: did the code survive. It's a behavioral metric, not a capability metric. That's exactly why it's closer to real value than any test-pass metric.</p>
+
+        <p>Another north-star is semantic-level user-response analysis. Cursor uses a language model to read what the user does after the agent's output: moving on to the next feature is a positive signal; pasting a stack trace is a negative one. The judge model introduces noise, but it provides a sustainable directional signal.</p>
+
+        <p>The second class is diagnostic metrics: latency, token efficiency, tool call count, cache hit rate, tool error rate. These can guide direction — lower latency, fewer tokens, higher cache hit — but cannot prove the agent is good on their own. An agent can generate wrong code very fast, or burn few tokens making useless tool calls. Diagnostics localize problems; north-star metrics define quality. You need both: with only north-star, you don't know where regressions come from; with only diagnostics, you might optimize the system to be very efficient at making users unhappy.</p>
+
+        <h2>Claude Code PM</h2>
+
+        <p>This is also why Cat spends so much time on team principles and metric readouts. The Claude Code team runs strict weekly metrics readouts so everyone has the business goals, trends, and drivers loaded in their head. The team also writes down clearly: who the core users are, why them, what is acceptable to sacrifice. That way every engineer who sees a piece of feedback knows which bucket the user belongs in; designers know what experiences can be sacrificed in interaction tradeoffs; PMM and docs know how to explain a feature when it's about to launch.</p>
+
+        <p>On the surface this looks like documentation. The real function is "loop infrastructure." In the past, goal definition was mainly used for pre-launch alignment. Now goal definition is also the substrate that supports high-frequency autonomous judgment. When many people on the team can take things end-to-end, the PM cannot stand on every path approving everything. The PM's job is to lay user persona, success state, failure modes, and feedback channels on the ground beforehand, so the team can run very tight loops on its own.</p>
+
+        <p>This explains why the PM role won't disappear. When engineers can ship product directly, message-passing PMs do shrink. But as the product loop speeds up, places that need judgment don't decrease — they densify. The team has more ideas it can execute per day, more user feedback to handle, more experiments to ship. When execution is no longer scarce, the truly scarce question becomes: what should go into the loop, and how do we judge whether the loop is actually learning?</p>
+
+        <h2>Product taste is cost judgment</h2>
+
+        <p>Asked what PMs need most going forward, Cat gave a thread that ties everything together: when code can be generated cheaply, the scarce thing is deciding what to write.</p>
+
+        <p>Compressed: product taste matters. But "taste" easily becomes hot air. In real work, it's a kind of cost-judgment ability.</p>
+
+        <p>A user says a button is in the wrong place. Old flow: PM collects more feedback, batches it for the next release — even moving a button costs a full design/eng/test/ship cycle. Under the new price table, if the change is genuinely small, an engineer or PM can ship a version internally or to a small external slice on the same day. Holding three meetings to debate moving that button doesn't match the cost anymore. But conversely: if a small feature touches permissions, billing, enterprise security, and data migration, then it looks easy but actually needs serious planning.</p>
+
+        <p>First, requirement-management ability gets downgraded; goal-definition ability gets upgraded. Writing PRDs still has value, especially on ambiguous features and infra projects. Cat says they still write PRDs sometimes. But PRDs are no longer the core carrier of PM value. What really determines weight is whether you can clearly define target user, success state, failure modes, and what can be dropped — so the team stays directionally aligned in high-frequency action.</p>
+
+        <p>Second, engineering understanding goes from a plus to a basic judgment ability. PMs don't need to become full-time engineers, but they must read the post-AI price table. Whether a feature deserves a meeting or a same-day research preview; whether a problem can be caught at the prompt layer or needs harness, eval, and product interaction together; whether a capability the model will pick up on its own next quarter or needs long-term productization — these judgments swing speed and resource allocation constantly.</p>
+
+        <p>Third, the PM increasingly becomes a loop designer. The loop covers how user feedback enters the team, how the team turns it into experiments, how experiments ship quickly, how users understand expectations, how the team judges success or failure, and how AI improves the next output from those signals. There's documentation, data, release mechanics, evals, organizational collaboration. Glued together, this is the new working surface of an AI-era PM.</p>
+
+        <p>This also explains why Cat says roles are merging while Anthropic still has 30-40 PMs. The title hasn't disappeared — the work under the title has changed. PMs used to translate between user problems, product solutions, and engineering implementation. Now, in the most frontier AI teams, the PM is more like the keeper of a high-speed learning system.</p>
+
+        <h2>Defending against AI cyberattacks</h2>
+
+        <p>Things that can be done:</p>
+
+        <p>Turning off auto-approve / YOLO mode is currently the highest-ROI single action. The 91% YOLO-session figure shows most users run agents in auto-approve, and most attack chains require auto-approve as a precondition.</p>
+
+        <p>Enable sandboxing (Claude Code's bubblewrap/Seatbelt, Codex's Landlock/Seatbelt) to bound the blast radius after manipulation. If your tool supports a sandbox but doesn't enable it by default, turn it on manually.</p>
+
+        <p>Treat PRs that touch <code>.cursorrules</code>, <code>.claude/settings.json</code>, <code>.github/copilot-instructions.md</code>, and <code>AGENTS.md</code> with the same review level as <code>.github/workflows/</code>. They control what the agent is allowed to execute on your machine.</p>
+
+        <p>Migrate credentials from <code>.zshrc</code>, <code>.npmrc</code>, and <code>.env</code> into a secrets manager. Session logs from AI coding tools record the contents of every file read.</p>
+
+        <p>For AI agents in CI/CD, use pinned commit hashes for all dependencies and configure <code>minimumReleaseAge</code>. The root cause of OpenAI's Axios incident was a floating tag with no cooldown.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
