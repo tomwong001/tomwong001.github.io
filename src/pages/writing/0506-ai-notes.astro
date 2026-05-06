@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 6";
+const date = "2026-05-06";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 6, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>AI for science</h2>
+
+        <p>Alex first saw promise for AI in theoretical physics after he asked o3 for help on his research. In the podcast, Alex recalls asking GPT for help with a calculation that would have taken days, and getting a result in eleven minutes. He immediately recognized how impactful AI would be for his work — even though his physicist colleagues and the larger community gave it a lukewarm or skeptical reception.</p>
+
+        <h2>Model companies going downstream into B2B consulting</h2>
+
+        <ul>
+          <li><strong>Anthropic's unnamed JV with Blackstone, Hellman &amp; Friedman, and Goldman Sachs</strong> — funded with $1.5B ($300m each from main participants). "A typical engagement starts with a small team working closely with the customer to understand where Claude can have the biggest impact. From there, the company's engineers — alongside Anthropic Applied AI staff — will <strong>develop Claude-powered systems tailored to each organization's operations.</strong>"</li>
+          <li><strong>OpenAI's The Deployment Company</strong>, backed by 19 investors including TPG, Brookfield Asset Management, Advent, and Bain Capital — has raised about $4B so far at a $10B pre-money valuation. "Microsoft-backed OpenAI last month said that its chief operating officer, Brad Lightcap, will shift into a new role and lead special projects while reporting directly to CEO Sam Altman. <strong>Lightcap would oversee OpenAI's push to sell software to businesses through a joint venture with a private equity firm.</strong>"</li>
+        </ul>
+
+        <h2>ChatGPT personalization</h2>
+
+        <p>GPT-5.5 Instant became the default in ChatGPT. OpenAI rolled GPT-5.5 Instant out to ChatGPT and the API, positioning it as a de facto across-the-board upgrade — base intelligence, image understanding, and tone. The release also bundles stronger personalization: ChatGPT can now use saved memories, past chats, files, and connected Gmail, while exposing "memory sources" so users can see which context influenced a response.</p>
+
+        <p>ChatGPT also improved Bing's recommendations.</p>
+
+        <h2>RL environments</h2>
+
+        <p><strong>RL infra is shifting from "single generation + reward" to long-running action systems.</strong> A new guide compares RL environment frameworks for the LLM era, focusing on what scales to thousands of environments. A detailed survey contrasted traditional RLVR with agentic RL, pointing to systems like Forge, ROLL, Slime, and Seer, and recurring concerns like TITO consistency, rollout latency, prefix-tree merging, and global KV caches.</p>
+
+        <p><strong>Proactive assistant surfaces are becoming a product category.</strong> A leak around Anthropic Orbit describes it as a proactive assistant that synthesizes data from Gmail, Slack, GitHub, Calendar, Drive, and Figma without explicit prompting. Manus also added recommended connectors that are suggested in context when needed.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
