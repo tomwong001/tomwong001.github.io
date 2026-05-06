@@ -1,0 +1,142 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月4日";
+const date = "2026-05-04";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月4日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>赛博精神病：当创造者开始怀疑自己</h2>
+
+        <p>张昊阳提到他和美团联合创始人王慧文聊天时的共鸣。王慧文说自己「在躁狂的时候最接近上帝，觉得那个时候自己开了天眼」。张昊阳坦言自己也进入了一种「轻躁狂」状态——连续 21 天没有感到疲惫，肾上腺素一直在顶着。直到产品真正爆了之后才松了一口气，身体才终于开始抗议。</p>
+
+        <p>但这种精神状态不是孤例。他观察到身边几乎所有接触过 AI 的企业高管、大厂高管，都比自己的员工还卷——<strong>员工回家过年了，老板们在疯狂用 AI Vibe Coding 做东西。</strong></p>
+
+        <p>「原来这个事在现在这个时代我也能做了，而且我做的效率说不定更高——因为我掌握更多的概念技能，能把不同东西都串起来。」</p>
+
+        <h2>一天 163 次提交</h2>
+
+        <p>在采访前两天，张昊阳一天内提交了 163 次代码，产出了 18 个大功能版本更新，让整个社群都惊呆了。他说这就像打字员当年刚发现电脑键盘一样——<strong>我们正在进入一个新时代，只是很多人都没有意识到。</strong></p>
+
+        <p>他的工作流程是：把自己拉进所有直面用户的群里，从核心群（都是思想共鸣的「赛博精神病」高净值人群）中快速获取反馈，10-20 分钟内直接导入 Vibe Coding 窗口，编码完成直接上线部署——<strong>直接在生产环境 coding。</strong></p>
+
+        <p>「这个对迭代速度的提升，完全不是传统资本能想象的。传统资本你得先规划，一步一步算商业模式。我们纯属于消耗 Token 但能极大放大价值。」</p>
+
+        <h2>AI 复制不了什么</h2>
+
+        <p>什么东西 AI 复制不了？他给了一串例子，每一个都值得品：</p>
+
+        <ul>
+          <li><strong>高级订阅信</strong>（Stratechery、The Information）—— 卖的是<strong>这个具体的人的判断和品味</strong>，AI 模仿得了文笔，模仿不了「这个人是谁」。</li>
+          <li><strong>精品咨询</strong>（McKinsey、小型精品 boutique）—— 卖的是<strong>承担后果的人</strong>坐在你对面，AI 不会被董事会问责。</li>
+          <li><strong>精选品牌</strong>（A24、Aesop）—— 卖的是<strong>审美和策展</strong>，AI 能生成 1000 张图，但选出「对的那张」是人的事。</li>
+          <li><strong>行业协会</strong>（律协、医学会）—— 卖的是<strong>准入资格和合法性背书</strong>，AI 不能给你发执照。</li>
+          <li><strong>会员俱乐部</strong>（Soho House）—— 卖的是<strong>这个房间里坐着谁</strong>，AI 进不去物理空间，也凑不齐这群人。</li>
+          <li><strong>物理世界承担最终责任的公司</strong>（医生、律师、做手术的医院、签字的会计师）—— 卖的是<strong>法律意义上的责任主体</strong>，AI 出错没人能起诉它。</li>
+        </ul>
+
+        <p>这串名单的共同点：<strong>它们看起来一点都不「科技」</strong>。它们卖的不是「能力」，而是「身份、关系、责任、品味、准入」——这些东西<strong>不能被代码复制</strong>。</p>
+
+        <h2>这个推论的颠覆性在哪</h2>
+
+        <p>它在告诉创业者和投资人一件很扎心的事：</p>
+
+        <p><strong>今天很多估值 100 亿美金的「AI 公司」，可能在用一个正在失效的商业模式。</strong></p>
+
+        <p>因为它们的护城河是「我们调教得最好」——但 skill 开源后，调教方法人人能拿；它们的护城河是「我们模型最强」——但开源模型在追上来；它们的护城河是「我们 agent 链路最顺」——但 framework 都在 GitHub 上。</p>
+
+        <p><strong>所有能被复制的东西，最终价格都会趋近于零（或者趋近于电费）。</strong>这是经济学最朴素的规律，AI 不会例外。</p>
+
+        <h2>Cursor 的 post-training 方法论</h2>
+
+        <p>做法上，Cursor 没有从零预训练一个模型，而是拿开源的 MoE 底座，在模拟 Cursor 生产环境的 agent harness 里做大规模 RL post-training，训练模型的工具调用决策和响应效率。</p>
+
+        <p>这里有一个常见的质疑：这不就是 fine-tuning 吗？</p>
+
+        <p>从 Composer 1 到 2 的五个月演进回答了这个问题。Cursor 的训练链路经历了三次迭代，每一次都不是简单的调参，而是训练方法论本身的升级。1 和 1.5 阶段的路线是纯 RL：拿开源底座做大规模后训练。到 Composer 1.5，RL 的计算量扩大了 20 倍，后训练消耗的算力甚至超过了底座预训练本身，同时引入了 thinking tokens（自适应推理深度）和 self-summarization（长上下文自动压缩）两个新训练行为。但他们发现 RL-only 路线的边际收益在递减：CursorBench 从 1 到 1.5 只提升了 6.2 分，算力却投入了 20 倍。</p>
+
+        <p>到 Composer 2，Cursor 做了一个关键的方法论转向：在 RL 之前加入 continued pretraining，改变 RL 探索的起点质量。底座换成了 Kimi K2.5（Moonshot 官方已确认），先做继续预训练再做 RL，结果 CursorBench 一口气提升了 17.1 分。Composer 2 的技术报告说得很明确：它在推理成本显著低于同级别模型的前提下达到了 Pareto 最优。换句话说，Cursor 的 post-training 链路做到的不是在底座上加一层 fine-tune 然后性能打折，而是在压缩成本和延迟的同时保持了可比的编程能力。</p>
+
+        <h2>指标的分工：north-star 和 diagnostic</h2>
+
+        <p>Cursor 把指标分成两类，这个分类比指标本身更有价值。</p>
+
+        <p>第一类是贴近用户质量的 north-star 指标。其中最有意思的是 <strong>Keep Rate</strong>——agent 生成的代码，在固定时间后还有多少比例留在用户代码库里。如果用户反复要求 agent 修改同一段代码，或者手动回退、自己重写，那意味着 agent 做的事没有被真正采纳。Keep Rate 不直接问模型会不会写代码，它测的是用户行为：这段代码最后有没有留下。它是一个行为指标，不是能力指标。正因如此，它比那些问模型有没有通过某项测试的检测更接近真实价值。</p>
+
+        <p>另一个 north-star 是语义级别的用户回应分析。Cursor 用语言模型读用户在 agent 输出后的回应：用户进入下一个 feature 开发是正信号，用户贴 stack trace 是负信号。这里会引入 judge model 的误判，但它仍然提供了一个可持续追踪的方向信号。</p>
+
+        <p>第二类是 diagnostic 指标：latency、token efficiency、tool call count、cache hit rate、tool error rate。这些指标能提供方向，例如降低延迟、减少 token 消耗、提高缓存命中率，但它们不能单独证明 agent 做得好。一个 agent 可以极快地生成错误代码，也可以在低 token 消耗下反复做无用工具调用。诊断指标负责定位问题，north-star 负责定义质量。两者缺一不可：只有 north-star 没有诊断指标，团队面对质量变化时不知道问题出在哪；只有诊断指标没有 north-star，团队可能会把系统优化到效率极高但用户并不满意的状态。</p>
+
+        <h2>Claude Code PM</h2>
+
+        <p>这也是 Cat 为什么花那么多时间讲团队原则和指标读数。Claude Code 团队每周做严格的 metrics readout，让每个人的脑子里都装着业务目标、趋势和驱动因素。同时团队会写清楚：核心用户是谁，为什么是他们，什么东西可以牺牲。这样每个工程师看到一条用户反馈，能自己判断它属于哪类用户；designer 做交互取舍的时候，知道哪些体验可以牺牲；PMM 和 docs 在功能快要上线时，知道应该怎么向用户讲这个功能。</p>
+
+        <p>这些东西表面上和文档没有区别，但它们真正的作用是回路基础设施。过去，目标定义主要用在上线前的团队对齐。现在，目标定义还要用来支撑高频的自主判断。因为如果团队里很多人都能端到端把东西做出来，PM 不可能站在每条路径上一个一个审批。PM 只能把用户画像、成功状态、失败模式、反馈通路提前铺在地上，让团队在很短的循环里自己跑。</p>
+
+        <p>这也解释了为什么 PM 这个角色不会消失。当工程师可以直接做产品了，只管传话的 PM 确实会越来越少。但产品循环变快以后，需要做判断的地方不是变少了，是变密了。团队每天有更多想法能执行，更多用户反馈能处理，更多实验能放上线。执行不再稀缺以后，真正稀缺的问题是：该把什么东西放进循环里，以及怎么判断循环有没有真正学到东西。</p>
+
+        <h2>Product taste 是成本判断能力</h2>
+
+        <p>谈到 PM 未来最需要什么能力时，Cat 给了一个能把很多线索串起来的判断：当代码可以低成本生成以后，真正稀缺的是决定该写什么。</p>
+
+        <p>概括起来就是 product taste 重要。但 taste 这个词容易变成空话。放到具体工作里，它说的是一种成本判断的能力。</p>
+
+        <p>一个用户反馈说按钮位置不好。按以前的流程，PM 会先收更多反馈，等下个版本统一改——因为哪怕只是移一个按钮，也得走设计、工程、测试和上线的完整流程，占掉不少资源。到了现在的价格表下，如果这个改动真的小，工程师或者 PM 当天就能做一个版本放给内部用户或者一小部分外网用户试。这时候再开三轮会讨论这个按钮该不该移，就对不上成本了。但反过来，如果一个小功能牵动了权限、计费、企业安全和数据迁移，那它看起来简单，实际上需要的是严肃规划。</p>
+
+        <p>第一，需求管理能力会降权，目标定义能力会升权。写 PRD 仍然有价值，尤其是在模糊功能和底层基础设施项目上。Cat 自己也说他们有时候会写 PRD。但 PRD 不再是 PM 价值的核心载体了。真正决定分量的是你能不能定义清楚目标用户、成功状态、失败模式、什么可以放弃，让团队在高频行动里不偏离方向。</p>
+
+        <p>第二，工程理解会从加分项变成一个基础的判断能力。PM 不需要成为全职工程师，但必须读得懂 AI 之后的新价格表。一个功能到底应该开会讨论还是当天就做一个 research preview，一个问题到底是 prompt 层能接住还是需要 harness、eval、产品交互一起上，一个能力到底是模型马上自己会补上还是得要长期产品化——这些判断动不动就影响产品速度和资源配置。</p>
+
+        <p>第三，PM 会越来越像一个回路设计者。这个回路包括用户反馈怎么进到团队里，团队怎么把反馈变成实验，实验怎么快速推上线，用户怎么理解预期，团队怎么判断成功或失败，AI 怎么从这些反馈里改进下一次的产出。这里面有文档，有数据，有发布机制，有 evals，有组织协作。它们粘在一起，才是 AI 时代 PM 真正的新工作面。</p>
+
+        <p>这也解释了为什么 Cat 一边说角色在融合，一边又说 Anthropic 还有 30 到 40 个 PM。title 没有消失，但 title 下面的工作在变。过去 PM 很多时候是用户问题、产品方案和工程实现之间的翻译者。现在，在最前沿的 AI 团队里，PM 更像是在维护一个高速学习系统。</p>
+
+        <h2>应对 AI cyberattack</h2>
+
+        <p>可以做的事：</p>
+
+        <p>关闭 auto-approve / YOLO mode 是目前性价比最高的单一措施。91% 的 YOLO session 数据说明绝大多数用户在自动批准模式下使用 agent，而多数攻击链的前提条件就是自动批准。</p>
+
+        <p>开启沙箱（Claude Code 的 bubblewrap/Seatbelt，Codex 的 Landlock/Seatbelt）可以限制被操纵后命令的损害范围。如果你用的工具支持沙箱但默认没开，手动开。</p>
+
+        <p>对 <code>.cursorrules</code>、<code>.claude/settings.json</code>、<code>.github/copilot-instructions.md</code>、<code>AGENTS.md</code> 这些文件的 PR 修改，给予和 <code>.github/workflows/</code> 同等的审查级别。它们能控制 agent 在你机器上执行什么。</p>
+
+        <p>把 <code>.zshrc</code>、<code>.npmrc</code>、<code>.env</code> 里的凭证迁移到 secrets manager。AI 编程工具的 session log 会记录读到的所有文件内容。</p>
+
+        <p>CI/CD 中使用 AI agent 时，对所有依赖使用 pinned commit hash 并配置 <code>minimumReleaseAge</code>。OpenAI 的 Axios 事件根本原因就是 floating tag 加上没有冷却期。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
