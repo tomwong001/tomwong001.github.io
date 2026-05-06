@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月5日";
+const date = "2026-05-05";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月5日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <p><strong>这是从「提供工具的软件」到「交付结果的软件」的转变。</strong></p>
+
+        <h2>新时代的数据供应商</h2>
+
+        <p><strong>我们交付的不是一批数据，而是帮助客户把模型、机器人或 AI 系统训练到更好效果的全过程能力。</strong></p>
+
+        <p>这里面有几个层次：</p>
+
+        <ul>
+          <li><strong>从数据交付，变成结果交付。</strong>过去是「我给你数据，你自己用」。未来应该是「我理解你的训练目标，然后围绕精度、泛化能力、召回率、任务完成率等指标，持续帮你把数据用好」。</li>
+          <li><strong>从一次性供应商，变成深度协作伙伴。</strong>数据交付以后，甲方训练过程中一定会发现问题：数据分布不够、标签标准不清、某些场景表现差、机器人在某些动作或环境里失败。这些问题其实正是数据公司继续创造价值的地方。</li>
+          <li><strong>从卖资源，变成卖服务能力。</strong>数据公司手里不只是有数据，还有标注人员、质检人员、行业专家、项目经理、数据工程能力、问题定位能力。这些都应该变成后续服务的一部分：帮客户补数据、改标注、做错误分析、调整采集方案、解释数据怎么用。</li>
+          <li><strong>从「验收数据」，变成「管理数据生命周期」。</strong>数据交付不是结束，而是开始。后面还应该有数据版本管理、问题反馈、缺陷修复、增量补充、模型效果回传、下一轮数据优化。这会让客户觉得你不是外包供应商，而是他训练体系的一部分。</li>
+        </ul>
+
+        <p>不过这里也要有边界，不能变成无限免费改。更成熟的方式是把它产品化：</p>
+
+        <ul>
+          <li><strong>基础交付：</strong>数据集、标注规范、质检报告、使用说明。</li>
+          <li><strong>训练支持：</strong>数据接入指导、问题答疑、模型效果反馈分析。</li>
+          <li><strong>优化服务：</strong>针对低精度场景补采、重标、清洗、再质检。</li>
+          <li><strong>长期合作：</strong>按月/按项目提供数据运营团队，持续提升模型表现。</li>
+        </ul>
+
+        <p>这样商业模式也会变：不是单纯按条数、小时、图片量收费，而是可以按「数据项目 + 后续服务 + 持续优化」收费。甚至在合适场景下，可以和客户的模型指标、机器人任务成功率、上线效果挂钩。</p>
+
+        <p>本质上，这是一种升级：</p>
+
+        <p><strong>传统数据供应商：交付数据。</strong><br>
+        <strong>新型 AI 数据伙伴：交付可被模型吸收、能推动效果提升的数据能力。</strong></p>
+
+        <h2>Meta 收购 ARI 进军机器人</h2>
+
+        <p>Meta 已收购 Assured Robot Intelligence（ARI），一家为类人机器人构建基础模型的初创公司，这些模型能够执行现实世界中的物理任务。联合创始人 Xiaolong Wang 和 Lerrel Pinto 将加入 Meta 的 Superintelligence Labs。这一举措建立在 Meta 现有的、由 Marc Whitten 领导的机器人技术努力之上。</p>
+
+        <p>这一举动发生在大科技公司争相争夺机器人技术人才的背景下，市场预测从高盛的 2035 年 380 亿美元到摩根士丹利的 2050 年 5 万亿美元不等。</p>
+
+        <p>为什么这很重要：训练互联网数据让 AI 走到了这一步。要进一步改进它，可能需要与物理世界的互动。机器人技术正在成为一种训练策略。谁拥有「通过行动学习」而不是「仅仅预测」的系统，谁就能获得一种纯软件模型难以匹敌的复合优势。</p>
+
+        <h2>模型 × harness × 上下文</h2>
+
+        <p>产品边界正在形成。全天反复出现的主题是，模型质量不再是唯一的有意义护城河。Anthony Maio 认为，锁定效应来自上下文管道——如何获取、排序和压缩 repo 状态以形成提示——而不是来自外壳本身。Mason Drxy 的报道进一步支持了这一观点：在外壳中更改提示和中间件使 gpt-5.2-codex 在 Terminal-Bench 2.0 上的得分从 52.8% 提高到 66.5%，并将 gpt-5.3-codex 在 tau2-bench 上的得分提高了 20%。</p>
+
+        <p>实际的启示是：agent 性能越来越是「模型 × 外壳 × 内存/上下文策略」的共同属性，而不仅仅是权重本身。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
