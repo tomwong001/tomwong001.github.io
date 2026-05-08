@@ -1,0 +1,64 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月8日";
+const date = "2026-05-08";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月8日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>数据行业还远未成熟</h2>
+
+        <p>数据行业远未发展成熟。听说 Anthropic 或 OpenAI 等公司为单个 RL 环境投入超过 100 万美元，年度累计支出达数亿美元，用来推动强化学习的前沿——很值得关注的问题是中国实验室是不是从美国数据公司买相同的环境，还是有一个镜像的国内供应生态。</p>
+
+        <p>答案不是「没有数据行业」，而是<strong>他们的经验是数据行业整体质量相对较差</strong>，通常自己搭建环境或数据反而更好。研究人员花大量时间亲手做 RL 训练环境；少数大公司（字节跳动、阿里巴巴）有内部数据标注团队来支持。这其实和「自建不买」的整体心态一致。</p>
+
+        <h2>Dreaming：让 Agent 在「梦里」学习</h2>
+
+        <p>Dreaming 是 Anthropic 给一个后台进程起的名字——这个进程会<strong>回顾 Agent 过去的会话和记忆</strong>，找出模式，重写记忆，从而让 Agent 在两次运行之间得到改进。OpenClaw 在 4 月推出过类似功能，但 Anthropic 的版本更强调「<strong>Agent 团队集体学到了什么</strong>」，而不是「单个 Agent 记住了什么」。系统会从重复纠正、反复出现的错误、运行良好的工作流里学习——长期来看就是在搭建一个机构知识库。</p>
+
+        <p>该功能目前以 research preview 形式存在于 Claude Managed Agents 中。一个明显的开放问题是：<strong>这个能力什么时候会进 Claude Code？</strong></p>
+
+        <h2>GPT-Realtime-Translate：实时语音互译</h2>
+
+        <ul>
+          <li>支持从 <strong>70 多种输入语言</strong> 实时流式翻译到 <strong>13 种输出语言</strong></li>
+          <li>OpenAI 联合创始人 Greg Brockman 表示，实时语音互译是 OpenAI 自公司早期就期待的应用方向，现在终于开放给所有人构建</li>
+        </ul>
+
+        <p>注意「13 种输出语言」是个很关键的不对称设计：输入端覆盖广，输出端聚焦在主要语言上，这其实是把翻译延迟和质量做平衡的合理选择。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
