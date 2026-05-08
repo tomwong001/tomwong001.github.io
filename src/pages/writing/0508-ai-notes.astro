@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 8";
+const date = "2026-05-08";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 8, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>The data industry is still immature</h2>
+
+        <p>The data industry is far from mature. Companies like Anthropic and OpenAI reportedly spend over $1M per individual RL environment, with annual totals in the hundreds of millions of dollars to push the RL frontier — which raises an interesting question: are Chinese labs buying the same environments from US data vendors, or is there a mirrored domestic ecosystem?</p>
+
+        <p>The answer isn't "there's no data industry" — it's that <strong>their experience is that the data industry's quality is relatively poor</strong>, and it's usually better to build environments and data in-house. Researchers spend a lot of time hand-crafting RL training environments; a few large companies (ByteDance, Alibaba) have internal annotation teams to support this. It's consistent with the broader "build, don't buy" mindset.</p>
+
+        <h2>Dreaming: agents that learn between runs</h2>
+
+        <p>Dreaming is Anthropic's name for a background process that <strong>reviews an agent's past sessions and memory</strong>, finds patterns, and rewrites memory so the agent improves between runs. OpenClaw shipped a similar feature in April, but Anthropic's framing is more focused on <strong>what teams of agents collectively learn</strong> than what a single agent remembers. The system learns from repeated corrections, recurring mistakes, and workflows that work well — over time, building an institutional knowledge base.</p>
+
+        <p>The feature currently lives inside Claude Managed Agents as a research preview. The obvious open question: <strong>when does this come to Claude Code?</strong></p>
+
+        <h2>GPT-Realtime-Translate</h2>
+
+        <ul>
+          <li>Live streaming speech translation from <strong>70+ input languages</strong> to <strong>13 output languages</strong></li>
+          <li>OpenAI cofounder Greg Brockman noted that real-time voice-to-voice translation has been an anticipated OpenAI application since the company's early days, and is now available for anyone to build with</li>
+        </ul>
+
+        <p>The asymmetry between 70+ inputs and 13 outputs is the interesting design choice: wide on input, focused on output — a sensible tradeoff between translation latency and quality.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
