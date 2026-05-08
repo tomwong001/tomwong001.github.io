@@ -1,0 +1,267 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 7";
+const date = "2026-05-07";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 7, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Claude rate limits raised</h2>
+
+        <p>Anthropic announced a new compute partnership with SpaceX and immediately turned the extra capacity into higher product limits: <strong>Claude Code's 5-hour rate limits are doubled for Pro, Max, Team, and seat-based Enterprise; peak-hour limit reductions are removed for Pro and Max; Opus API rate limits are substantially increased</strong>.</p>
+
+        <h2>Harvey ships LAB legal-agent benchmark</h2>
+
+        <p>Harvey launched <strong>LAB</strong>, an open-source long-horizon legal-agent benchmark covering <strong>1,200 tasks across 24 practice areas</strong>, with support and commentary from LangChain, Baseten, Artificial Analysis, and others. Law is one of the few domains that combines long tasks, long context, and high accuracy bars all at once — much harder than point QA.</p>
+
+        <h2>Genesis AI: a robotics model built for human-level hand control</h2>
+
+        <p>Genesis AI introduced <strong>GENE-26.5</strong>, a robotics model designed for tasks that require precise hand movements and coordination.</p>
+
+        <p>To train the system, the company also built a robotic hand and a motion-capture glove that lets humans generate training data simply by performing tasks while wearing the glove. Genesis says the hardware is around <strong>100x cheaper</strong> than traditional systems and can collect data much faster.</p>
+
+        <p>Their demo showed robots cracking eggs, slicing tomatoes, conducting lab experiments, solving a Rubik's Cube, and playing piano with surprisingly fluid hand control.</p>
+
+        <p><strong>Why this matters:</strong></p>
+
+        <ul>
+          <li>The biggest problem in robotics is increasingly becoming data — robots need massive amounts of real-world examples showing how humans move and manipulate objects</li>
+          <li>Genesis is trying to solve that by turning normal human activity into training data. If it works, every interaction becomes part of the learning process and robots improve much faster</li>
+        </ul>
+
+        <h2>Kanwas: an open-source second brain for teams</h2>
+
+        <p>Kanwas pitches itself as "the open-source second brain built for modern teams." Worth keeping in mind as a reference shape — the question of how to build a team-level brain is genuinely interesting.</p>
+
+        <h2>Figure tour notes</h2>
+
+        <p>A walkthrough of humanoid robotics company <strong>Figure</strong>'s headquarters, with the founder leading a tour of R&amp;D, manufacturing, and testing.</p>
+
+        <h3>Company snapshot</h3>
+
+        <ul>
+          <li>Four-building campus in California, around 500 employees (250-300 at HQ)</li>
+          <li>Less than 4 years old, hundreds of robots in fleet</li>
+          <li>Goal: more robots than employees</li>
+          <li>Recently became the first company to bring a humanoid robot into the White House</li>
+        </ul>
+
+        <h3>The product: Figure 3</h3>
+
+        <ul>
+          <li>About 40 joint motors, each rotates 360°</li>
+          <li>~135 lb (61 kg), 4-5 hour battery life</li>
+          <li><strong>Wireless inductive charging through the soles</strong> (2 kW), 1 hour of charge → 4-5 hours of work</li>
+          <li>Cameras, IMU, Wi-Fi, 5G, Bluetooth</li>
+          <li>Removable fabric outer suit (zip in back), high-top sneakers</li>
+        </ul>
+
+        <h3>The brain: Helix neural network</h3>
+
+        <ul>
+          <li>In-house Vision-Language-Action (VLA) model that fully replaces traditional control code</li>
+          <li>Inference runs on the robot's onboard GPU — <strong>no internet connection required</strong></li>
+          <li>Outputs 50-200 full-body joint commands per second</li>
+          <li>Training data approaches one million hours, mostly in simulation via reinforcement learning, then zero-shot transferred to physical robots</li>
+          <li>"Never Fall" project: even with a missing joint (e.g. knee), the robot keeps a one-legged hop without falling</li>
+        </ul>
+
+        <h3>The factory: BotQ</h3>
+
+        <ul>
+          <li>In-house design and manufacturing of head, battery, limbs, fingers</li>
+          <li>2.25 kWh battery with structural design that prevents thermal runaway from spreading</li>
+          <li>March production hit a record high; the goal is a fully automated "lights-out" factory — robots building robots</li>
+          <li>Last year, Figure robots helped assemble the world's first car built by humanoid robots (BMW X3)</li>
+        </ul>
+
+        <h3>Design evolution</h3>
+
+        <ul>
+          <li><strong>Figure 1</strong> (2022): CNC-machined, hundreds of thousands of dollars per unit, tendon-driven hand (deprecated)</li>
+          <li><strong>Figure 2</strong>: battery moved into the torso, 3x compute, ~50 units produced before retirement</li>
+          <li><strong>Figure 3</strong>: ~90% cost reduction (under $100K per unit), thinner profile, soft-foam outer covering</li>
+          <li><strong>Figure 4</strong>: in late development, expected to be the biggest jump yet</li>
+        </ul>
+
+        <h3>Go-to-market</h3>
+
+        <ul>
+          <li>Home: target $400-600/month lease pricing (similar to a car lease) — chores, laundry, organizing</li>
+          <li>Commercial: manufacturing, logistics, healthcare</li>
+          <li>Primary battlefield is the US; Europe is harder due to data privacy</li>
+        </ul>
+
+        <h3>Founder's perspective</h3>
+
+        <ul>
+          <li>Believes AGI may <strong>arrive first in embodied AI</strong> because real-world interaction data is the missing piece</li>
+          <li>Design philosophy leans Westworld (anthropomorphic) over Ex Machina</li>
+          <li>Data collection team wears spandex for motion capture training</li>
+        </ul>
+
+        <p>Overall: a company that has vertically integrated hardware, AI, and manufacturing about as deeply as you can, sitting at the "flip phone to iPhone 1" transition point.</p>
+
+        <h2>1. Data scale and tiers</h2>
+
+        <p>Founder Brett describes training data in two layers:</p>
+
+        <ul>
+          <li><strong>Pre/mid-training</strong>: Helix used <strong>roughly one million hours</strong>. This is the foundation that determines whether the robot "understands the world"</li>
+          <li><strong>Post-training</strong>: only on the order of <strong>thousands of hours</strong>. This fine-tunes for specific tasks (folding clothes, tidying a living room, moving packages)</li>
+        </ul>
+
+        <p>The ratio is telling — <strong>most of the value density in data work sits in pre-training</strong>. Post-training is more like alignment. For anyone working in data, the long-term work is in pre-training: cleaning, deduplication, quality grading.</p>
+
+        <h2>2. Three data collection paths</h2>
+
+        <h3>2.1 Human motion capture (the spandex crew)</h3>
+
+        <p>The video mentions "people in spandex walking around the campus" — this is <strong>joint-level tracking</strong>. Markers or inertial sensors on tight clothing record the angle, velocity, and trajectory of every joint while a human does household tasks.</p>
+
+        <p>Why spandex? Loose clothing makes markers drift and joint-angle estimation unreliable. From a data perspective, the value of this kind of data is:</p>
+
+        <ul>
+          <li>It provides a "human motion prior" — the robot doesn't have to learn from scratch how to swing its arm to wash a dish</li>
+          <li>Combined with video frames, it enables <strong>image conditioning</strong>: each frame pairs with a joint state, and that's the core training pair for a VLA model (vision → action)</li>
+        </ul>
+
+        <h3>2.2 Synthetic data from simulation (the main event)</h3>
+
+        <p>Mortz, the controls lead, said it well:</p>
+
+        <p>"We spend a lot of time imagining everything that could happen in the real world, and then we make it all happen in simulation."</p>
+
+        <p>This is standard <strong>domain randomization</strong>. Inside the physics simulator, you randomize:</p>
+
+        <ul>
+          <li>Gravity, friction coefficients</li>
+          <li>Joint damping, motor latency</li>
+          <li>Lighting, textures, camera noise</li>
+          <li>External disturbances (someone shoving the robot)</li>
+        </ul>
+
+        <p>Simulation data <strong>requires no human labeling</strong> — states, actions, and rewards come straight from the simulator, so it's effectively unlimited. This is the fundamental reason Figure switched from hand-coded controllers to RL-based neural networks: <strong>the data scale is orders of magnitude different</strong>.</p>
+
+        <h3>2.3 Real-robot teleoperation + autonomous return</h3>
+
+        <p>Brett denied that the robots are remote-controlled, but during <strong>training</strong>, teleoperation data is unavoidable — Tesla, 1X, Physical Intelligence all do the same. Robots deployed in homes upload their daily run data to a central training pipeline, which then OTA-updates model weights.</p>
+
+        <h2>3. Sim-to-real zero-shot</h2>
+
+        <p>The phrase shows up during the segment where the robot gets shoved:</p>
+
+        <p>"We trained the controller in simulation, and then we <strong>zero-shot it</strong> to this robot — load it onto the computer, and that's the performance you get."</p>
+
+        <p>The precise meaning: <strong>the model has never been trained on the real robot, and yet works on first deployment</strong>. To make this work you need:</p>
+
+        <ol>
+          <li><strong>A small sim-to-real gap</strong> — Figure designs its own motors and measures its own torque response curves, so the simulated motor model is very close to the real one</li>
+          <li><strong>Wide-enough domain randomization</strong> — the disturbance space seen in training ≥ the disturbance space in the real world</li>
+          <li><strong>Matching observation spaces</strong> — simulated camera intrinsics, FOV, and noise have to track the real cameras closely</li>
+        </ol>
+
+        <p>For data work, this means: <strong>pure simulation tasks need very little human labeling</strong> (the simulator generates labels), but <strong>simulator tuning and real-robot regression testing</strong> grow as QA work — for example, labeling "which real-robot failures correspond to uncovered scenarios in simulation".</p>
+
+        <h2>4. Data processing details</h2>
+
+        <h3>Privacy and anonymization</h3>
+
+        <p>Brett's framing: "What we mostly care about is the robot's state — what it sees, and how that helps it generalize." In practice:</p>
+
+        <ul>
+          <li>Faces, text, private information get <strong>masked or blurred</strong></li>
+          <li>What actually enters the training set is the triple <strong>pixels → robot state → action</strong></li>
+          <li>Europe deployment is on hold because of GDPR — meaning their de-identification pipeline isn't yet EU-compliant</li>
+        </ul>
+
+        <h3>The "positive transfer" assumption</h3>
+
+        <p>Brett makes one key bet:</p>
+
+        <p>"We assume the data we're collecting now will produce massive positive transfer in almost any environment."</p>
+
+        <p>This is a bet on the balance between <strong>diversity vs volume</strong> — collecting the same action (opening a drawer, picking something up) in different environments lets the model learn the <strong>essence of the action</strong> rather than the contingencies of any one environment. Implications for data strategy:</p>
+
+        <ul>
+          <li><strong>Diversity-axis labels</strong> (lighting, materials, layout, object types) are worth more than simply adding samples</li>
+          <li>Think in terms of <strong>long-tail distribution</strong> — common scenarios saturate quickly, rare scenarios deserve heavier labeling</li>
+        </ul>
+
+        <h2>5. Training pipeline</h2>
+
+        <p>Stated in the video:</p>
+
+        <ul>
+          <li>Onboard GPU inference at <strong>50-200 Hz</strong></li>
+          <li>One model, multiple tasks (home + logistics + manufacturing)</li>
+          <li>Architecture is a transformer-based VLA</li>
+        </ul>
+
+        <p>Industry context (not stated in the video but public): Helix is a dual-system architecture — a slow "System 2" handles semantic understanding and task planning at ~7-9 Hz, while a fast "System 1" generates actions at ~200 Hz. <strong>Task-level labels</strong> ("step three of folding a shirt") and <strong>action-level labels</strong> (per-frame joint state) are produced separately.</p>
+
+        <h2>6. New hands = new data challenges</h2>
+
+        <p>Brett emphasizes that the newly released high-DOF hand has "as many joints as a human hand," with the goal of being able to <strong>passively learn from human videos</strong>. This points to a new direction:</p>
+
+        <ul>
+          <li>Use large amounts of <strong>internet human video</strong> (YouTube cooking, chores) for pre-training</li>
+          <li>The data emphasis shifts from "how the robot moves" to "<strong>how the human hand moves in the video</strong>"</li>
+          <li>High-precision hand pose estimation is needed, likely involving parametric hand representations like the MANO model</li>
+        </ul>
+
+        <h2>Reachy Mini: Hugging Face's App Store for desktop robots</h2>
+
+        <p><strong>One-line version: Hugging Face built an "App Store" for a small desktop robot called Reachy Mini.</strong> Just like the iPhone App Store — except this time the "phone" is a robot.</p>
+
+        <h3>Some terms first</h3>
+
+        <p><strong>Hugging Face</strong>: originally a model hosting platform — most open-source models live there. Last year they acquired French robotics company Pollen Robotics, stepping from pure software into hardware.</p>
+
+        <p><strong>Reachy Mini</strong>: a <strong>desktop-scale</strong> robot from Pollen. Important — <strong>it's not a humanoid like Figure</strong>. Specs:</p>
+
+        <ul>
+          <li>28 cm tall, 1.5 kg, sits on a desk</li>
+          <li>One movable head (6 DOF) + two antennae + one camera + microphone</li>
+          <li>Price: <strong>$299-$449</strong></li>
+          <li>Fully open source</li>
+        </ul>
+
+        <p>Compared to Figure 03 (a $60K machine that can do laundry) it's a different species. <strong>This is closer to a "moving smart speaker + AI toy."</strong></p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body h3 { font-size: 1.1rem; margin-top: 1.75rem; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
