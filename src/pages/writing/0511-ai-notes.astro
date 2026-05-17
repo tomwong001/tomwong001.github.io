@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 11";
+const date = "2026-05-11";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 11, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Recursive self-improvement</h2>
+
+        <p>Key points from Jack Clark's latest Import AI essay. His core claim: there's a 60%+ chance that "human-out-of-the-loop AI R&D" — a system that can train its own successor — appears before the end of 2028. The argument isn't based on a single benchmark but on a cumulative effect: SWE-Bench, METR time horizons, CORE-Bench, MLE-Bench, PostTrainBench, kernel optimization, automated alignment research, and AI systems that manage other AI systems. The case is a mosaic of separate pieces that are starting to connect into a loop.</p>
+
+        <h2>Forward Deployed Engineers</h2>
+
+        <p>OpenAI announced the OpenAI Deployment Company, a new entity to help organizations integrate AI into daily operations. It places specialized engineers — Forward Deployed Engineers (FDEs) — inside organizations to identify where AI can improve workflows and build systems employees can reliably use day to day. This is the same downstream move other model-makers are running: pushing past the API and into hands-on B2B implementation.</p>
+
+        <h2>What's happening in Chinese AI / robotics companies</h2>
+
+        <p>The compute gap between the US and China is only set to grow. US AI companies are just beginning to integrate NVIDIA's Blackwell chips, significantly stronger than anything Chinese companies can legally obtain. While NVIDIA's CEO has claimed Chinese companies already have sufficient compute, the Chinese researchers interviewed were skeptical of that talking point.</p>
+
+        <p>Many Chinese companies offer coding plans, often with generous token allowances to pull customers away from Claude Code, but they also pursue more differentiated directions. MiniMax builds high-margin AI companion products; Z.ai pursues B2B partnerships with social media companies, COMAC (the Chinese commercial aircraft maker), and government agencies. Alibaba affiliate Ant Group has carved out a niche in AI-based medical delivery — something that would be a liability and patient-privacy nightmare in the US.</p>
+
+        <p>Like the model companies, Unitree's researchers work long hours, but without the same AGI-driven zeal — Unitree's relationship to "AGI" is like a fish needing a bicycle. Another robotics company, Galbot, showed a warehouse where robots autonomously pick cold medicine and contact lenses off shelves and pack them per app-submitted customer orders. Delivery drivers came and went to collect robot-packed orders. Galbot says it completed over a million orders in 2025, 20% of them submitted at night when traditional pharmacies are closed. None of these orders need frontier models or superhuman intelligence — China's robotics ecosystem is using AI and making money under compute constraints. As one observer noted, there's a large class of AI+robotics industrial applications US companies won't notice because the US has lost its industrial base. The pharmacy scenario is genuinely well-suited to robots.</p>
+
+        <p>Unitree's revenue used to be dominated by sales to academic research labs, but as its IPO prospectus revealed, that's becoming less true as commercial sales balloon. Some buyers are industrial, but Unitree and Galbot both noted that the plurality of commercial buyers are purchasing robots for entertainment applications. It's surprisingly satisfying to watch a robot dance — or struggle to make coffee. Galbot said it opened over 100 stores last year where robots make beverages. Apparently the novelty sells.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
