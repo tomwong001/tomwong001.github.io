@@ -1,0 +1,53 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月9日";
+const date = "2026-05-09";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月9日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Anthropic 估值</h2>
+
+        <p>尽管 ARR（年度经常性收入）的收入确认方式可以争论，但很难否认来自二级市场和传统媒体的非常真实的报道：在一个年化增长约 80 倍、单月 ARR 增长 150 亿美元的「奇迹 Q1」之后，Anthropic 现在被传估值在 1–1.2 万亿美元区间——这将使其正式超越 OpenAI，跻身全球第 11–15 大公司之列。</p>
+
+        <p>有两点值得注意。其一，ARR 的确认方式与对外讲述的数字之间存在差距——当增长这么快时，对外的标题数字和底层的收入机制可能相差很大。其二，二级市场和主流报道独立地收敛到相近的估值，这让人很难只用「炒作」来一笔带过。</p>
+
+        <h2>Figure 机器人</h2>
+
+        <p>简单记一笔，跟踪 Figure 创始人 Brett Adcock 的最新动态。人形机器人这条赛道持续在产出值得关注的演示——这些演示反复出现的主题，与其说是能力峰值，不如说是「持续、可靠地运行」。（先记在这里，后面继续跟进。）</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
