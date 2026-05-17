@@ -1,0 +1,124 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 12";
+const date = "2026-05-12";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 12, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Few-shot and zero-shot</h2>
+
+        <p>These two concepts originally come from "few-shot learning" and "zero-shot learning" in machine learning, but in the LLM era they mostly describe <strong>how many examples you put in the prompt</strong>.</p>
+
+        <h2>Zero-shot</h2>
+
+        <p>Give the model no examples, just ask it to do the task. You describe what you want in natural language, and the model relies on knowledge learned during pretraining to understand and execute. For example, sentiment analysis:</p>
+
+        <pre><code>Judge whether the sentiment of this sentence is positive, negative, or neutral:
+"The weather is great today, I feel especially relaxed."</code></pre>
+
+        <p>The model has seen no demonstration and directly outputs "positive" based on the instruction.</p>
+
+        <p><strong>When to use:</strong> the task is common, the phrasing is clear, and the model likely saw similar tasks in pretraining — translation, summarization, rewriting, basic classification, writing a polite email. <strong>Pros:</strong> short prompt, fast to write, fewer tokens. <strong>Cons:</strong> when the format is unusual, a strict style is required, or it's an unfamiliar domain, the output gets unstable and drifts.</p>
+
+        <h2>Few-shot</h2>
+
+        <p>Put a few input–output example pairs in the prompt (usually 1 to 10) so the model completes the new task by imitating them. This is also called in-context learning — note the model's weights are not updated; it just "gets it on the spot" in the current conversation. Same sentiment analysis:</p>
+
+        <pre><code>Judge the sentiment of the sentence:
+
+Sentence: This restaurant's service was terrible.
+Sentiment: negative
+
+Sentence: The movie was okay, nothing special.
+Sentiment: neutral
+
+Sentence: I got a gift today and was happy all day.
+Sentiment: positive
+
+Sentence: He finally passed the exam.
+Sentiment:</code></pre>
+
+        <p>The model observes the format of the first three examples and answers "positive" in the same format. <strong>Derived concept:</strong> giving only one example is one-shot, a special case of few-shot.</p>
+
+        <p><strong>When to use:</strong> a specific output format is needed (e.g. fixed JSON), there are subtle judgment criteria (what counts as "positive" depends on your business definition), the task is niche, or you want consistent output style. <strong>Pros:</strong> significantly improves accuracy and format consistency — like on-the-spot teaching. <strong>Cons:</strong> examples consume the context window and cost more tokens; badly chosen examples mislead the model (uneven distribution, incomplete coverage, or errors).</p>
+
+        <h2>Comparison and selection advice</h2>
+
+        <p>In short: zero-shot is "tell the model what to do," few-shot is "show the model how to do it." The practical rule of thumb: try zero-shot first and see how it goes. If the output already meets expectations, don't add examples — save tokens and effort. If format is unstable, criteria are fuzzy, or it drifts wrong, add 2–5 high-quality examples to make it few-shot. Still not working? Consider adding Chain-of-Thought (let the model reason step by step), or just fine-tune.</p>
+
+        <p>Note: example <strong>quality</strong> matters far more than <strong>quantity</strong>. Three carefully chosen examples covering typical and edge cases usually beat ten thrown together. Examples should be consistent in style and format, and cover the different input types you expect the model to handle.</p>
+
+        <h2>Full-duplex multimodal interaction</h2>
+
+        <p><strong>Full-duplex</strong> is a comms term. A phone call is full-duplex — both sides can talk and interrupt simultaneously; a walkie-talkie is half-duplex — one person finishes before the other speaks. Most current AI voice assistants (including ChatGPT voice mode) are essentially half-duplex: you finish, it processes, replies, then waits for you.</p>
+
+        <p><strong>Multimodal</strong> means handling multiple information forms at once — voice, video, text, image. <strong>Full-duplex multimodal interaction</strong> means the AI can simultaneously listen, watch the camera, think, search, and respond — and these actions are <strong>concurrent</strong>, not queued.</p>
+
+        <h2>"Trained from scratch" vs "stacked"</h2>
+
+        <p>This is the key point. <strong>Traditional approach (stacked):</strong> today's ChatGPT voice mode is roughly glued together from a speech-recognition model (speech → text), an LLM (text → reply text), a speech-synthesis model (reply text → speech), plus rules for "did you finish talking" (turn-taking) and "should I call a tool." It's a few independent parts glued together; under the hood it's still turn-based — you say one thing, it says one thing.</p>
+
+        <p><strong>New approach (trained from scratch):</strong> Thinking Machines trained one model whose "input" is a <strong>continuous stream of audio + video + text</strong> and whose "output" is also a <strong>continuous stream of audio + text</strong>. No intermediate conversion, no concept of turns; the model natively lives in continuous time.</p>
+
+        <h2>The human↔AI bandwidth problem</h2>
+
+        <p>The people cited (John Schulman, a core RLHF author; Soumith Chintala, PyTorch's creator) frame this as a <strong>bandwidth</strong> problem. When humans talk to each other, information is high-bandwidth and concurrent — I listen while you speak, watch your expression, think about my reply, maybe check my phone. But human↔AI communication today is low-bandwidth and serial — one side must finish before the other moves. The new model widens that information pipe so interaction feels as natural as person-to-person.</p>
+
+        <h2>Capabilities emphasized in the demo</h2>
+
+        <ul>
+          <li><strong>Continuous time perception:</strong> the model isn't "fed" a recording; it perceives time passing in real time (e.g. realizing "the user has been silent for 3 seconds").</li>
+          <li><strong>Interruption handling:</strong> change your mind mid-sentence and interrupt, and it stops to listen — instead of finishing the prepared reply.</li>
+          <li><strong>Simultaneous speech:</strong> both sides can overlap, like the "mm-hm, yeah" of real conversation.</li>
+          <li><strong>Visual proactivity:</strong> it actively notices and incorporates what the camera sees, without you prompting "look at this."</li>
+          <li><strong>Background tool use:</strong> it quietly searches/calls tools while talking, without blurting "I'm searching now..." and stalling. The experience stays continuous.</li>
+        </ul>
+
+        <h2>What "zero-shot" means at the end</h2>
+
+        <p>A <strong>type signature</strong> is a programming term for a function's input and output types. Schulman's point: AI's old type signature was <code>text → text</code> (or, with parts bolted on, <code>speech → speech</code>); the new model's is <code>continuous audio+video+text → audio+text</code>. <strong>When the model's native I/O is this rich multimodal stream, many tasks that previously needed a purpose-built system can now be done zero-shot</strong> — no special training, no examples. Examples: real-time sign-language translation used to need a sign-recognition model + translation + speech synthesis stitched together; now the model watches video, hears speech, outputs speech in one shot. "Give verbal suggestions while watching you code" used to need screen recognition + code understanding + speech generation; now it's zero-shot.</p>
+
+        <p>One-sentence summary: Thinking Machines previewed a model that is <strong>natively continuous, multimodal, real-time interaction</strong> — not an existing LLM with voice bolted on, but a model that learned during training to "listen, speak, watch, think, and search at the same time." Once the capability base looks like this, many real-time interaction tasks that needed bespoke systems can now be done with no extra training (zero-shot).</p>
+
+        <h2>Deep agents and local agents are maturing fast</h2>
+
+        <p>A deep-agent CLI can hot-swap the underlying model provider mid-conversation without losing context — a non-trivial systems feature many agent stacks still lack. LangChain also emphasized using profiles for provider/model-specific tuning. A separate pricing analysis argued that for high-volume agent workloads, DeepSeek V4 Flash can be much cheaper than GPT/Gemini flash-tier options.</p>
+
+        <p>Local/open models keep improving faster than the hardware ceiling. One strong argument: under the same top-tier MacBook Pro memory limit, the "smartest open-weight model you can actually run" went from Llama 3 70B-era capability to DeepSeek V4 Flash hybrid Q2 GGUF-era capability — roughly 4.7x in 24 months, i.e. doubling every ~10.7 months, faster than Moore's law. Supporting data points: rapid growth in GGUF uploads, and the community repeatedly observing that Qwen 3.6, Gemma 4, and DeepSeek variants can now do non-trivial agent tasks locally.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
