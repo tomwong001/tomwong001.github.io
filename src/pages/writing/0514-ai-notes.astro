@@ -1,0 +1,104 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 14";
+const date = "2026-05-14";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 14, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>A classic model-training failure caused by data leakage</h2>
+
+        <p>This is a fascinating and instructive story — a real case of an AI deployment failing in hospitals.</p>
+
+        <h2>Background: predicting sepsis</h2>
+
+        <p><strong>What is sepsis?</strong> A dysregulated immune response to infection that can rapidly cause organ failure. It's one of the deadliest emergencies in hospitals — every hour of delayed treatment raises mortality by 4–8%. So an AI that predicts which patients will develop sepsis a few hours early could save many lives.</p>
+
+        <p><strong>Who is Epic?</strong> Epic Systems is the largest electronic health record (EHR) company in the US; over 40% of US hospitals use it to manage patient data. It shipped an AI sepsis-prediction tool, claimed high internal accuracy, and was enabled by default at hundreds of hospitals.</p>
+
+        <h2>The failure: much worse in real hospitals</h2>
+
+        <p>In 2021, JAMA Internal Medicine published an external validation study with shocking results: it missed 67% of real sepsis cases (two-thirds of true patients undetected), and produced a flood of false alarms. Doctors were frequently interrupted for nothing — "alert fatigue" — which led them to start ignoring alerts, including real ones.</p>
+
+        <p>The puzzle: internal testing looked great, so why was real-world performance so bad?</p>
+
+        <h2>The core problem: the model was "cheating" with future information</h2>
+
+        <p>This is the key technical point. It's called <strong>data leakage</strong> (or target leakage), a classic ML pitfall. When training the model, researchers fed it hundreds of features (temperature, heart rate, white-cell count, medication records…) to learn "what kind of patient gets diagnosed with sepsis."</p>
+
+        <p>One feature was: <strong>"has the doctor already prescribed antibiotics?"</strong> It sounds fine — antibiotic prescription correlates strongly with sepsis. But the logical order is wrong:</p>
+
+        <ul>
+          <li><strong>Real clinical flow:</strong> doctor first suspects/diagnoses sepsis → then prescribes antibiotics.</li>
+          <li><strong>What the model learned:</strong> doctor prescribed antibiotics → this patient has sepsis.</li>
+        </ul>
+
+        <p>In other words, the "predictive signal" the model learned is actually "the doctor's reaction after already diagnosing." It wasn't predicting — it was parroting the doctor's diagnosis.</p>
+
+        <h2>Why internal testing couldn't catch this</h2>
+
+        <p><strong>During internal testing:</strong> researchers validated on historical case data. In those cases, the timestamps of antibiotic prescriptions and sepsis diagnoses are all present. The model sees "this patient was prescribed antibiotics" — that info exists in the historical data — and predicts "sepsis," looking incredibly accurate.</p>
+
+        <p><strong>During real deployment:</strong> the model must warn before the patient is diagnosed. But at that point the doctor hasn't prescribed antibiotics yet (they prescribe because they've already diagnosed — they don't need an AI prompt). The model's most-relied-on feature is gone, and accuracy collapses.</p>
+
+        <p>This is what the source meant by: "the model used a feature from the future, depending on a variable that has a causal dependency on the outcome." "From the future" means: relative to the moment the model should predict, "the doctor prescribed antibiotics" happens later. "Causal dependency" means: the antibiotic prescription is not the cause of sepsis but the result of it (prescribed only after diagnosis). The model reversed causality — it thought "prescribed antibiotics → will get sepsis," when really it's "has sepsis → then gets prescribed antibiotics."</p>
+
+        <h2>The future of human work</h2>
+
+        <p>More and more human work becomes "controlling AI" — like factory workers shifting from manual labor to monitoring machines after the industrial revolution, future roles increasingly revolve around specification and supervision.</p>
+
+        <h2>Claude pricing</h2>
+
+        <p>Claude's pricing-change notice is well done, though it's not what subscription users want to hear: every Claude subscription now gets a monthly API token credit equal to the dollar amount of the plan. So you pay $200 and get both a Claude subscription with its own usage limits for interactive tools like Claude.ai and Claude Code ("interactive use"), plus $200 of API credit for programmatic use of Claude (e.g. <code>claude -p</code> and elsewhere).</p>
+
+        <h2>Pretraining efficiency and architecture experiments</h2>
+
+        <p>This is the strongest research thread. Nous Research's token-stacking training modifies the early stage of pretraining so the model reads/predicts a continuous packet of tokens before reverting to standard next-token prediction; they report 2–3x wall-clock speedup at matched FLOPs with no inference-time architecture change, validated from 270M to 3B dense and 10B-A1B MoE. Jonas Geiping et al. argue current message/chat training over-constrains agents to a single stream, and released a multi-stream LLM paper claiming lower latency, cleaner separation of concerns, and more readable parallel reasoning/tool use. δ-mem proposes an external online associative memory attached to a frozen full-attention backbone, reportedly improving average score 1.10x at 8x8 state and 1.15x over a non-δ-mem baseline, with larger gains on memory-intensive benchmarks.</p>
+
+        <h2>Trajectory dataset</h2>
+
+        <p>A note to track a large SWE trajectory dataset (SWE-ZERO-12M-trajectories) for later study.</p>
+
+        <h2>Figure runs an 8-hour autonomous robot shift</h2>
+
+        <p>Figure AI livestreamed an 8-hour autonomous factory shift using teams of its Figure 03 humanoids powered by the company's Helix-02 system. The robots sort small packages by detecting barcodes from camera input, picking up packages, and placing them face-down onto conveyors for scanning. Figure says the system now operates at roughly human speed, averaging around one package every 3 seconds. The robots run entirely onboard without cloud inference, using a single neural network for vision, movement, balance, and manipulation.</p>
+
+        <p>More notably, the robots coordinate with each other to keep the system running continuously. When battery levels drop, robots autonomously request replacements to minimize downtime. If a robot detects a fault, it can reportedly diagnose the issue itself, walk to maintenance, and request another unit to take over. Figure says the long-term goal is continuous 24/7 operation.</p>
+
+        <p>These companies are starting to test whether robots can function as persistent labor infrastructure in real operating environments. In robotics, reliability matters more than demos. A robot is only economically valuable when it can run for long stretches, recover from problems, coordinate with other machines, and keep working without constant human supervision.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
