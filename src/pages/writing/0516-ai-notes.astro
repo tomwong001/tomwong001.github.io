@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 16";
+const date = "2026-05-16";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 16, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Skepticism about Figure vs conviction about robotics</h2>
+
+        <p>Interpretation split between skepticism about Figure specifically and broader conviction about robotics acceleration. Some commenters argued critics were underestimating what these demonstrations imply for near-term labor substitution, while others noted the skepticism was directed more at <strong>Figure</strong> than at <strong>robotics as a category</strong>. Either way, this was one of the clearest "continuous uptime" demos in the batch.</p>
+
+        <h2>Sales as a steady role</h2>
+
+        <p>A view worth recording: in a world where AI is imminently going to replace jobs, sales is a role that stays relatively steady — and there's no better thing to sell than AI itself. The suggested move: ask to transition into the sales team at your current company.</p>
+
+        <h2>Cerebras IPO</h2>
+
+        <p>Technical stories are the usual focus, but occasional large fundraisings are noteworthy in themselves. The Cerebras IPO this week — after a pulled S-1, a 750MW partnership, and a $10–20B stake/deal with OpenAI — qualifies as a growing theme supporting the "inference inflection," roughly 6 months after NVIDIA's $20B execu-hire of Groq. $CBRS ended at $280, a market cap of $60B — significant validation for the wafer-scale "Big Chip" approach.</p>
+
+        <h2>Codex remote control</h2>
+
+        <p>OpenAI's Codex mobile/app rollout dominated product chatter. Users described building websites from a bar, controlling Macs from an iPhone, and treating laptops as "satellite devices" while an always-on Mac mini runs sessions in the background. The pattern is the same one recurring across agent tooling: the laptop becomes a thin client, with a persistent background machine doing the actual long-running work.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
