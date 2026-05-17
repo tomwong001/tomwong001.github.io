@@ -1,0 +1,104 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月14日";
+const date = "2026-05-14";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月14日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>一个由数据泄漏导致的经典模型训练翻车案例</h2>
+
+        <p>这是一个非常有意思也很有教育意义的故事——AI 在医院里部署失败的真实案例。</p>
+
+        <h2>背景：医院想用 AI 预测脓毒症</h2>
+
+        <p><strong>脓毒症（sepsis）是什么？</strong>简单说就是身体对感染产生的失控免疫反应，会快速导致器官衰竭。它是医院里最致命的急症之一——每延迟一小时治疗，死亡率上升 4–8%。所以如果 AI 能提前几小时预测哪个病人要发生脓毒症，就能救很多命。</p>
+
+        <p><strong>Epic 是谁？</strong>Epic Systems 是美国最大的电子病历（EHR）系统公司，全美 40% 以上的医院用它管理病人数据。它推出了一个 AI 脓毒症预测工具，号称内部测试准确率很高，被几百家医院默认开启使用。</p>
+
+        <h2>翻车：在真实医院里表现糟糕得多</h2>
+
+        <p>2021 年 JAMA 内科杂志发布了一项外部验证研究，结果震惊业界：漏掉了 67% 的真实脓毒症病例（三分之二的真患者没识别出来），还产生大量假警报。医生被频繁打扰但其实没事——这叫「警报疲劳（alert fatigue）」，反而让医生开始忽略警报，包括真警报。</p>
+
+        <p>问题是：内部测试明明很好，怎么实战这么烂？</p>
+
+        <h2>核心问题：模型在「作弊」——用了未来的信息</h2>
+
+        <p>这是最关键的技术点。这叫 <strong>data leakage（数据泄漏）</strong>，或 target leakage（标签泄漏），是机器学习里非常经典的坑。训练这个模型时，研究者给它喂了几百个特征（病人的体温、心率、白细胞数、用药记录……），让它学「什么样的病人会被诊断为脓毒症」。</p>
+
+        <p>其中一个特征是：<strong>「医生是否已经开了抗生素？」</strong>听起来好像没问题——医生开抗生素和脓毒症确实强相关。但逻辑顺序错了：</p>
+
+        <ul>
+          <li><strong>真实临床流程</strong>：医生先怀疑/诊断脓毒症 → 然后开抗生素。</li>
+          <li><strong>模型学到的「规律」</strong>：医生开了抗生素 → 这个病人是脓毒症。</li>
+        </ul>
+
+        <p>换句话说，模型学到的「预测信号」其实是「医生已经诊断出来后的反应」。它根本没在做「预测」，它只是在「复读医生的诊断」。</p>
+
+        <h2>为什么这个错误内部测试发现不了</h2>
+
+        <p><strong>内部测试时</strong>：研究者拿历史病例数据来验证。这些病例里，抗生素处方的时间戳和脓毒症诊断的时间戳都齐全。模型看到「这个病人开了抗生素」——这条信息在历史数据里就是存在的——它据此预测「脓毒症」，看起来准得不得了。</p>
+
+        <p><strong>实战部署时</strong>：模型要在病人还没被诊断之前就预警。但此时医生根本还没开抗生素（医生开抗生素就是因为已经诊断了，根本不需要 AI 提示）。模型最依赖的特征消失了，准确率自然崩盘。</p>
+
+        <p>这就是原文说的：「模型使用了一个来自未来的特征，依赖于一个在结果上有因果依赖的变量」。「来自未来」指的是：相对于「模型应当做预测的时刻」，「医生开抗生素」这件事是未来才会发生的。「因果依赖」指的是：抗生素处方不是脓毒症的原因，而是脓毒症的结果（医生确诊后才开）。模型把因果方向搞反了——它以为是「开了抗生素 → 会得脓毒症」，实际是「得了脓毒症 → 才会被开抗生素」。</p>
+
+        <h2>未来人类工作</h2>
+
+        <p>未来人类工作越来越多变成「控制 AI」：就像工业革命后工厂工人从体力劳动变成监控机器，未来岗位会更多围绕任务规范（specification）和监督展开。</p>
+
+        <h2>Claude 定价</h2>
+
+        <p>Claude 的定价变更通知总体来说做得相当不错，但这并不是订阅用户想听到的：现在每个 Claude 订阅都会获得与订阅计划美元金额相等的每月 API token 信用额度。所以你支付 200 美元，就同时获得一个有自己使用限制的 Claude 订阅（用于 Claude.ai 和 Claude Code 等交互式工具，即「交互式使用」），以及 200 美元价值的 API 信用额度，用于程序化使用 Claude（例如 <code>claude -p</code> 等场景）。</p>
+
+        <h2>预训练效率与架构实验</h2>
+
+        <p>这是最强的研究主线。Nous Research 的 Token 叠加训练修改了预训练的早期阶段，使模型在恢复到标准的下一个 token 预测之前读取/预测连续的 token 包；他们报告在匹配的 FLOPs 下实现 2–3 倍的墙钟加速，且没有推理时的架构变化，验证范围从 270M 到 3B 密集型和 10B-A1B MoE。Jonas Geiping 等人认为当前基于消息/聊天的训练过度把代理限制到单个流，并发布了一篇多流 LLM 论文，声称具有更低延迟、更清晰的关注点分离以及更易读的并行推理/工具使用。δ-mem 提出了一种附加在冻结的全注意力主干上的外部在线关联内存，据报道 8x8 状态平均得分提高 1.10 倍，并比非 δ-mem 基线提高 1.15 倍，在内存密集型基准上取得更大增益。</p>
+
+        <h2>轨迹数据集</h2>
+
+        <p>记一笔：跟踪一个大型 SWE 轨迹数据集（SWE-ZERO-12M-trajectories），后面再细看。</p>
+
+        <h2>Figure 运行 8 小时自主机器人轮班</h2>
+
+        <p>Figure AI 直播了一个 8 小时的自主工厂班次，使用其配备公司 Helix-02 系统的 Figure 03 人形机器人团队。机器人通过检测摄像头输入的条形码来对小包裹分类，拾起包裹，并将它们面朝下放到传送带上扫描。Figure 称该系统现在以大约人类的速度运行，平均每 3 秒处理一个包裹。机器人完全在板载运行，无需云推理，并使用单个神经网络进行视觉、运动、平衡和操作。</p>
+
+        <p>更值得注意的是，机器人相互协调以保持系统持续运行。当电池电量下降时，机器人会自主请求更换以最小化停机时间。如果机器人检测到故障，据报道它可以自行诊断问题，走到维护区，并请求另一个单元接管。Figure 称长期目标是持续 24/7 运行。</p>
+
+        <p>这些公司开始测试机器人是否能在实际运行环境中作为持久性劳动基础设施发挥作用。在机器人领域，可靠性比演示更重要。只有当机器人能够长时间运行、从问题中恢复、与其他机器协调，并且无需持续人工监督就能继续工作时，它才具有经济价值。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
