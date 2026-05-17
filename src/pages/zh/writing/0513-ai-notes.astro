@@ -1,0 +1,87 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月13日";
+const date = "2026-05-13";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月13日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>本周要做的事</h2>
+
+        <p>弄清楚你的 agent 最长能跑多久。METR 教会我们：持续时间可能是难度的良好近似。问自己：你最长信任 agent 自动运行的时间有多长？如果你不知道，你就无法延长它。</p>
+
+        <h2>Perplexity：怎么设计 skill</h2>
+
+        <p>Perplexity，一家构建代理研究和浏览工具的 AI 搜索公司，发布了其设计 agent skill 的方法论。主要教训：不要从 skill 开始，而要从测试开始。</p>
+
+        <ul>
+          <li><strong>先写 evals。</strong>从生产查询、已知故障和边界案例中提取五到十个案例。包含负面示例——不应调用此 skill 的查询。</li>
+          <li><strong>触发方式像人类一样表述。</strong>以「Load when…」开头，并使用你的用户使用的语言。不要用「monitors pull requests」，而尝试「babysit a PR」「watch CI」或「make sure this lands」。这样 skill 就会在团队无需特定命令或技术短语的情况下加载。</li>
+          <li><strong>正文用原则而非步骤。</strong>模型已经知道命令；它需要关于如何应用的指导。与其列出详细步骤（检出分支、挑选文件、检查冲突……），不如写「将提交 cherry-pick 到干净的分支上。解决冲突并保留意图」。</li>
+          <li><strong>把失败转化为教训。</strong>当 agent 在生产中失败时，把失败模式写入 skill 文件。错误就成为一项永久指令，防止未来重犯。</li>
+          <li><strong>严格编辑说明。</strong>每增加一行都要问：「没有这一行，agent 会出错吗？」如果不会，就删掉它。每增加一行都增加上下文成本。</li>
+        </ul>
+
+        <h2>基准测试不断变难</h2>
+
+        <p>研究级推理基准持续升级。Soohak 引入了由 64 位数学家（包括 38 位教授）从零开始创作的 439 个研究级数学问题，明确针对超出标准奥赛风格数学的能力。在医学评估方面，SophontAI 发布了 Medmarks v1.0，将其开放医学基准套件从 20→30 个基准、46→61 个模型扩展。越来越多的观点认为旧评估正在饱和：应该用得分较低、挑战前沿的测试取代分数普遍偏高的基准。</p>
+
+        <h2>Blackwell 成为大型 MoE 服务的参考平台</h2>
+
+        <p>Blackwell 机架正成为服务大型 MoE 的参考平台。Perplexity 发布了在 NVIDIA GB200 NVL72 上服务 post-trained Qwen3 235B 的细节，认为 GB200 相对 Hopper 是大型 MoE 的重要推理升级。基准引用：NVLS all-reduce 延迟从 H200 的 586.1µs 降到 GB200 的 313.3µs，MoE prefill combine 在 EP=4 时从 730.1µs 降到 438.5µs，并在高 token 率下有更好的解码吞吐。这实质性地改变了服务大型 MoE 的 prefill/decode 解耦。</p>
+
+        <h2>Demis Hassabis 谈 AI 用于健康</h2>
+
+        <p>Demis Hassabis 一直认为 AI 的头号应用应该是改善人类健康。这项工作始于 AlphaFold，如今在 Isomorphic Labs 继续，使命是重新构想药物发现、有朝一日解决所有疾病——并以 21 亿美元新融资加速这一目标。</p>
+
+        <h2>更安全的代码生成正成为独立研究方向</h2>
+
+        <p>GitHub 的 <code>pull_request_target</code> 仍然是 fork-based PR 自动化中最锋利的 CI/CD 陷阱之一。在工作站层面，建议把密钥从普遍的本地 <code>.env</code> 文件移到合适的密钥管理器中。与斯坦福相关的 SecureForge 工作通过提示优化来发现/预防 LLM 生成代码中的漏洞，将其框定为代码生成与安全评估之间的桥梁。更广泛的观点：编码代理现在足够强大，以至于供应链加固和安全生成评估需要被视为核心基础设施，而不是次要关注点。</p>
+
+        <h2>用 Intel Optane 跑 1 万亿参数模型</h2>
+
+        <p>一台使用 Intel Optane DC 持久内存 DIMM 的高内存 Xeon，据报道可在本地通过 llama.cpp 混合 GPU/CPU 推理以约 4 tokens/s 运行 Kimi K2.5（一个 ~1T 参数 MoE 模型）。关键技术点：768GB Optane PMem 在 Memory Mode 下表现为系统 RAM，192GB DDR4 ECC DRAM 作为缓存，因此模型的稀疏专家权重驻留在 PMem 中，而注意力/密集/共享专家/路由张量则用 <code>override-tensor</code> 或 <code>ngl auto</code>/<code>cmoe</code> 放进 RTX 3060 12GB。评论者讨论了更高核心数的 Cascade Lake Xeon 是否有帮助、Optane Storage Mode 加 <code>mmap</code> 是否可能优于 Memory Mode，以及 4 tokens/s 对交互式使用是否实际可接受。</p>
+
+        <h2>Google：用 AI 取代点击和输入</h2>
+
+        <p>在 I/O 大会之前，谷歌发布了新的基于 Gemini 的产品：AI 原生的「Googlebook」笔记本电脑、面向 Android 的跨设备 Gemini Intelligence 系统，以及一个新的 AI 驱动光标 Magic Pointer。Magic Pointer 让用户指向屏幕上的某个物体，同时 Gemini 理解周围环境并直接响应语音指令。例如：指向视频中的建筑物 →「给我展示路线」；指向邮件中的日期 → 创建会议；指向一张表 → 把它变成图表。该系统可在 Chrome、Android 应用和 Google 服务中运行，无需不断打开聊天窗口或编写详细提示。谷歌还宣布了 AI 辅助语音输入、Chrome 中的自动浏览以及 AI 生成的部件。</p>
+
+        <h2>为什么实时通讯重要</h2>
+
+        <p>大多数 AI 仍然像即时通讯软件一样工作：输入一些内容，等待，然后得到回应。人类协作不是这样的。Thinking Machines 认为下一阶段的人工智能不仅仅是更智能，更是更好的交互。如果这些系统得到改进，人工智能的体验可能会开始不那么像使用软件，更像是在与一个能够倾听、反应并实时保持在场的事物一起工作。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
