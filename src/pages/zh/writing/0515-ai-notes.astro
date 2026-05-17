@@ -1,0 +1,109 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月15日";
+const date = "2026-05-15";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月15日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Abridge：从记录工具到临床智能层</h2>
+
+        <p><strong>核心信息</strong>：Abridge（成立于 2018 年）正从「AI 医疗记录工具」升级为「临床智能层」，目标是为美国医疗系统提供贯穿就诊前、中、后的 AI 基础设施。</p>
+
+        <p><strong>公司规模</strong>：预计今年支持 8000 万+ 医患对话，覆盖 250 家大型美国医疗系统，支持 28+ 种语言、50+ 种专科。2025 年 6 月以 53 亿美元估值融资 3 亿美元。</p>
+
+        <h2>三大战略阶段：省时间 → 省钱 → 救命</h2>
+
+        <ul>
+          <li><strong>省时间</strong>：减轻医生每周 10–20 小时的文书负担（消除「睡衣时间」——医生回家穿着睡衣补病历）。</li>
+          <li><strong>省钱 / 多赚钱</strong>：帮助医院在低利润环境下优化计费、合规、预授权。</li>
+          <li><strong>救命</strong>：通过临床决策支持改善患者结局。</li>
+        </ul>
+
+        <h2>产品演进：从被动记录到主动智能</h2>
+
+        <p>目标是让 AI 像「空调」一样存在——在背景中默默工作，只在必要时介入。90% 以上的传统医疗警报被忽略，所以 Abridge 选择在就诊之前预备医生，而非就诊中频繁打断。</p>
+
+        <p><strong>预授权（Prior Authorization）案例</strong>：传统流程——开了 MRI → 4 周后被保险拒绝 → 病人重新预约。Abridge 方式——在病人还在诊室时，提醒医生补问关键问题（如「是否做过物理治疗？疼痛是否超过 6 周？」），实时满足保险条件。</p>
+
+        <h2>关键技术挑战与方法</h2>
+
+        <p><strong>最难的 AI 问题</strong>：在高风险临床场景中同时实现高质量 + 低延迟 + 低成本的实时支持。</p>
+
+        <p><strong>模型策略</strong>：第三方前沿模型 + 自有专有模型（基于 1 亿+ 医疗对话数据训练）。「每个 agent 本质上都是 coding agent」，EHR 可视为 agent 的「文件系统」。</p>
+
+        <p><strong>个性化三层级</strong>：个人医生（风格偏好）、专科（心内 vs 皮肤科）、医院系统（机构内部指南）。</p>
+
+        <p><strong>评估体系（Evals）</strong>：LFD（内部临床医生先看数据）、LLM 裁判、第三方评估员 + 专科特定评估、渐进式发布（类比 Waymo 自动驾驶）。客户已从季度发布周期缩短到月度。</p>
+
+        <p><strong>隐私与合规</strong>：所有数据单向去标识化（不可逆）。严格 HIPAA / PHI 管控，写入客户合同。</p>
+
+        <h2>反共识观点：「PRD 并未死亡，原型并非万能」</h2>
+
+        <p>在高风险、高复杂度产品中，清晰的书面思考比快速原型更重要。「Go slow to go fast」。早期初创可以「先扔 30 个原型试错」，但在 Abridge 规模下，每个决策都涉及 200+ 医院系统的实施成本。</p>
+
+        <h2>监管利好</h2>
+
+        <p>FDA 于 2026 年 1 月更新临床决策支持指南，对 AI 更友好。政府推动系统间互操作性。高风险领域反而会最先解决最难的 AI 问题（80/20 在医疗不适用）。</p>
+
+        <h2>团队特色：临床科学家（Clinician Scientists）</h2>
+
+        <p>既有 MD 背景又懂技术的「突变体」，嵌入产品和评估团队，从根本上提高产品标准。</p>
+
+        <h2>未来愿景</h2>
+
+        <p>同一段医患对话可同时服务：医生（病历）、患者（就诊总结）、保险公司（理赔依据）、药企（临床试验匹配）——把今天分散昂贵的多套系统折叠成一个平台。</p>
+
+        <h2>代理的执行隔离持续成熟</h2>
+
+        <p>W&B/CoreWeave 推出了 CoreWeave Sandboxes，用于 RL、工具使用和评估工作负载中的隔离执行，明确测试大规模的破坏性命令（如 <code>rm -rf /</code>）。在类似精神下，围绕代理调试的开源/本地开发工具涌现——一个免费的本地代理调试堆栈，其 trace 暴露给 Codex/Claude Code，用于自动化评估编写。</p>
+
+        <p>CoreWeave（Weights & Biases 的母公司）在预览版中推出了 Sandboxes：通过 W&B SDK 提供的隔离 CPU 环境，代理可以在其中执行代码、克隆仓库、安装依赖——所有这些都是供应链事件后你不希望在主机器上发生的事情。一个明显的用例：代理评估需要每个测试都有新鲜、一致的环境，然后清理。Sandboxes 正好解决了这个问题。</p>
+
+        <h2>转向 Hermes（Nous Research）</h2>
+
+        <p>一个有意思的行业叙事转变：本周有几位长期关注 AI 的评论者独立地切换了他们日常使用的 agent harness。共同的故事是：某个流行的 agent harness 早期非常神奇，但在 Anthropic 的价格调整使通过它使用 Max 级别 Opus 变得非常昂贵之后，再加上几个月里每次更新都不断出问题，魔法就消失了——用户发现自己在「不断修复它」而不是使用它。</p>
+
+        <p>于是有人转向 Codex，有人转向 Nous Research 的 Hermes。为什么是 Hermes？它现在是 OpenRouter 全球上使用最广泛的 CLI 代理，在 OpenRouter 使用上超越了其他 harness，甚至超越了 Claude Code。它有 /goal、steering，以及通过 TryCUA 集成实现的后台计算机使用。它是开放的，所以你可以无缝移植你的记忆、profile 和配置文件。</p>
+
+        <p><strong>Steering</strong> 可能是最被低估的补充——这是一个 Codex 功能，在 Hermes 中也存在：你可以发送后续消息，代理会在下一次工具调用后看到它，而不是在整个思维链完成之后。这让对话变得自然得多。</p>
+
+        <h2>Thinking Machines：一个 276B MoE</h2>
+
+        <p>交互模型是一个 276B 的 MoE，其中 12B 活跃。本地模型社区的期待：权重可以被量化以在小型家用硬件上运行，实现完全离线、始终在场的家庭助手。反复出现的主题——小而强、能本地运行的模型，作为环境式助手的基础。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
