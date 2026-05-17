@@ -1,0 +1,89 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月10日";
+const date = "2026-05-10";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月10日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Code with Claude：Managed Agents</h2>
+
+        <p>本周 Code with Claude 开发者大会的核心叙事：未来你只需要给 Claude 两样东西——一个<strong>结果（outcome）</strong>和一个<strong>预算（budget）</strong>，就能完成一个目标。这就是新的 Managed Agents 功能的方向：把 Claude 封装在云端的一台计算机里，你可以按需启动、扩展和管理。Anthropic 正在解决那个「杀死大多数 agent 产品」的底层基础设施，并确保它能扩展到全天候运行的 agent。</p>
+
+        <h2>访谈：Anthropic 平台团队（Every 播客）</h2>
+
+        <p>这是对 Anthropic 平台团队两位负责人的访谈——产品负责人 Angela 和工程负责人 Caitlin。重点如下：</p>
+
+        <h2>一、平台的演进轨迹</h2>
+
+        <p>最早的「平台」就是一个 completion endpoint：发个 prompt，拿个回复。然后加上工具调用、聊天会话，再到现在的有状态会话。整体方向是从无状态到有状态、从低级原语到更高层抽象，目的都是一个：让用户用最少的工作拿到最好的结果。</p>
+
+        <h2>二、Managed Agents 是什么、给谁用</h2>
+
+        <p>它建立在 Messages API 和内置工具（代码执行沙箱、网页搜索等）之上，把 Anthropic 自己反复造过几次的基础设施打包成一套开箱即用的方案。两类目标用户：公司内部要搭自动化或平台的人（端到端的软件开发平台，或一个让法务自动审查营销文案的小流程）；以及要把 agent 集成进自己对外产品的开发者——这种场景仍需大量定制，但基础设施工程不值得自己重造。</p>
+
+        <p>有主持人提到锁定（lock-in）的担忧：他的团队用一台 Mac mini 跑 <code>claude -p</code> 命令循环，担心切到 managed agents 会跟不上 Claude Code 的新功能。Caitlin 的回应是：Anthropic 自己的一方产品（Claude Code、co-worker 等）也建立在同一个平台上，所以未来 divergence 会越来越小。</p>
+
+        <h2>三、Harness 与模型的路径依赖</h2>
+
+        <p>过去流行做一个非常通用的 harness，可以热插拔不同模型。但 Angela 认为这种思路正在过时——各家实验室对模型的训练方向越来越不一样，harness 和模型会越来越绑定。你仍然需要冗余、仍然会用其他模型，但热插拔的层级会上升到「agent」（即 harness + 模型）这个粒度，而不是模型本身。她举例：同样做 memory 这个功能，他们试了好几种 harness 设计，eval 结果差异巨大。harness engineering 本身就有大量 alpha。代价是：选什么作为核心原语会深度影响模型的能力方向。Anthropic 押注的是文件系统和 skills，所以模型也越来越擅长这些。</p>
+
+        <h2>四、用户以为难的 vs 实际难的</h2>
+
+        <p>用户以为最难的是 harness engineering（prompt caching、上下文窗口管理等）。实际上撞墙的地方是<strong>基础设施</strong>：sandbox 掉了 agent 就死了、长跑 server、transcript 存储、安全沙箱、扩展性。Managed Agents 主打就是替你解决这一层。</p>
+
+        <h2>五、Agent 应用的层次</h2>
+
+        <p>个人生产力工具到处都是，但<strong>团队级 agent</strong> 才是真正复杂、真正有杠杆的地方——多个 agent 互相协作、流程端到端自动化，需要一个比「单 agent」更高一层的平台抽象。Vercel 的 Guillermo 把这种组织形态描述为「内部的 AI 软件工厂」。具体案例：法务审营销文案的 agent，这事不能只用 skill 解决，因为需要 human in the loop、不同人协作、agent 跨会话运行。建出来后，营销和法务的用户其实并不直接改 prompt，而是通过另一个 Claude 来跟那个 agent 交互——「managed agents all the way down」。</p>
+
+        <h2>六、Multi-agent orchestration 的新玩法</h2>
+
+        <p>可以拼装出不同的策略架构：advisor/executor 分离、对抗式（一个生成一个挑刺）、分治再合并、best-of-N、swarm 协作等。不同架构适合不同任务——swarm 适合 bug hunting，分治适合 deep research。原语越像乐高，越能在更高层 hill climb。</p>
+
+        <h2>七、怎么衡量 agent 成功</h2>
+
+        <p>除了常规 eval，他们更倾向于 <strong>verifiable outcome</strong>——比如代码 agent 就看 PR 有没有被 merge。终极愿景是用户只用提供两个参数：可验证的 outcome + budget，剩下的全部由系统自己搞定。</p>
+
+        <h2>八、Agent 过期 / 退役</h2>
+
+        <p>确实是个真问题。他们做了一些 skill 来帮助升级模型、做迁移，把它当成「breaking change」来正经对待。最 AGI-pilled 的玩家会跑 agent 来监控自家 agent 是否过期。</p>
+
+        <h2>九、一年后的愿景</h2>
+
+        <p>Angela：希望接近那个「outcome + budget」两参数的世界，Claude 自己懂自己，自己选模型、自己拉子 agent、自己写 harness，用户不用再操心架构选型和 prompt 工程。一年内可能能做到 outcome 那部分，budget 还会有点误差。Caitlin：那个世界对平台的扩展性要求极高——agent 永远在跑、在自我重建，平台必须保证 token 进出、长跑请求、各种异形负载都不能成为瓶颈。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
