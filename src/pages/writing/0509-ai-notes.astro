@@ -1,0 +1,53 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 9";
+const date = "2026-05-09";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 9, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Anthropic's valuation</h2>
+
+        <p>You can debate the finer points of ARR revenue recognition, but it's hard to dismiss the very real reports from the secondary market and traditional media: after a "miracle Q1" of roughly 80x annualized growth and a one-month jump of $15B in ARR, Anthropic is now reportedly being valued in the $1–1.2T range — which would put it officially ahead of OpenAI as the 11th–15th most valuable company in the world.</p>
+
+        <p>Two things stand out. First, the gap between how ARR is recognized and how the number is talked about — when growth is this fast, the headline figure and the underlying revenue mechanics can diverge a lot. Second, the fact that the secondary market and mainstream reporting independently converge on a similar valuation makes it harder to wave away as hype alone.</p>
+
+        <h2>Figure Robotics</h2>
+
+        <p>A short note to track Figure's latest update from Brett Adcock. The humanoid robotics race keeps producing demos worth watching — the recurring theme across these is less about peak capability and more about continuous, reliable operation. (Tracked here to follow up on later.)</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
