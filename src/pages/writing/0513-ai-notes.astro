@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 13";
+const date = "2026-05-13";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 13, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>What to do this week</h2>
+
+        <p>Figure out your longest agent run. METR teaches us that duration may be a good approximation of difficulty. Ask: what's the longest stretch you've trusted an agent on autopilot? If you don't know, you can't extend it.</p>
+
+        <h2>Perplexity: how to design skills</h2>
+
+        <p>Perplexity, an AI search company building agentic research and browsing tools, published its methodology for designing agent skills. The main lesson: don't start with the skill, start with the tests.</p>
+
+        <ul>
+          <li><strong>Write the evals first.</strong> Pull five to ten cases from production queries, known failures, and edge cases. Include negative examples — queries that should not invoke this skill.</li>
+          <li><strong>Phrase triggers like a human would.</strong> Start with "Load when…" and use the language your users use. Instead of "monitors pull requests," try "babysit a PR," "watch CI," or "make sure this lands." The skill loads without your team needing a specific command or technical phrase.</li>
+          <li><strong>Write the body in principles, not procedures.</strong> The model already knows commands; it needs direction on how to apply them. Instead of listing detailed steps (check out a branch, cherry-pick files, check for conflicts…), write instructions like "Cherry-pick the commit onto a clean branch. Resolve conflicts preserving intent."</li>
+          <li><strong>Codify failures into lessons.</strong> When the agent fails in production, write the failure mode into the skill file. The mistake becomes a standing instruction guarding against future mistakes.</li>
+          <li><strong>Edit instructions rigorously.</strong> For every line you add, ask: "Would the agent get this wrong without this?" If not, cut it. Every extra line adds context cost.</li>
+        </ul>
+
+        <h2>Benchmarks keep getting harder</h2>
+
+        <p>Research-level reasoning benchmarks keep escalating. Soohak introduces 439 research-level math problems authored from scratch by 64 mathematicians (including 38 faculty), explicitly targeting capabilities above standard olympiad-style math. In medical evaluation, SophontAI released Medmarks v1.0, expanding its open medical benchmark suite from 20→30 benchmarks and 46→61 models. There's growing sentiment that old evals are saturating: the argument that benchmarks with uniformly high scores should be retired in favor of lower-scoring, frontier-challenging tests.</p>
+
+        <h2>Blackwell as the reference platform for large-MoE serving</h2>
+
+        <p>Blackwell racks are emerging as the reference platform for serving large MoEs. Perplexity published details on serving post-trained Qwen3 235B on NVIDIA GB200 NVL72, arguing GB200 is a major inference step up over Hopper. Benchmarks cite NVLS all-reduce latency dropping from 586.1µs on H200 to 313.3µs on GB200, and MoE prefill combine at EP=4 dropping from 730.1µs to 438.5µs, with better decode throughput at high token rates. This materially changes prefill/decode disaggregation for serving large MoEs.</p>
+
+        <h2>Demis Hassabis on AI for health</h2>
+
+        <p>Demis Hassabis has long believed the No.1 application of AI should be improving human health. That work started with AlphaFold, and now continues at Isomorphic Labs with the mission to reimagine drug discovery and one day solve all disease — turbocharged with $2.1B in new funding.</p>
+
+        <h2>Safer codegen is becoming its own research track</h2>
+
+        <p>GitHub's <code>pull_request_target</code> remains one of the sharpest CI/CD traps in fork-based PR automation. At the workstation level, the recommendation is to move secrets out of ubiquitous local <code>.env</code> files into a proper secrets manager. Stanford-aligned work on SecureForge targets vulnerability discovery/prevention in LLM-generated code via prompt optimization, framing it as a bridge between codegen and security evaluation. The broader point: coding agents are now strong enough that supply-chain hardening and secure-generation evaluation need to be treated as core infra, not side concerns.</p>
+
+        <h2>1T-parameter model on Intel Optane</h2>
+
+        <p>A high-memory Xeon build using Intel Optane DC Persistent Memory DIMMs reportedly runs Kimi K2.5 — a ~1T parameter MoE model — locally at about 4 tokens/s via llama.cpp hybrid GPU/CPU inference. The key technical point: 768GB Optane PMem in Memory Mode (Optane appears as system RAM) with 192GB DDR4 ECC DRAM as cache, so the model's sparse expert weights live in PMem while attention/dense/shared-expert/routing tensors fit on an RTX 3060 12GB using <code>override-tensor</code> or <code>ngl auto</code>/<code>cmoe</code>. Commenters debated whether a higher-core-count Cascade Lake Xeon would help, and whether Optane Storage Mode plus <code>mmap</code> might outperform Memory Mode — and whether 4 tokens/s is practically tolerable for interactive use.</p>
+
+        <h2>Google: AI to replace clicking and typing</h2>
+
+        <p>Ahead of I/O, Google unveiled new Gemini-powered products: an AI-native "Googlebook" laptop, a cross-device Gemini Intelligence system for Android, and a new AI-powered cursor called Magic Pointer. Magic Pointer lets users point at something on screen while Gemini understands the surrounding context and responds to voice commands directly. Examples: point at a building in a video → "show me the route"; point at a date in an email → create a meeting; point at a table → turn it into a chart. The system works across Chrome, Android apps, and Google services without constantly opening chat windows or writing detailed prompts. Google also announced AI-assisted dictation, auto-browsing in Chrome, and AI-generated widgets.</p>
+
+        <h2>Why real-time communication matters</h2>
+
+        <p>Most AI still works like messaging software: type something, wait, get a response. Human collaboration doesn't work that way. Thinking Machines is betting the next shift in AI is not just better intelligence but better interaction. If these systems improve, AI could start feeling less like using software and more like working alongside something that can listen, react, and stay present in real time.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
