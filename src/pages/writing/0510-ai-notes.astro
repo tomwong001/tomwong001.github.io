@@ -1,0 +1,89 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 10";
+const date = "2026-05-10";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 10, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Code with Claude: Managed Agents</h2>
+
+        <p>The pitch from this week's Code with Claude developer event: in the future, you accomplish a goal by giving Claude just two things — an <strong>outcome</strong> and a <strong>budget</strong>. That's the direction behind the new Managed Agents feature: Claude wrapped in a cloud computer that you can spin up, scale, and manage as needed. Anthropic is taking on the infrastructure layer that kills most agent products, and making it scale for agents running 24/7.</p>
+
+        <h2>Interview: Anthropic platform team (Every podcast)</h2>
+
+        <p>An interview with two leads from Anthropic's platform team — Angela (product) and Caitlin (engineering). The key points:</p>
+
+        <h2>1. How the platform evolved</h2>
+
+        <p>The earliest "platform" was just a completion endpoint: send a prompt, get a reply. Then tool calls, chat sessions, and now stateful sessions. The overall direction is stateless → stateful, low-level primitives → higher-level abstractions, all toward one goal: let users get the best result with the least work.</p>
+
+        <h2>2. What Managed Agents is, and who it's for</h2>
+
+        <p>It builds on the Messages API and built-in tools (code execution sandbox, web search, etc.), packaging the infrastructure Anthropic has rebuilt several times into an off-the-shelf solution. Two target users: people inside companies building automation or internal platforms (an end-to-end software-dev platform, or a small flow that lets legal auto-review marketing copy); and developers integrating agents into products they ship externally — still highly custom, but the infra engineering isn't worth rebuilding yourself.</p>
+
+        <p>One host raised the worry of lock-in: his team runs a <code>claude -p</code> loop on a Mac mini and fears falling behind Claude Code's new features. Caitlin's answer: Anthropic's own first-party products (Claude Code, co-worker, etc.) are built on the same platform, so divergence should shrink over time.</p>
+
+        <h2>3. Harness and model path dependence</h2>
+
+        <p>The old fashion was to build a very generic harness that could hot-swap models. Angela argues that's becoming outdated — labs are training models in increasingly different directions, so harness and model become more tightly coupled. You still want redundancy and will still use other models, but the hot-swap unit rises to the level of the "agent" (harness + model), not the model alone. Her example: building the same memory feature, they tried several harness designs and eval results varied enormously. There's a lot of alpha in harness engineering itself. The cost: choosing your core primitive deeply shapes the model's capability direction. Anthropic bet on the file system and skills, so the models keep getting better at exactly those.</p>
+
+        <h2>4. What users think is hard vs. what actually is</h2>
+
+        <p>Users think the hard part is harness engineering (prompt caching, context-window management). The actual wall is <strong>infrastructure</strong>: a dropped sandbox kills the agent, long-running servers, transcript storage, security sandboxing, scalability. Managed Agents is built to solve that layer for you.</p>
+
+        <h2>5. The levels of agent applications</h2>
+
+        <p>Personal productivity tools are everywhere, but <strong>team-level agents</strong> are where the real complexity and leverage live — multiple agents collaborating, end-to-end process automation, needing a platform abstraction above the single agent. Vercel's Guillermo called this organizational form an "internal AI software factory." Concrete case: a legal-review agent for marketing copy can't be solved with a skill alone — it needs human-in-the-loop, multi-person collaboration, and cross-session runs. Once built, marketing and legal users don't edit prompts directly; they interact with the agent through another Claude — "managed agents all the way down."</p>
+
+        <h2>6. Multi-agent orchestration patterns</h2>
+
+        <p>You can assemble different strategy architectures: advisor/executor separation, adversarial (one generates, one critiques), divide-and-merge, best-of-N, swarm collaboration. Different architectures suit different tasks — swarm for bug hunting, divide-and-conquer for deep research. The more Lego-like the primitives, the higher up the stack you can hill-climb.</p>
+
+        <h2>7. Measuring agent success</h2>
+
+        <p>Beyond standard evals, they prefer <strong>verifiable outcomes</strong> — for a code agent, did the PR get merged? The ultimate vision: users provide just two parameters — a verifiable outcome plus a budget — and the system handles everything else.</p>
+
+        <h2>8. Agent expiration / retirement</h2>
+
+        <p>A real problem. They built skills to help upgrade models and do migrations, treating it as a proper "breaking change." The most AGI-pilled players will run agents to monitor whether their own agents have gone stale.</p>
+
+        <h2>9. The one-year vision</h2>
+
+        <p>Angela: get close to that "outcome + budget" world, where Claude understands itself, picks its own model, spins up sub-agents, writes its own harness, and users stop worrying about architecture choice and prompt engineering. Within a year the outcome part may be reachable; budget will still have some error. Caitlin: that world demands extreme platform scalability — agents always running and rebuilding themselves, so token throughput, long-running requests, and weird load shapes must never become bottlenecks.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
