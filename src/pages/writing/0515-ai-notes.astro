@@ -1,0 +1,109 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 15";
+const date = "2026-05-15";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 15, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Abridge: from documentation tool to clinical intelligence layer</h2>
+
+        <p><strong>Core message:</strong> Abridge (founded 2018) is moving from "AI medical scribe" to "clinical intelligence layer," aiming to be AI infrastructure spanning before, during, and after a visit for the US healthcare system.</p>
+
+        <p><strong>Scale:</strong> expected to support 80M+ patient-clinician conversations this year, covering 250 large US health systems, 28+ languages and 50+ specialties. Raised $300M at a $5.3B valuation in June 2025.</p>
+
+        <h2>Three strategic phases: save time → save money → save lives</h2>
+
+        <ul>
+          <li><strong>Save time:</strong> reduce 10–20 hours/week of documentation burden (eliminate "pajama time" — doctors finishing notes at home in pajamas).</li>
+          <li><strong>Save money:</strong> help hospitals optimize billing, compliance, and prior authorization in a low-margin environment.</li>
+          <li><strong>Save lives:</strong> improve patient outcomes via clinical decision support.</li>
+        </ul>
+
+        <h2>Product evolution: from passive recording to active intelligence</h2>
+
+        <p>The goal is for AI to exist like air conditioning — working quietly in the background, intervening only when necessary. Over 90% of traditional medical alerts are ignored, so Abridge chose to prepare doctors before the visit rather than interrupt frequently during it.</p>
+
+        <p><strong>Prior authorization case:</strong> traditional flow — order an MRI → rejected by insurance 4 weeks later → patient reschedules. Abridge's way — while the patient is still in the room, prompt the doctor to ask the key questions ("any physical therapy? pain longer than 6 weeks?"), satisfying insurance criteria in real time.</p>
+
+        <h2>Key technical challenges and approach</h2>
+
+        <p><strong>The hardest AI problem:</strong> achieving high quality + low latency + low cost simultaneously for real-time support in high-stakes clinical settings.</p>
+
+        <p><strong>Model strategy:</strong> third-party frontier models + proprietary models trained on 100M+ medical conversations. "Every agent is essentially a coding agent"; the EHR can be viewed as the agent's "file system."</p>
+
+        <p><strong>Three levels of personalization:</strong> individual doctor (style preferences), specialty (cardiology vs dermatology), health system (institutional guidelines).</p>
+
+        <p><strong>Evals:</strong> LFD (internal clinicians look at data first), LLM judge, third-party evaluators + specialty-specific evaluation, progressive rollout (analogous to Waymo's self-driving). Customers have moved from quarterly release cycles to monthly.</p>
+
+        <p><strong>Privacy and compliance:</strong> all data is one-way de-identified (irreversible). Strict HIPAA / PHI controls, written into customer contracts.</p>
+
+        <h2>A contrarian view: "PRD isn't dead, prototypes aren't a panacea"</h2>
+
+        <p>In high-stakes, high-complexity products, clear written thinking matters more than fast prototyping. "Go slow to go fast." Early startups can throw 30 prototypes at the wall, but at Abridge's scale, each decision involves implementation cost across 200+ hospital systems.</p>
+
+        <h2>Regulatory tailwinds</h2>
+
+        <p>The FDA updated clinical decision support guidance in January 2026, more AI-friendly. Government is pushing for interoperability across systems. High-stakes domains will actually solve the hardest AI problems first (80/20 doesn't apply in medicine).</p>
+
+        <h2>Team: clinician scientists</h2>
+
+        <p>"Mutants" with both an MD background and technical skills, embedded in product and eval teams, fundamentally raising the product bar.</p>
+
+        <h2>Vision</h2>
+
+        <p>The same patient-clinician conversation can simultaneously serve: the doctor (note), the patient (visit summary), the insurer (claims basis), and pharma (clinical trial matching) — folding today's fragmented, expensive multiple systems into one platform.</p>
+
+        <h2>Execution isolation for agents continues to mature</h2>
+
+        <p>W&B/CoreWeave launched CoreWeave Sandboxes for isolated execution in RL, tool use, and eval workloads, explicitly testing destructive commands like <code>rm -rf /</code> at scale. In a similar spirit, open-source/local dev tooling is surfacing around agent debugging — a free local agent debugging stack with traces exposed to Codex/Claude Code for automated eval authoring.</p>
+
+        <p>CoreWeave (the parent of Weights & Biases) launched Sandboxes in preview: isolated CPU environments via the W&B SDK where agents can execute code, clone repos, and install dependencies — exactly the things you don't want happening on your main machine after a supply-chain incident. A clear use case: agentic evaluations need fresh, consistent environments per test, then teardown. Sandboxes solve exactly that.</p>
+
+        <h2>The shift toward Hermes (Nous Research)</h2>
+
+        <p>An interesting industry-narrative shift: several long-time AI commentators independently switched their daily agent harness this week. The common story: a popular agent harness was magical early on, but after Anthropic's pricing changes made Max-tier Opus usage through it significantly more expensive, plus months of constant breakage on every update, the magic faded — users found themselves "constantly fixing" it instead of using it.</p>
+
+        <p>So some moved to Codex, others to Hermes from Nous Research. Why Hermes? It's now the #1 most-used CLI agent on OpenRouter globally, passing other harnesses and even Claude Code on OpenRouter usage. It has /goal, steering, and background computer use via the TryCUA integration. It's open, so you can port your memory, profile, and config files seamlessly.</p>
+
+        <p><strong>Steering</strong> is maybe the most underrated addition — a Codex feature that also exists in Hermes: you can send a follow-up message and the agent sees it after the next tool call, not after the whole chain of thought completes. This makes the conversation much more natural.</p>
+
+        <h2>Thinking Machines: a 276B MoE</h2>
+
+        <p>The interaction model is a 276B MoE with 12B active. The local-model community's hope: weights that can be quantized to run on small home hardware for a fully offline, always-present home assistant. The recurring theme — small, capable, local models as the foundation for ambient assistants.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
