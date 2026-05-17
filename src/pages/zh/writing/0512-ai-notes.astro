@@ -1,0 +1,124 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月12日";
+const date = "2026-05-12";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月12日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Few-shot 与 zero-shot</h2>
+
+        <p>这两个概念最初来自机器学习中的「小样本学习（Few-shot Learning）」和「零样本学习（Zero-shot Learning）」，但在大语言模型时代，它们更多被用来描述<strong>你在提示词里给模型提供多少示例</strong>。</p>
+
+        <h2>Zero-shot（零样本）</h2>
+
+        <p>不给模型任何示例，直接让它完成任务。你只用自然语言描述要做什么，模型靠预训练时学到的知识自行理解并执行。举个例子，做情感分析：</p>
+
+        <pre><code>判断下面这句话的情感是正面、负面还是中性：
+"今天天气真好，心情特别舒畅。"</code></pre>
+
+        <p>模型没看过任何示范，直接根据指令输出「正面」。</p>
+
+        <p><strong>适用场景</strong>：任务本身比较常见、表述清晰、模型在预训练中大概率见过类似任务，比如翻译、摘要、改写、基础分类、写一封礼貌的邮件。<strong>优点</strong>：提示词短、写起来快、消耗 token 少。<strong>缺点</strong>：当任务格式特殊、需要严格遵循某种风格，或者是模型不熟悉的领域时，输出容易不稳定、跑偏。</p>
+
+        <h2>Few-shot（少样本）</h2>
+
+        <p>在提示词里给模型几个「输入—输出」配对的示例（通常 1 到 10 个），让它通过模仿这些示例来完成新任务。这也叫 in-context learning（上下文学习）——注意，模型的权重并没有被更新，它只是在当前对话里「临场领悟」了你想要的模式。同样是情感分析：</p>
+
+        <pre><code>判断下面句子的情感：
+
+句子：这家餐厅服务态度太差了。
+情感：负面
+
+句子：电影还行，没什么特别的。
+情感：中性
+
+句子：今天收到礼物开心了一整天。
+情感：正面
+
+句子：他终于通过了考试。
+情感：</code></pre>
+
+        <p>模型会观察到前三个示例的格式，然后用同样的格式回答「正面」。<strong>衍生概念</strong>：只给一个示例的叫 one-shot（单样本），是 few-shot 的特例。</p>
+
+        <p><strong>适用场景</strong>：需要特定输出格式（比如固定的 JSON 结构）、有微妙的判断标准（什么算「正面」取决于你的业务定义）、任务比较冷门、或者你希望输出风格一致。<strong>优点</strong>：能显著提升准确率和格式一致性，相当于「现场教学」。<strong>缺点</strong>：示例占用上下文窗口，token 消耗变大；示例选得不好反而会误导模型（分布不均、覆盖不全、甚至有错误）。</p>
+
+        <h2>两者对比与选用建议</h2>
+
+        <p>简单总结：zero-shot 是「告诉模型该干什么」，few-shot 是「演示给模型看怎么干」。实际工作中的经验法则是：先用 zero-shot 试一遍，看效果如何。如果输出已经符合预期，就不必加示例，省 token 又省事；如果出现格式不稳定、判断标准模糊、或者跑偏到错误方向，再加 2–5 个高质量示例改成 few-shot。再不行就考虑加 Chain-of-Thought（让模型分步推理）、或者干脆做微调（fine-tuning）。</p>
+
+        <p>需要注意的是，示例的<strong>质量</strong>远比<strong>数量</strong>重要。三个精心挑选、覆盖典型情况和边界情况的示例，往往比十个随便堆上去的示例效果好得多。示例之间最好风格统一、格式一致，并尽量覆盖你期望模型处理的不同输入类型。</p>
+
+        <h2>什么是「全双工多模态交互」</h2>
+
+        <p><strong>全双工（full-duplex）</strong>：通信术语。打电话是全双工——双方可以同时说话、互相打断；对讲机是半双工——一个人说完另一个人才能说。当前大多数 AI 语音助手（包括 ChatGPT 语音模式）本质上还是半双工：你说完，它才开始处理，然后回复，再等你说。</p>
+
+        <p><strong>多模态（multimodal）</strong>：能同时处理多种信息形式——语音、视频、文字、图像。<strong>全双工多模态交互</strong>：AI 能同时听你说话、看摄像头画面、思考、搜索、回应——而且这些动作是<strong>并发的</strong>，不是排队进行的。</p>
+
+        <h2>「从头训练」 vs 「叠加」</h2>
+
+        <p>这是最关键的一点。<strong>传统做法（叠加）</strong>：现在的 ChatGPT 语音模式大致是这样拼起来的：语音识别模型（把你说的话转成文字）、LLM（处理文字、生成回复文字）、语音合成模型（把回复文字转成语音），外加一些规则判断「你说完了吗」（轮流发言）、「要不要调用工具」。这就像把几个独立的零件用胶水粘起来。模型骨子里还是「基于轮次（turn-based）」的——你一句、它一句。</p>
+
+        <p><strong>新做法（从头训练）</strong>：Thinking Machines 直接训练一个模型，它的「输入」就是<strong>连续的音频+视频+文字流</strong>，「输出」也是<strong>连续的音频+文字流</strong>。没有中间转换，没有轮次概念，模型天生就活在「连续时间」里。</p>
+
+        <h2>「人类↔AI 带宽问题」</h2>
+
+        <p>引用的几个人（John Schulman 是 RLHF 的核心作者之一，Soumith Chintala 是 PyTorch 创始人）把这个问题框定为<strong>带宽</strong>问题。意思是：人和人交流时，信息是高带宽并发的——你说话时我在听、在看你表情、在想怎么回、还可能在查手机。但现在人和 AI 交流是低带宽串行的——必须一方说完另一方才能动。新模型要解决的就是把「人↔AI 之间的信息管道」加宽，让交流像人和人之间那样自然。</p>
+
+        <h2>演示里强调的几个能力</h2>
+
+        <ul>
+          <li><strong>连续时间感知</strong>：模型不是被「喂」一段录音，而是实时感知时间流逝（比如能意识到「用户已经沉默 3 秒了」）。</li>
+          <li><strong>中断处理</strong>：你说到一半改主意打断它，它能立刻停下来听新内容——而不是把准备好的回复说完。</li>
+          <li><strong>同时语音</strong>：双方可以重叠说话，像真人对话里的「嗯嗯」「对对」。</li>
+          <li><strong>视觉主动性</strong>：摄像头看到的画面，模型会主动注意并融入回应，不用你提示「看一下这个」。</li>
+          <li><strong>后台工具使用</strong>：它在和你说话的同时偷偷搜索/调用工具，而不会冒出一句「我现在在搜索...」然后卡住几秒。对你来说体验是连贯的。</li>
+        </ul>
+
+        <h2>最后一句「零样本学习」是什么意思</h2>
+
+        <p><strong>类型签名（type signature）</strong>是编程术语，指一个函数的输入和输出类型。Schulman 的意思是：以前 AI 的类型签名是 <code>文字 → 文字</code>（或加几个零件后变成 <code>语音 → 语音</code>），新模型的类型签名是 <code>连续音频+视频+文本 → 音频+文本</code>。<strong>当模型的「原生输入输出」就是这种丰富的多模态流时，很多以前需要专门搭建系统才能做的任务，现在直接 zero-shot 就能做</strong>——不需要专门训练、不需要给示例。举例：以前做「实时手语翻译」得专门训练手语识别模型 + 翻译模型 + 语音合成模型拼起来，现在新模型直接看视频、听语音、输出语音，一次到位；以前「边看你写代码边给口头建议」需要屏幕识别 + 代码理解 + 语音生成的复杂管道，现在直接 zero-shot。</p>
+
+        <p>一句话总结：Thinking Machines 预览了一种<strong>原生就是连续多模态实时交互</strong>的新模型，不是把现有 LLM 拼装出语音功能，而是从训练阶段就让模型学会「同时听、说、看、想、查」。一旦模型的能力底座变成这样，很多过去需要专门系统才能完成的实时交互任务，现在不用任何额外训练就能直接做到（zero-shot）。</p>
+
+        <h2>深度代理 / 本地代理正在快速成熟</h2>
+
+        <p>深度代理 CLI 可以在对话中途热替换底层模型提供者而不丢失上下文，这是许多代理堆栈仍然缺失的非平凡系统功能。LangChain 还强调了为 provider/模型特定调优而使用 profile。另一份分项定价分析认为，对于高容量代理工作负载，DeepSeek V4 Flash 可以比 GPT/Gemini flash 级选项便宜得多。</p>
+
+        <p>本地/开源模型持续以比硬件天花板更快的速度改进。一个最有力的论点：在相同的顶级 MacBook Pro 内存限制下，「你能实际运行的最智能开源权重模型」从 Llama 3 70B 时代的能力提升到了 DeepSeek V4 Flash 混合 Q2 GGUF 时代的能力，在 24 个月内增长约 4.7 倍，意味着每约 10.7 个月翻一番，比摩尔定律更快。支持性数据点来自 GGUF 上传的快速增长，以及社区反复观察到的 Qwen 3.6、Gemma 4 和 DeepSeek 变体现在可用于本地执行非平凡的代理任务。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
