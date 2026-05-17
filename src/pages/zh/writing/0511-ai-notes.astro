@@ -1,0 +1,61 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月11日";
+const date = "2026-05-11";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月11日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>递归自我改进</h2>
+
+        <p>这是 Jack Clark 最新一篇 Import AI 文章的要点。他的主要观点是：有 60% 以上的可能性，「无人类参与的 AI 研发」——一个能够训练自己后继系统的系统——会在 2028 年底之前出现。这个论点不是基于单一基准，而是基于累积效应：SWE-Bench、METR 时间范围、CORE-Bench、MLE-Bench、PostTrainBench、内核优化、自动化对齐研究，以及管理其他 AI 系统的 AI 系统。这个论证是一幅由开始相互连接的碎片拼成的马赛克。</p>
+
+        <h2>Forward Deployed Engineer（前置部署工程师）</h2>
+
+        <p>OpenAI 宣布成立 The OpenAI Deployment Company，一家新公司，旨在帮助组织把 AI 整合进日常运营。它会在组织内部部署专业工程师——称为前置部署工程师（FDE）——以识别 AI 可以改进工作流程的地方，并构建员工日常可靠使用的系统。这和其他模型公司在做的「下场」动作是一回事：越过 API，进入手把手的 to B 落地。</p>
+
+        <h2>中国 AI / 机器人公司在做什么</h2>
+
+        <p>美国和中国之间的算力差距只会越来越大。美国 AI 公司才刚刚开始集成英伟达的 Blackwell 芯片，这些芯片比中国公司合法获得的任何芯片都强大得多。尽管英伟达 CEO 声称中国公司已经拥有足够的算力，但受访的中国研究人员对这一说法持怀疑态度。</p>
+
+        <p>许多中国公司提供编程套餐，通常附带丰厚的 token 额度来吸引客户离开 Claude Code，但它们也追求更细分的产品方向。MiniMax 打造高利润的 AI 伴侣产品；Z.ai 则寻求与社交媒体公司、中国商飞 COMAC 以及政府机构建立 B2B 合作。阿里关联公司蚂蚁集团在基于 AI 的医疗配送领域开辟了利基——这在美国会是一场责任与患者隐私的噩梦。</p>
+
+        <p>像模型公司一样，Unitree 的研究人员也在加班加点，但没有同样的 AGI 驱动热情——Unitree 对「AGI」的关系就像鱼需要自行车。另一家机器人公司 Galbot 带访客参观了一个仓库，机器人自主地从货架上挑选感冒药和隐形眼镜，并根据 app 提交的客户订单打包。参观时配送司机来来往往，来取机器人打包的订单。Galbot 称 2025 年完成了超过一百万个订单，其中 20% 在传统药店打烊的夜间提交。这些订单都不需要前沿模型或超人类智能——中国的机器人生态正在用 AI、并在算力受限的情况下赚钱。正如有观察者指出的，有大量 AI+机器人的工业应用美国公司察觉不到，因为美国已经失去了其工业基础。药房这个场景确实非常适合机器人。</p>
+
+        <p>Unitree 的收入曾主要来自对学术研究实验室的销售，但正如其招股书所揭示的，随着商业销售激增，这一点正变得越来越不成立。一些买家是工业领域的，但 Unitree 和 Galbot 都指出，商业买家中的多数其实是为娱乐应用购买机器人。观看机器人跳舞——或者努力做咖啡——出乎意料地令人满足。Galbot 说去年开了 100 多家由机器人做饮料的门店。显然，新奇感是卖点。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
