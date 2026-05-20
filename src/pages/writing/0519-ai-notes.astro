@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 19";
+const date = "2026-05-19";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 19, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>The math behind LLMs</h2>
+
+        <p>Reading list: a Dwarkesh interview with Reiner Pope on the math underneath large language models — worth slotting into a quiet evening.</p>
+
+        <h2>How to land a job at a frontier LLM lab</h2>
+
+        <p>Vlad Feinberg's piece (May 10, 2026) on what it actually takes to get hired into a frontier lab. The honest version, not the recruiter version.</p>
+
+        <h2>Meta's AI-native restructure</h2>
+
+        <p>Reporting: Meta moved 7,000 employees into new AI-focused divisions just days before laying off about 8,000. Per internal documents, these new divisions will operate under an "AI-first" architecture with a flatter management layer. At the same time, Meta is dialing back parts of its metaverse investment and pushing employees to use AI more deeply in day-to-day work. As Meta competes with OpenAI, Google, and Anthropic, Mark Zuckerberg is increasingly treating AI as the company's top priority.</p>
+
+        <h2>Humanoid robots: four interconnected systems</h2>
+
+        <p>A useful framing — humanoid robots get human-like perception, intelligence, and movement from four systems working together:</p>
+
+        <ul>
+          <li><strong>Sensors (the sensory system).</strong> Cameras, lidar, microphones, and tactile sensors give the robot continuous readings of its environment, the same role your sensory system plays.</li>
+          <li><strong>Control unit and software (the brain).</strong> The intelligence layer that processes sensor data and executes complex functions.</li>
+          <li><strong>Power system (the metabolic system).</strong> The battery that supplies and manages energy to every component, continuously.</li>
+          <li><strong>Actuators (the muscular system).</strong> Mechanical devices that convert energy into rotary or linear motion — joints, grip, movement.</li>
+        </ul>
+
+        <h2>Where humanoid robots will hit hardest</h2>
+
+        <p>Seven highest-impact areas:</p>
+
+        <ol>
+          <li><strong>Domestic assistance.</strong> Mobility support, household chores, medication reminders.</li>
+          <li><strong>Manufacturing.</strong> Assisting assembly tasks, moving tools and parts, inspecting finished products.</li>
+          <li><strong>Security and monitoring.</strong> Patrolling facilities, investigating alerts, helping in emergencies.</li>
+          <li><strong>Customer service and reception.</strong> Greeting and directing visitors, answering questions, managing check-ins or bookings.</li>
+          <li><strong>Facility maintenance.</strong> Routine inspections, minor repairs, cleaning and sanitizing spaces.</li>
+          <li><strong>Healthcare.</strong> Assisting nurses, delivering supplies or meals, monitoring patients.</li>
+          <li><strong>Warehouse and logistics.</strong> Picking and packing, loading and unloading, moving inventory.</li>
+        </ol>
+
+        <h2>What management becomes in an AI-native company</h2>
+
+        <p>An observation worth sitting with:</p>
+
+        <p><em>Management roles will become more important, not less. Someone has to set direction for AI, review its output, ensure work stays coherent across the org, and manage employees working alongside AI.</em></p>
+
+        <p>So <strong>alignment becomes the key element of corporate AI adoption</strong>, and arguably its most important value. Humans are increasingly unable to verify AI output line-by-line; what they can do is make sure work is pointed in the right direction.</p>
+
+        <h2>When marginal cost goes to zero, where does value go?</h2>
+
+        <p>A reader question that's stuck in my head: <em>"When the marginal cost of everything converges to zero, what does that do to its value?"</em></p>
+
+        <p>Spotify is a worked example. The marginal cost of distributing music dropped to roughly zero, but value didn't disappear — it migrated. It migrated to <strong>discovery</strong>, <strong>curation</strong>, and <strong>subscription bundling</strong>. David Bowie's 2002 prediction held up: "Music will be like water, so artists will tour like crazy." Value moved to concerts, IP, and brand — the things that can't be driven to zero marginal cost.</p>
+
+        <p>So the right question isn't "value → 0," it's <strong>value migrates → where?</strong></p>
+
+        <p>And a corollary: when the cost of doing a thing is very low, <strong>who does it</strong> becomes the load-bearing variable. Provided what they're doing is actually high quality.</p>
+
+        <h2>Outsourcing micro-decisions</h2>
+
+        <p>A passage worth keeping:</p>
+
+        <p><em>"The wealthiest people on Earth already operate this way. They have teams of assistants, researchers, PR strategists, designers, copywriters, and coaches. Those people curate what they read, draft their e-mails, craft their public statements, and book their flights. I very much doubt these individuals consider themselves to be less free. If anything, outsourcing a multitude of micro-decisions allows them to invest their energy into the things that actually matter to them."</em></p>
+
+        <p>This is a useful frame for what working with AI assistants is actually supposed to feel like.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul, .article-body ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
