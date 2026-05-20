@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 18";
+const date = "2026-05-18";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 18, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>Drone warfare: a Latent.Space episode worth digesting</h2>
+
+        <p>A Latent.Space podcast hosted by Brandon Anderson with guest host Noah Smith (Noahpinion) interviews Ukrainian tech entrepreneur Yaroslav Azhnyuk — nearly two hours, with one core thesis: <strong>the future of warfare has already arrived, and the West isn't ready</strong>.</p>
+
+        <h2>From pet cameras to weapons</h2>
+
+        <p>Yaroslav previously ran <strong>Petcube</strong> in San Francisco (pet cameras, treat dispensers). On February 23, 2022 he and his fiancée had just landed in Kyiv to prepare their wedding. The next day Russia invaded. He pivoted from "cameras that throw treats to pets" to "cameras that drop explosives on invaders" and founded <strong>The Fourth Law</strong> (autonomous drone systems) and <strong>Odd Systems</strong> (thermal imaging).</p>
+
+        <h2>The modern drone stack</h2>
+
+        <p>FPV (first-person-view) drones have become the new "god of war" on the front line, responsible for 70–80% of casualties. Yaroslav defined a <strong>five-level autonomy ladder</strong> (terminal guidance → autonomous strike → autonomous target ID → autonomous navigation → autonomous take-off and landing) and <strong>eight dimensions of the autonomous battlefield</strong>. Fiber-optic drone cable surged from $4/km to $32/km, driven by AI data center demand. A $500 drone can destroy a $5M tank.</p>
+
+        <h2>Geopolitics and the China manufacturing advantage</h2>
+
+        <p>Ukraine produced 4 million FPV drones last year. China's capacity is on the order of <strong>4 billion</strong>. The West lags on four layers: technology, mass manufacturing, components, and rare earths. He warns China could potentially launch millions of drones from container ships toward any coastline, and the West currently has no real answer.</p>
+
+        <h2>What he recommends to the West</h2>
+
+        <ul>
+          <li>Treat Kyiv as the "defense Silicon Valley" and study Ukraine's experience seriously.</li>
+          <li>Reform procurement processes.</li>
+          <li>Europe is waking up too slowly.</li>
+          <li>Many countries may quietly start pursuing nuclear weapons again — Budapest Memorandum has become a cautionary tale rather than a credible guarantee.</li>
+        </ul>
+
+        <h2>Counter-drone measures (and their limits)</h2>
+
+        <p>Shotguns (low hit rate), electronic warfare (an endless frequency game), netting corridors, "porcupine" rods on tanks, lasers (poor cost-effectiveness — a $3M Raytheon laser cannot economically take down 6,000 FPV drones).</p>
+
+        <h2>Closing line</h2>
+
+        <p><em>Si vis pacem, para bellum</em> — if you want peace, prepare for war.</p>
+
+        <h2>Why drones need rare earths</h2>
+
+        <p>One question from the read: why is rare earth a hard constraint for drones? The answer: drone motors. FPV and most small drones use <strong>brushless DC motors (BLDC)</strong>. The performance of a BLDC motor depends on its <strong>permanent magnets</strong>, and high-performance permanent magnets are almost always <strong>NdFeB (neodymium-iron-boron)</strong>, often doped with dysprosium and terbium for heat tolerance.</p>
+
+        <p>Why not substitute? NdFeB has more than 10× the magnetic energy product of ordinary ferrite magnets. For the same motor weight, NdFeB delivers far more torque and power. Drones are extremely sensitive to <strong>power density</strong> — every gram of motor weight is a gram less payload or battery. Replacing rare-earth magnets with ferrite produces drones that fly shorter, carry less, and turn slower. Effectively unusable.</p>
+
+        <p>Yaroslav makes a finer point: the real bottleneck isn't ore — rare earths are actually widely distributed globally — it's <strong>refining and processing capacity</strong>. China controls roughly <strong>85–90%</strong> of global rare-earth refining and over <strong>90%</strong> of NdFeB magnet production. Even US/Australian ore typically gets shipped to China for processing.</p>
+
+        <h2>What does AI actually change? A 1997-style question</h2>
+
+        <p>An analogy: in 1997, asking "what will the internet change" got most predictions wrong. Once AI automates a large class of human work, there are three possible outcomes:</p>
+
+        <ul>
+          <li><strong>Becomes a button</strong> — the work disappears entirely (elevator operators).</li>
+          <li><strong>Job content changes</strong> — the profession survives but does different work (accounting after software).</li>
+          <li><strong>Unlocks new things</strong> — barcodes plus inventory automation made supermarket SKU counts 5× larger; the internet repackaged music and media.</li>
+        </ul>
+
+        <h2>Should AI write your Slack messages?</h2>
+
+        <p>A quote worth holding onto:</p>
+
+        <p><em>"I still don't use LLMs to write Slack messages, ADRs, issues and so forth. I believe I have a better sense of what's important to communicate, and I want to signal that there's a human being thinking about the content."</em></p>
+
+        <p>Low-quality auto-generated messages have a real cost to organizational efficiency.</p>
+
+        <h2>Image editing</h2>
+
+        <p>ChatGPT image editing 2.0 is the best so far.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
