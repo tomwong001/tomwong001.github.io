@@ -1,0 +1,106 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月18日";
+const date = "2026-05-18";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月18日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>无人机战争：一期值得消化的 Latent.Space 节目</h2>
+
+        <p>Latent.Space 的一期特别节目，主持人 Brandon Anderson 与客座主持 Noah Smith（Noahpinion 博主）共同采访乌克兰科技创业者 <strong>Yaroslav Azhnyuk</strong>，时长接近两小时。核心论点只有一句：<strong>未来战争已经到来，而西方还没准备好</strong>。</p>
+
+        <h2>从宠物相机到武器制造</h2>
+
+        <p>Yaroslav 原本在旧金山经营 <strong>Petcube</strong>（宠物摄像头公司）。2022 年 2 月 23 日，他和未婚妻刚回到基辅准备婚礼，第二天俄罗斯就入侵了。他从「给宠物扔零食的相机」转向「给侵略者扔炸药的相机」，先后创办了 <strong>The Fourth Law</strong>（无人机自主系统）和 <strong>Odd Systems</strong>（热成像）。</p>
+
+        <h2>现代无人机技术栈</h2>
+
+        <p>FPV（第一人称视角）无人机已经成为前线「新的战争之神」，占据 70%–80% 的伤亡。他提出了<strong>五级自主等级</strong>（终端制导 → 自主轰炸 → 自主目标识别 → 自主导航 → 自主起降），以及<strong>自主战场的八个维度</strong>。光纤无人机用的光缆，因 AI 数据中心需求把价格从每公里 4 美元推到 32 美元。一架 500 美元的无人机，可以摧毁 500 万美元的坦克。</p>
+
+        <h2>地缘政治与中国制造优势</h2>
+
+        <p>去年乌克兰生产了 400 万架 FPV 无人机，而中国的产能在 <strong>40 亿架</strong>这个量级。西方在四个层面落后：技术、大规模制造、零部件、稀土。他警告中国有可能从集装箱船向任何海岸线投放数百万架无人机，而西方目前没有真正的应对方案。</p>
+
+        <h2>他对西方的建议</h2>
+
+        <ul>
+          <li>把基辅当作「国防硅谷」，认真学习乌克兰的实战经验。</li>
+          <li>改革采购流程。</li>
+          <li>欧洲觉醒太慢。</li>
+          <li>许多国家可能会重新寻求核武器——布达佩斯备忘录已经成了一个反面教材，而不是可靠的安全保证。</li>
+        </ul>
+
+        <h2>反无人机措施与各自的局限</h2>
+
+        <p>霰弹枪（命中率低）、电子战（永无止境的频段博弈）、鱼网走廊、坦克上的「豪猪」杆、激光（成本效益差——雷神 300 万美元的激光打不下 6000 架 FPV）。</p>
+
+        <h2>收尾</h2>
+
+        <p><em>Si vis pacem, para bellum</em>——欲求和平，必先备战。</p>
+
+        <h2>为什么无人机也需要稀土</h2>
+
+        <p>读完留下来的一个问题：为什么稀土是无人机的硬约束？答案在电机。FPV 和大多数小型无人机用的是<strong>无刷直流电机（BLDC）</strong>，BLDC 的核心是<strong>永磁体</strong>，高性能永磁体几乎都是<strong>钕铁硼磁铁（NdFeB）</strong>——以钕为主，常掺入镝、铽来提高耐高温性能。</p>
+
+        <p>为什么不能替代？钕铁硼磁铁的磁能积是普通铁氧体磁铁的 10 倍以上。同样大小、同样重量的电机，稀土磁铁能输出大得多的扭矩和功率。无人机对<strong>功率密度</strong>极其敏感——多 1 克电机重量，就少 1 克能带的炸药或电池。用铁氧体磁铁替代后，做出来的无人机飞得更近、载得更少、转向更慢，基本无法实战使用。</p>
+
+        <p>Yaroslav 还补充了更深一层：稀土真正的瓶颈不是矿藏——稀土在地球上分布其实很广——而是<strong>精炼和加工产能</strong>。中国控制了全球大约 <strong>85%–90%</strong> 的稀土精炼能力，以及超过 <strong>90%</strong> 的钕铁硼磁铁产能。美国、澳大利亚的稀土矿，往往也要运到中国加工。</p>
+
+        <h2>AI 究竟会改变什么：一个 1997 年式的提问</h2>
+
+        <p>一个类比：1997 年问「互联网会改变什么」，大部分预测都错了。AI 把原本需要人做的一大类工作自动化之后，可能出现三种结果：</p>
+
+        <ul>
+          <li><strong>变成一个按钮</strong>——这件工作直接消失（电梯操作员被自动化彻底替代）。</li>
+          <li><strong>工作内容改变</strong>——职业还在，但内容变了（软件没有让会计师消失，但工作内容变了）。</li>
+          <li><strong>解锁新事情</strong>——条码 + 库存自动化让超市 SKU 翻 5 倍，互联网让音乐和媒体被重新打包。</li>
+        </ul>
+
+        <h2>发消息这件事，应该让 AI 接管吗</h2>
+
+        <p>一段值得记下来的引用：</p>
+
+        <p><em>「我仍然不会使用大语言模型来撰写 Slack 消息、ADR、问题报告等内容。我觉得自己更清楚哪些信息是真正需要传达的；同时，我也希望让人们知道，这些内容都是经过人工思考后才产生的。」</em></p>
+
+        <p>低质量、自动生成的消息，对组织效率有真实的负面成本。</p>
+
+        <h2>图像编辑</h2>
+
+        <p>ChatGPT 2.0 的图像编辑目前是最好的。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
