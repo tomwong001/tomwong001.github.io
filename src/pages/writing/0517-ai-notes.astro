@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const lang = 'en';
+const title = "AI Notes — May 17";
+const date = "2026-05-17";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/writing/" class="back-link">← Back to Writing</a>
+        <div class="article-meta">
+          <span class="tag">Learning Log</span>
+          <time datetime={date}>May 17, 2026</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>US vs China frontier model Elo over time</h2>
+
+        <p>A chart from the U.S. Center for AI Standards and Innovation tracks frontier model capability (Elo score) against release date from January 2024 through May 2026, with separate trend lines for the US and Chinese ecosystems.</p>
+
+        <h2>What the chart shows</h2>
+
+        <p><strong>US trajectory (low to high):</strong> OpenAI GPT-4o (Jan 2024, ~100 Elo) → Anthropic 3.6 Sonnet → OpenAI o1 → OpenAI o3-mini → OpenAI o3 → Anthropic Opus 4 → OpenAI GPT-5 → OpenAI GPT-5.2 → OpenAI GPT-5.4 (~1100) → Anthropic Opus 4.6 (~1100) → OpenAI GPT-5.5 (~1250, current peak).</p>
+
+        <p><strong>China trajectory:</strong> DeepSeek R1 (Jan 2025, ~150) → Alibaba Qwen3 → DeepSeek R1-0528 → Alibaba QwQ → DeepSeek V3.1 → Kimi K2-Thinking → Kimi K2.5 → DeepSeek V4 Pro (~800, current peak).</p>
+
+        <h2>Observations worth keeping</h2>
+
+        <ul>
+          <li><strong>Similar slopes, staggered starts.</strong> Both lines progress at roughly the same rate — the popular narrative of China "catching up faster" doesn't really show up in the slope. What's there instead is a starting-point lag: the Chinese frontier is roughly 6–9 months behind on the time axis.</li>
+          <li><strong>Current capability gap is about 450 Elo.</strong> The US line touches ~1250 by mid-2026 while the top Chinese model (DeepSeek V4 Pro) sits around 800.</li>
+          <li><strong>Elo is not absolute capability.</strong> A leaderboard score is a coarse compression of behavior across tasks. Two models with similar Elo can perform very differently on specific workloads.</li>
+          <li><strong>Linear extrapolation does not close the gap.</strong> If you draw both trends forward at their current slopes, the distance stays roughly constant rather than narrowing.</li>
+        </ul>
+
+        <h2>Caveats</h2>
+
+        <p>This is a public-leaderboard, public-release view. Closed lab models, internal evaluation snapshots, and unreleased systems are not in the picture. Whatever conclusions you draw from the chart should be held loosely on that basis.</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
