@@ -1,0 +1,66 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const lang = 'zh';
+const title = "AI 学习笔记 — 5月17日";
+const date = "2026-05-17";
+---
+
+<Layout title={title} lang={lang}>
+  <div class="container">
+    <article class="article">
+      <div class="article-header fade-in">
+        <a href="/zh/writing/" class="back-link">← 返回文章列表</a>
+        <div class="article-meta">
+          <span class="tag">学习日志</span>
+          <time datetime={date}>2026年5月17日</time>
+        </div>
+        <h1>{title}</h1>
+      </div>
+
+      <div class="article-body fade-in">
+        <h2>中美前沿模型 Elo 随时间的对比</h2>
+
+        <p>来自 U.S. Center for AI Standards and Innovation 的一张图，把 2024 年 1 月到 2026 年 5 月各家前沿模型的能力分（Elo）画在发布时间轴上，分别画出了中美两条趋势线。</p>
+
+        <h2>图表内容</h2>
+
+        <p><strong>美国阵营（从低到高）：</strong>OpenAI GPT-4o（2024 年 1 月，约 100 Elo） → Anthropic 3.6 Sonnet → OpenAI o1 → OpenAI o3-mini → OpenAI o3 → Anthropic Opus 4 → OpenAI GPT-5 → OpenAI GPT-5.2 → OpenAI GPT-5.4（约 1100）→ Anthropic Opus 4.6（约 1100）→ OpenAI GPT-5.5（约 1250，当前最高）。</p>
+
+        <p><strong>中国阵营：</strong>DeepSeek R1（2025 年 1 月，约 150）→ 阿里 Qwen3 → DeepSeek R1-0528 → 阿里 QwQ → DeepSeek V3.1 → Kimi K2-Thinking → Kimi K2.5 → DeepSeek V4 Pro（约 800，当前最高）。</p>
+
+        <h2>值得记下的几点观察</h2>
+
+        <ul>
+          <li><strong>斜率相近，起点错开。</strong>两条趋势线的爬升速度几乎相同，所谓「中国追赶速度更快」在斜率上并没有明显体现。真正存在的是起点差距：中国前沿模型在时间轴上大约滞后 6–9 个月。</li>
+          <li><strong>当前能力 gap 约 450 Elo。</strong>美国线在 2026 年中已经摸到 1250，中国最高（DeepSeek V4 Pro）约 800。</li>
+          <li><strong>Elo 并不等于绝对能力。</strong>榜单分是对模型行为的一种粗粒度压缩，两个 Elo 接近的模型在具体任务上的表现可能差异很大。</li>
+          <li><strong>按现有斜率外推，gap 不缩小。</strong>把两条线按当前斜率往前延，距离基本保持不变，而不是逐渐收敛。</li>
+        </ul>
+
+        <h2>需要注意的边界</h2>
+
+        <p>这是一份基于公开榜单、公开发布的视图。各家实验室未公布的闭源模型、内部评测快照、未发布版本都不在图里。任何从这张图得到的结论，都应该在这个前提下保持克制。</p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .article { max-width: 680px; padding-bottom: 3rem; }
+  .article-header { margin-bottom: 3rem; }
+  .back-link { display: inline-block; color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; transition: color var(--transition); }
+  .back-link:hover { color: var(--color-accent); }
+  .article-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .article-meta time { font-size: 0.85rem; color: var(--color-text-light); }
+  .article-header h1 { font-size: 2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .article-body { font-size: 1.05rem; line-height: 1.85; color: var(--color-text); }
+  .article-body h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .article-body p { margin-bottom: 1.25rem; color: var(--color-text-muted); }
+  .article-body ul { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  .article-body li { margin-bottom: 0.75rem; color: var(--color-text-muted); line-height: 1.75; }
+  .article-body strong { color: var(--color-text); font-weight: 600; }
+  .article-body pre { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  .article-body code { font-size: 0.9em; }
+  @media (max-width: 768px) { .article-header h1 { font-size: 1.5rem; } }
+</style>
